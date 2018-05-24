@@ -1,6 +1,0 @@
-D:\Projetos\Visual Studio\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.exe.config
-D:\Projetos\Visual Studio\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.exe
-D:\Projetos\Visual Studio\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.pdb
-D:\Projetos\Visual Studio\ConsoleApp3\ConsoleApp3\obj\Debug\ConsoleApp3.csproj.CoreCompileInputs.cache
-D:\Projetos\Visual Studio\ConsoleApp3\ConsoleApp3\obj\Debug\ConsoleApp3.exe
-D:\Projetos\Visual Studio\ConsoleApp3\ConsoleApp3\obj\Debug\ConsoleApp3.pdb
