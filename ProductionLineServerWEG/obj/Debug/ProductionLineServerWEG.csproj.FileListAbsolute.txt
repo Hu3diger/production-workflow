@@ -8,3 +8,9 @@ D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\websocket-s
 D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.csproj.CopyComplete
 D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.exe
 D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.pdb
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\MsgPack.dll
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\SocketIO.Emitter.dll
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\StackExchange.Redis.dll
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\MsgPack.xml
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\StackExchange.Redis.pdb
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\StackExchange.Redis.xml
