@@ -1,19 +1,17 @@
 $(document).ready(function () {
   $('.sidenav').sidenav();
 
-  setInterval(inserirT, 2000);
+  //setInterval(inserirT, 2000);
 });
 
 var json = [];
 
-function inserirT() {
+function inserirT(m, c) {
   $("#xuxu").html('');
-  let x = Math.floor(Math.random() * 100);
-  let y = x < 10
   let teste = {
     horario: getHorario(),
-    mensagem: 'Teste dhasdhasuiduhasuhdasuhdashas',
-    critico: y
+    mensagem: m,
+    critico: c
   };
   json.splice(0, 0, teste);
 
