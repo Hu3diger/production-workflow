@@ -1,22 +1,19 @@
-﻿var username = prompt("Enter username!");
-var ws;
-if (username) {
-    var ws = new WebSocket("ws://localhost:8085/chat");
+﻿var ws;
+    ws = new WebSocket("ws://localhost:8085/client");
+    
     ws.onopen = function() {
-        alert("Connection established!");
-        ws.send(username + " joined to chat!");
+        alert("Conectado com sucesso!");
     };
 
     ws.onmessage = function(evt) {
-        document.getElementById("chatTextArea").value += evt.data+"\n";
+        //evt.data
+
+        //oq fazer depois de conectado
     };
 
     ws.onclose = function() {
-        alert("Connection is closed...");
+        alert("Conexão fechada.");
     };
-} else {
-    alert("Username not entered!");
-}
 
 function sendMessage() {
     var message = document.getElementById("inputMessage").value;
