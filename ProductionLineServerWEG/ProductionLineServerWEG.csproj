@@ -77,11 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ModelServer\" />
-    <Folder Include="Page\css\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Page\index.html" />
-    <Content Include="Page\js\app.js" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

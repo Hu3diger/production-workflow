@@ -8,7 +8,9 @@ namespace ProductionLineServerWEG
 {   
     class Threads
     {
+#pragma warning disable CS0169 // O campo "Threads.kappa" nunca é usado
         private static List<int> kappa;
+#pragma warning restore CS0169 // O campo "Threads.kappa" nunca é usado
 
         private static void ThreadLeitura()
         {

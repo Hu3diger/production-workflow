@@ -13,11 +13,10 @@ namespace ProductionLineServerWEG
 {
     class Program
     {
-        static int port = 8005; // порт для приема входящих запросов
         static void Main(string[] args)
         {
             var wssv = new WebSocketServer("ws://localhost:8085");
-            wssv.AddWebSocketService<ChatServer>("/chat");
+            wssv.AddWebSocketService<ClienteServer>("/client");
             wssv.Start();
             Console.WriteLine("Server started...");
             Console.ReadKey(true);

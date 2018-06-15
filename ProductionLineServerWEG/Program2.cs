@@ -10,13 +10,6 @@ namespace ProductionLineServerWEG
     {
         static List<Processo> listProcessos = new List<Processo>();
 
-        static void Main(string[] args)
-        {
-            // Testes.TesteProcesso1();
-            // Testes.TesteProcesso2();
-            // ListAnacleto();
-        }
-
         static void ListAnacleto()
         {
             while (true)

@@ -8,7 +8,7 @@ using WebSocketSharp.Server;
 
 namespace ProductionLineServerWEG
 {
-    class ChatServer : WebSocketBehavior
+    class ClienteServer : WebSocketBehavior
     {
         protected override void OnMessage(MessageEventArgs e)
         {
