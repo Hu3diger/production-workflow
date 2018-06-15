@@ -1,24 +1,20 @@
-﻿var socket = new io.Socket("10.3.74.190", {
-  port: 8085
-});
-socket.connect();
+﻿var ws;
+ws = new WebSocket("ws://10.3.74.190:8085/client");
 
-// Add a connect listener
-socket.on("connect", function() {
+ws.onopen = function() {
   alert("Conectado com sucesso!");
-});
-// Add a connect listener
-socket.on("message", function(data) {
+};
+
+ws.onmessage = function(evt) {
   var t = [];
   t = evt.data.split("/../");
   inserirT(t[0], t[1]);
-});
-// Add a disconnect listener
-socket.on("disconnect", function() {
-  alert("Conexão fechada.");
-});
+};
 
-// Sends a message to the server via sockets
+ws.onclose = function() {
+  alert("Conexão fechada.");
+};
+
 function sendMessage() {
   if (message && ws) {
     var content = "[" + username + "] " + message;
