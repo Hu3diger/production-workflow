@@ -1,2 +1,10 @@
 D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.csprojResolveAssemblyReference.cache
 D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.csproj.CoreCompileInputs.cache
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\ProductionLineServerWEG.exe.config
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\ProductionLineServerWEG.exe
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\ProductionLineServerWEG.pdb
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\websocket-sharp.dll
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\bin\Debug\websocket-sharp.xml
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.csproj.CopyComplete
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.exe
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.pdb
