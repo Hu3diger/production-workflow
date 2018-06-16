@@ -15,9 +15,15 @@ ws.onclose = function() {
   alert("Conexão fechada.");
 };
 
-function sendMessage() {
+function sendMessage(message) {
   if (message && ws) {
-    var content = "[" + username + "] " + message;
-    ws.send(content);
+    ws.send(message);
   }
+}
+
+// Funções para o servidor
+
+function cadProcess(){
+  let msg = "/cadBaseProcess/" + $("#name_Process").val() + "/../" + $("#description_tx").val() + "/../" + $("#runTime_Process").val();
+  sendMessage(msg);
 }

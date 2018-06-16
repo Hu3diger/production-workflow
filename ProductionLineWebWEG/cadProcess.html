@@ -1,0 +1,102 @@
+<<!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Cadastro Produto</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" media="screen" href="utils/css/materialize.min.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="utils/css/fonts.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="utils/css/main.css" />
+    </head>
+
+    <body>
+        <!-- Nav Bar -->
+        <div class="navbar-fixed">
+            <nav class="light-blue darken-2">
+                <div class="nav-wrapper">
+                    <a href="#" data-target="mobile-menu" class="sidenav-trigger">
+                        <i class="material-icons">menu</i>
+                    </a>
+                    <a href="index.html" class="brand-logo center">
+                        <img src="utils/images/wega.png" width="50" style="margin-top: 15px">
+                    </a>
+                    <ul class="left hide-on-med-and-down">
+                        <li class="active">
+                            <a href="dashboard.html">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="esteiras.html">Esteiras</a>
+                        </li>
+                        <li>
+                            <a href="processos.html">Processos</a>
+                        </li>
+                        <li>
+                            <a href="producao.html">Produção</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <ul class="sidenav" id="mobile-menu">
+                    <li>
+                        <a class="close-button-a">
+                            <i class="material-icons sidenav-close close-button">close</i>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="esteiras.html">Esteiras</a>
+                    </li>
+                    <li>
+                        <a href="processos.html">Processos</a>
+                    </li>
+                    <li>
+                        <a href="producao.html">Produção</a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+
+        <!-- Page content -->
+        <div class="row">
+            <form class="col s2 offset-m5">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="name_Process" type="text" class="validate">
+                        <label for="name_Process">Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="description_tx" class="materialize-textarea"></textarea>
+                        <label for="description_tx">Description</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="runTime_Process" type="number" class="validate">
+                        <label for="runTime_Process">RunTime (ms)</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <a class="waves-effect waves-light btn left-align right-align">button</a>
+                    <button class="btn waves-effect waves-light" type="submit" name="action" onclick="cadProcess()">Submit
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- JS in the end of file to optimize loading -->
+        <script src="utils/js/jquery-3.3.1.min.js"></script>
+        <script src="utils/js/materialize.min.js"></script>
+        <script src="utils/js/main.js"></script>
+        <script src="utils/js/websocket.js"></script>
+    </body>
+
+    </html>
