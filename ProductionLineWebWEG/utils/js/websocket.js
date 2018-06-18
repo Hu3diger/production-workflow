@@ -26,4 +26,5 @@ function sendMessage(message) {
 function cadProcess(){
   let msg = "/cadBaseProcess/" + $("#name_Process").val() + "/../" + $("#description_tx").val() + "/../" + $("#runTime_Process").val();
   sendMessage(msg);
+  M.toast({html: 'Processo criado com sucesso!'});
 }
