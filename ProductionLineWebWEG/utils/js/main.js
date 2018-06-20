@@ -2,6 +2,7 @@ $(document).ready(function () {
   $('.sidenav').sidenav();
   $('.collapsible').collapsible();
   $('.tooltipped').tooltip();
+  $('.modal').modal();
   
   //setInterval(inserirT, 2000);
 });

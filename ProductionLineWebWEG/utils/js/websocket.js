@@ -12,7 +12,7 @@ ws.onmessage = function(evt) {
 };
 
 ws.onclose = function() {
-  alert("Conexão fechada.");
+  //alert("Conexão fechada.");
 };
 
 function sendMessage(message) {
@@ -27,4 +27,5 @@ function cadProcess(){
   let msg = "/cadBaseProcess/" + $("#name_Process").val() + "/../" + $("#description_tx").val() + "/../" + $("#runTime_Process").val();
   sendMessage(msg);
   M.toast({html: 'Processo criado com sucesso!'});
+  $(".t").val(" ");
 }

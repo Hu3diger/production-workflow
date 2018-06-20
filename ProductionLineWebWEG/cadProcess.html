@@ -43,39 +43,103 @@
 
   <!-- Page content -->
   <div class="row">
-    <form class="col s12 m4 offset-m4 mt">
-      <div class="row">
-        <div class="col s12">
-          <div class="input-field">
-            <input id="name_Process" type="text" class="validate">
-            <label for="name_Process">Nome</label>
-          </div>
-        </div>
+    <div class="row">
+      <div class="col s12 m2 offset-m2 mt">
+          <a class="btn-floating btn-large waves-effect waves-light red tooltipped modal-trigger" data-position="top" data-tooltip="Criar nova esteira" onclick="showModal();" href="#modal1"><i class="material-icons">add</i></a>
       </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="input-field">
-            <textarea id="description_tx" class="materialize-textarea"></textarea>
-            <label for="description_tx">Descrição do processo</label>
-          </div>
-        </div>
+    </div>
+    <div id="modal1" class="modal modal1 modal-fixed-footer">
+    </div>
+    <div class="row">
+      <div class="col s12 m8 offset-m2">
+        <ul class="collapsible">
+          <li>
+            <div class="collapsible-header"><i class="fas fa-pallet t"></i>Esteira 1</div>
+            <div class="collapsible-body">
+              <table class="responsive-table">
+                <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Item</th>
+                      <th>Item</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Alvin</td>
+                    <td>Eclair</td>
+                    <td>$0.87</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="fas fa-pallet t"></i>Esteira 2</div>
+            <div class="collapsible-body">
+              <table class="responsive-table">
+                <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Item</th>
+                      <th>Item</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Alvin</td>
+                    <td>Eclair</td>
+                    <td>$0.87</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="fas fa-pallet t"></i>Esteira 3</div>
+            <div class="collapsible-body">
+              <table class="responsive-table">
+                <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Item</th>
+                      <th>Item</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Alvin</td>
+                    <td>Eclair</td>
+                    <td>$0.87</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="fas fa-pallet t"></i>Esteira 4</div>
+            <div class="collapsible-body">
+              <table class="responsive-table">
+                <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Item</th>
+                      <th>Item</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Alvin</td>
+                    <td>Eclair</td>
+                    <td>$0.87</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+        </ul>
       </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="input-field">
-            <input id="runTime_Process" type="number" class="validate">
-            <label for="runTime_Process">Tempo de execução (ms)</label>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12 m8 offset-m4">
-         <button class="btn waves-effect waves-light right light-blue darken-4" type="submit" onclick="cadProcess()">Cadastrar
-            <i class="material-icons right">send</i>
-          </button>
-       </div>
-      </div>
-    </form>
+    </div>
   </div>
 
 
@@ -83,6 +147,7 @@
   <script src="utils/js/jquery-3.3.1.min.js"></script>
   <script src="utils/js/materialize.min.js"></script>
   <script src="utils/js/main.js"></script>
+  <script src="utils/js/process.js"></script>
   <script src="utils/js/websocket.js"></script>
 </body>
 
