@@ -76,15 +76,15 @@ namespace ProductionLineServerWEG
             return _processos.Count == 0;
         }
         /// <summary>
-        /// Armazena quem é o pai do processo
+        /// returna quem é o pai do processo (nulo ne não tiver)
         /// </summary>
         /// <param name="p">Processo a ser declarado api</param>
-        public void insertFather(Processo p)
+        public Processo getFather()
         {
-            _father = p;
+            return _father;
         }
         /// <summary>
-        /// Procura pelo processo esspecificado dentro do processso a ser executado.
+        /// Adiciona o processo esspecificado dentro do processso a ser executado.
         /// </summary>
         /// <param name="nameProcess">Nome do processo a ser pesquisado (Name)</param>
         public void AddInternalProcess(int index, Processo process)
@@ -98,16 +98,31 @@ namespace ProductionLineServerWEG
                     throw new Exception("Wrong Position");
                 }
 
-                process.insertFather(this);
+                process._father = this;
 
                 _processos.Insert(index, process);
             }
             else
             {
-                process.insertFather(this);
+                process._father = this;
 
                 _processos.Add(process);
             }
+
+            ReorderCascade();
+        }
+        public void ReorderCascade()
+        {
+            if (_father != null)
+            {
+                this._cascade = _father._cascade + 1;
+            }
+            else
+            {
+                this._cascade = 0;
+            }
+
+            _processos.ForEach(x => x.ReorderCascade());
         }
         /// <summary>
         /// Retorna o Processo especificado buscando dentro do processso a ser executado.
@@ -173,10 +188,10 @@ namespace ProductionLineServerWEG
         {
             List<Processo> p = new List<Processo>();
 
+            p.Add(this);
             for (int i = 0; i < _processos.Count; i++)
             {
-                _processos[i].GetInternalOrderProcess();
-                p.Add(_processos[i]);
+                _processos[i].GetInternalOrderProcess().ForEach(x => p.Add(x));
             }
 
             return p;

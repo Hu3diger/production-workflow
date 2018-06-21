@@ -30,3 +30,5 @@ E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLine
 E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.csproj.CopyComplete
 E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.exe
 E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.pdb
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.Form1.resources
+D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.csproj.GenerateResource.cache

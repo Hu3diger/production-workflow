@@ -164,7 +164,7 @@ namespace ProductionLineServerWEG
                         break;
 
                     case "list":
-                        p1.GetInternalOrderProcess().ForEach(x => WriteLine(x.Order + " | " + x.Name));
+                        p1.GetInternalOrderProcess().ForEach(x => WriteLine(x.Order + " | " + x.Cascade + " | " + x.Name));
                         break;
 
                     case "listthis":
@@ -193,7 +193,7 @@ namespace ProductionLineServerWEG
                 Console.ReadKey();
                 Console.Clear();
             }
-        nha:
+            nha:
             WriteLine("End...");
         }
 
