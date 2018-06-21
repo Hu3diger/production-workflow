@@ -2,8 +2,7 @@ function showModal() {
     $("#modal1").append('\
       <div class="modal-content">\
         <h5>Cadastrar nova esteira</h5>\
-        <div class="row">\
-        </div>\
+        <div class="row"></div>\
         <div class="row">\
         <div class="input-field col s12 m10 offset-m1">\
           <input id="name" type="text" class="validate">\

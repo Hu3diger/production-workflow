@@ -1,5 +1,5 @@
 ﻿var ws;
-ws = new WebSocket("ws://localhost:8085/client");
+ws = new WebSocket("ws://10.197.9.168:8085/client");
 
 ws.onopen = function() {
   alert("Conectado com sucesso!");
