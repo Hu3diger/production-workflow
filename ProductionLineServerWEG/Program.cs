@@ -43,16 +43,16 @@ namespace ProductionLineServerWEG
 
 
 
-        static void Main(string[] args)
-        {
-            var wssv = new WebSocketServer("ws://localhost:8085");
-            wssv.AddWebSocketService<ClienteServer>("/client");
-            wssv.Start();
-            Console.WriteLine("Server started...");
-            Console.ReadKey(true);
-            wssv.Stop();
-            Console.WriteLine("Server stopped");
-            Console.ReadKey();
-        }
+        //static void Main(string[] args)
+        //{
+        //     var wssv = new WebSocketServer("ws://localhost:8085");
+        //     wssv.AddWebSocketService<ClienteServer>("/client");
+        //     wssv.Start();
+        //     Console.WriteLine("Server started...");
+        //     Console.ReadKey(true);
+        //     wssv.Stop();
+        //     Console.WriteLine("Server stopped");
+        //     Console.ReadKey();
+        //}
     }
 }
