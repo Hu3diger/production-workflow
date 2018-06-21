@@ -44,8 +44,8 @@
             this.nomeP = new System.Windows.Forms.TextBox();
             this.BtnCriaProcesso = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -96,7 +96,7 @@
             // 
             // BtnListProcesso
             // 
-            this.BtnListProcesso.Location = new System.Drawing.Point(53, 348);
+            this.BtnListProcesso.Location = new System.Drawing.Point(53, 350);
             this.BtnListProcesso.Name = "BtnListProcesso";
             this.BtnListProcesso.Size = new System.Drawing.Size(158, 23);
             this.BtnListProcesso.TabIndex = 24;
@@ -106,7 +106,7 @@
             // 
             // BtnInsertProcesso
             // 
-            this.BtnInsertProcesso.Location = new System.Drawing.Point(53, 319);
+            this.BtnInsertProcesso.Location = new System.Drawing.Point(53, 321);
             this.BtnInsertProcesso.Name = "BtnInsertProcesso";
             this.BtnInsertProcesso.Size = new System.Drawing.Size(158, 23);
             this.BtnInsertProcesso.TabIndex = 23;
@@ -117,7 +117,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(124, 215);
+            this.label4.Location = new System.Drawing.Point(124, 216);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(15, 13);
             this.label4.TabIndex = 22;
@@ -126,7 +126,7 @@
             // listBox2
             // 
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(53, 231);
+            this.listBox2.Location = new System.Drawing.Point(53, 233);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(158, 82);
             this.listBox2.TabIndex = 21;
@@ -138,6 +138,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(158, 82);
             this.listBox1.TabIndex = 20;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -209,19 +210,19 @@
             this.tabPage2.Text = "Esteiras";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(111, 6);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 1;
-            // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(111, 32);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 20);
             this.textBox2.TabIndex = 2;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(111, 6);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 1;
             // 
             // Form1
             // 
