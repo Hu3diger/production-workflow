@@ -46,7 +46,7 @@
   <div class="row">
     <div class="row">
       <div class="col s12 m2 offset-m2 mt">
-          <a class="btn-floating btn-large waves-effect waves-light red tooltipped modal-trigger" data-position="top" data-tooltip="Criar nova esteira" onclick="showModal();" href="#modal1"><i class="material-icons">add</i></a>
+          <a class="btn-floating btn-large waves-effect waves-light red tooltipped modal-trigger" data-position="top" data-tooltip="Criar novo processo" onclick="showModal();" href="#modal1"><i class="material-icons">add</i></a>
       </div>
     </div>
     <div id="modal1" class="modal modal1 modal-fixed-footer">
@@ -55,14 +55,19 @@
       <div class="col s12 m8 offset-m2">
         <ul class="collapsible">
           <li>
-            <div class="collapsible-header"><i class="fas fa-cogs t"></i>Processo 1</div>
+            <div class="collapsible-header">
+              <div class="col s12 m12">
+                <i class="fas fa-cogs t"></i>Processo 1
+                <i class="fas fa-trash-alt right cpd"></i>
+              </div>
+            </div>
             <div class="collapsible-body">
               <table class="responsive-table">
                 <thead>
                   <tr>
-                      <th>Name</th>
-                      <th>Item</th>
-                      <th>Item</th>
+                      <th>Nome</th>
+                      <th>Descrição</th>
+                      <th width=200>Tempo Execução (ms)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -76,14 +81,19 @@
             </div>
           </li>
           <li>
-            <div class="collapsible-header"><i class="fas fa-cogs t"></i>Processo 2</div>
+            <div class="collapsible-header">
+              <div class="col s12 m12">
+                <i class="fas fa-cogs t"></i>Processo 2
+                <a href="modal2.html"><i class="fas fa-trash-alt right cpd"></i></a>
+              </div>
+            </div>
             <div class="collapsible-body">
               <table class="responsive-table">
                 <thead>
                   <tr>
-                      <th>Name</th>
-                      <th>Item</th>
-                      <th>Item</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th width=200>Tempo Execução (ms)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -97,14 +107,19 @@
             </div>
           </li>
           <li>
-            <div class="collapsible-header"><i class="fas fa-cogs t"></i>Processo 3</div>
+            <div class="collapsible-header">
+              <div class="col s12 m12">
+                <i class="fas fa-cogs t"></i>Processo 3
+                <i class="fas fa-trash-alt right cpd"></i>
+              </div>
+            </div>
             <div class="collapsible-body">
               <table class="responsive-table">
                 <thead>
                   <tr>
-                      <th>Name</th>
-                      <th>Item</th>
-                      <th>Item</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th width=200>Tempo Execução (ms)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -118,24 +133,51 @@
             </div>
           </li>
           <li>
-            <div class="collapsible-header"><i class="fas fa-cogs t"></i>Processo 4</div>
+            <div class="collapsible-header">
+              <div class="col s12 m12">
+                <i class="fas fa-cogs t"></i>Processo 4
+                <i class="fas fa-trash-alt right cpd"></i>
+              </div>
+            </div>
             <div class="collapsible-body">
-              <table class="responsive-table">
-                <thead>
-                  <tr>
-                      <th>Name</th>
-                      <th>Item</th>
-                      <th>Item</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Alvin</td>
-                    <td>Eclair</td>
-                    <td>$0.87</td>
-                  </tr>
-                </tbody>
-              </table>
+                <table class="responsive-table">
+                    <thead>
+                      <tr>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th width=200>Tempo Execução (ms)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Alvin</td>
+                        <td>Eclair</td>
+                        <td>$0.87</td>
+                      </tr>
+                    </tbody>
+                  </table>
+              <ul class="collapsible">
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+                  <div class="collapsible-body">
+                      <table class="responsive-table">
+                          <thead>
+                            <tr>
+                              <th>Nome</th>
+                              <th>Descrição</th>
+                              <th width=200>Tempo Execução (ms)</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Alvin</td>
+                              <td>Eclair</td>
+                              <td>$0.87</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                  </div>
+                </li>
             </div>
           </li>
         </ul>

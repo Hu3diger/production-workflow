@@ -1,36 +1,37 @@
 function showModal() {
     $("#modal1").append('\
     <div class="modal-content">\
-    <h5>Cadastrar nova esteira</h5>\
-    <div class="row">\
-    <div class="col s12">\
-      <div class="input-field t">\
-        <input id="name_Process" type="text" class="validate">\
-        <label for="name_Process">Nome</label>\
+        <h5>Cadastrar nova esteira</h5>\
+        <div class="row"></div>\
+        <div class="row">\
+          <div class="input-field col s12 m10 offset-m1">\
+            <input id="name_Process" type="text" class="validate">\
+            <label for="name_Process">Nome</label>\
+          </div>\
+        </div>\
+        <div class="row">\
+          <div class="input-field col s12 m10 offset-m1">\
+            <textarea id="description_tx" class="materialize-textarea"></textarea>\
+            <label for="description_tx">Descrição do processo</label>\
+          </div>\
+        </div>\
+        <div class="row">\
+          <div class="input-field col s12 m10 offset-m1">\
+            <input id="runTime_Process" type="number" class="validate">\
+            <label for="runTime_Process">Tempo de execução (ms)</label>\
+          </div>\
+        </div>\
+        <div class="row">\
+          <div class="col s12 m8 l8 offset-m2 offset-l2">\
+            <div class="error-div left warning left-align">\
+            </div>\
+          </div>\
+        </div>\
       </div>\
-    </div>\
-    </div>\
-    <div class="row">\
-    <div class="col s12">\
-      <div class="input-field t">\
-        <textarea id="description_tx" class="materialize-textarea"></textarea>\
-        <label for="description_tx">Descrição do processo</label>\
-      </div>\
-    </div>\
-    </div>\
-    <div class="row">\
-    <div class="col s12">\
-      <div class="input-field t">\
-        <input id="runTime_Process" type="number" class="validate">\
-        <label for="runTime_Process">Tempo de execução (ms)</label>\
-      </div>\
-    </div>\
-    </div>\
-    <div class="modal-footer">\
+      <div class="modal-footer">\
         <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="dimissModal(\'modal1\');">Cancelar</a>\
         <a href="#!" class="waves-effect waves-green btn-flat" onclick="dimissModal(\'modal1\');">Salvar</a>\
-    </div>\
-    </div>\
+      </div>\
     ');
     $('select').formSelect();
 
