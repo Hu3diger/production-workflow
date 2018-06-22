@@ -55,19 +55,21 @@
             this.label5 = new System.Windows.Forms.Label();
             this.InLimitE = new System.Windows.Forms.TextBox();
             this.NomeE = new System.Windows.Forms.TextBox();
-            this.BtnPreLoadProcess = new System.Windows.Forms.Button();
             this.tabPeca = new System.Windows.Forms.TabPage();
+            this.BtnPreLoadProcess = new System.Windows.Forms.Button();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabTal = new System.Windows.Forms.TabPage();
             this.tabControle = new System.Windows.Forms.TabPage();
-            this.BtnInsertPiece = new System.Windows.Forms.Button();
             this.listBox5 = new System.Windows.Forms.ListBox();
+            this.BtnInsertPiece = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.BtnStop = new System.Windows.Forms.ToolStripButton();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.BtnStart = new System.Windows.Forms.ToolStripButton();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.BtnStop = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.BtnLigarE = new System.Windows.Forms.Button();
+            this.BtnDesligarE = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabProcesso.SuspendLayout();
             this.tabEsteiras.SuspendLayout();
@@ -243,7 +245,7 @@
             this.tabEsteiras.Location = new System.Drawing.Point(4, 22);
             this.tabEsteiras.Name = "tabEsteiras";
             this.tabEsteiras.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEsteiras.Size = new System.Drawing.Size(263, 453);
+            this.tabEsteiras.Size = new System.Drawing.Size(263, 437);
             this.tabEsteiras.TabIndex = 1;
             this.tabEsteiras.Text = "Esteiras";
             this.tabEsteiras.UseVisualStyleBackColor = true;
@@ -334,6 +336,16 @@
             this.NomeE.Size = new System.Drawing.Size(100, 20);
             this.NomeE.TabIndex = 1;
             // 
+            // tabPeca
+            // 
+            this.tabPeca.Location = new System.Drawing.Point(4, 22);
+            this.tabPeca.Name = "tabPeca";
+            this.tabPeca.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPeca.Size = new System.Drawing.Size(263, 437);
+            this.tabPeca.TabIndex = 2;
+            this.tabPeca.Text = "Peça";
+            this.tabPeca.UseVisualStyleBackColor = true;
+            // 
             // BtnPreLoadProcess
             // 
             this.BtnPreLoadProcess.Location = new System.Drawing.Point(53, 6);
@@ -343,16 +355,6 @@
             this.BtnPreLoadProcess.Text = "Pré Load Processos";
             this.BtnPreLoadProcess.UseVisualStyleBackColor = true;
             this.BtnPreLoadProcess.Click += new System.EventHandler(this.BtnPreLoadProcess_Click);
-            // 
-            // tabPeca
-            // 
-            this.tabPeca.Location = new System.Drawing.Point(4, 22);
-            this.tabPeca.Name = "tabPeca";
-            this.tabPeca.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPeca.Size = new System.Drawing.Size(263, 453);
-            this.tabPeca.TabIndex = 2;
-            this.tabPeca.Text = "Peça";
-            this.tabPeca.UseVisualStyleBackColor = true;
             // 
             // tabControl2
             // 
@@ -377,6 +379,8 @@
             // 
             // tabControle
             // 
+            this.tabControle.Controls.Add(this.BtnDesligarE);
+            this.tabControle.Controls.Add(this.BtnLigarE);
             this.tabControle.Controls.Add(this.listBox5);
             this.tabControle.Controls.Add(this.BtnInsertPiece);
             this.tabControle.Location = new System.Drawing.Point(4, 22);
@@ -387,6 +391,14 @@
             this.tabControle.Text = "Controle";
             this.tabControle.UseVisualStyleBackColor = true;
             // 
+            // listBox5
+            // 
+            this.listBox5.FormattingEnabled = true;
+            this.listBox5.Location = new System.Drawing.Point(53, 6);
+            this.listBox5.Name = "listBox5";
+            this.listBox5.Size = new System.Drawing.Size(158, 82);
+            this.listBox5.TabIndex = 25;
+            // 
             // BtnInsertPiece
             // 
             this.BtnInsertPiece.Location = new System.Drawing.Point(53, 94);
@@ -396,14 +408,6 @@
             this.BtnInsertPiece.Text = "Inserir Peça";
             this.BtnInsertPiece.UseVisualStyleBackColor = true;
             this.BtnInsertPiece.Click += new System.EventHandler(this.BtnInsertPiece_Click);
-            // 
-            // listBox5
-            // 
-            this.listBox5.FormattingEnabled = true;
-            this.listBox5.Location = new System.Drawing.Point(53, 6);
-            this.listBox5.Name = "listBox5";
-            this.listBox5.Size = new System.Drawing.Size(158, 82);
-            this.listBox5.TabIndex = 25;
             // 
             // toolStrip1
             // 
@@ -419,21 +423,6 @@
             this.toolStrip1.TabIndex = 15;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // BtnStop
-            // 
-            this.BtnStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.BtnStop.Image = ((System.Drawing.Image)(resources.GetObject("BtnStop.Image")));
-            this.BtnStop.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.BtnStop.Name = "BtnStop";
-            this.BtnStop.Size = new System.Drawing.Size(23, 22);
-            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(91, 22);
-            this.toolStripLabel1.Text = "Start Simulation";
-            // 
             // BtnStart
             // 
             this.BtnStart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -443,16 +432,51 @@
             this.BtnStart.Size = new System.Drawing.Size(23, 22);
             this.BtnStart.Click += new System.EventHandler(this.BtnStart_Click);
             // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(91, 22);
+            this.toolStripLabel1.Text = "Start Simulation";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // BtnStop
+            // 
+            this.BtnStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.BtnStop.Image = ((System.Drawing.Image)(resources.GetObject("BtnStop.Image")));
+            this.BtnStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.BtnStop.Name = "BtnStop";
+            this.BtnStop.Size = new System.Drawing.Size(23, 22);
+            this.BtnStop.Click += new System.EventHandler(this.BtnStop_Click);
+            // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
             this.toolStripLabel2.Size = new System.Drawing.Size(91, 22);
             this.toolStripLabel2.Text = "Stop Simulation";
             // 
-            // toolStripSeparator1
+            // BtnLigarE
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.BtnLigarE.Location = new System.Drawing.Point(53, 123);
+            this.BtnLigarE.Name = "BtnLigarE";
+            this.BtnLigarE.Size = new System.Drawing.Size(76, 23);
+            this.BtnLigarE.TabIndex = 26;
+            this.BtnLigarE.Text = "Ligar E";
+            this.BtnLigarE.UseVisualStyleBackColor = true;
+            this.BtnLigarE.Click += new System.EventHandler(this.BtnLigarE_Click);
+            // 
+            // BtnDesligarE
+            // 
+            this.BtnDesligarE.Location = new System.Drawing.Point(135, 123);
+            this.BtnDesligarE.Name = "BtnDesligarE";
+            this.BtnDesligarE.Size = new System.Drawing.Size(76, 23);
+            this.BtnDesligarE.TabIndex = 27;
+            this.BtnDesligarE.Text = "Desligar E";
+            this.BtnDesligarE.UseVisualStyleBackColor = true;
+            this.BtnDesligarE.Click += new System.EventHandler(this.BtnDesligarE_Click);
             // 
             // Form1
             // 
@@ -520,5 +544,7 @@
         private System.Windows.Forms.ToolStripButton BtnStart;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Button BtnDesligarE;
+        private System.Windows.Forms.Button BtnLigarE;
     }
 }

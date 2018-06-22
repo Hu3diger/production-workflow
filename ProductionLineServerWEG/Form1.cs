@@ -183,5 +183,15 @@ namespace ProductionLineServerWEG
         {
 
         }
+
+        private void BtnLigarE_Click(object sender, EventArgs e)
+        {
+            listEsteiras.Find(x => x.Name.Equals(listBox5.GetItemText(listBox5.SelectedItem))).TurnOn();
+        }
+
+        private void BtnDesligarE_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

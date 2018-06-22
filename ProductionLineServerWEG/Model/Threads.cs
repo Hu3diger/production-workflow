@@ -8,7 +8,14 @@ namespace ProductionLineServerWEG
 {
     class Threads
     {
-        public static void mainThread()
+        private EsteiraAbstrata e;
+
+        public Threads(EsteiraAbstrata e)
+        {
+            this.e = e;
+        }
+
+        public void mainThread()
         {
             if (verificacao())
             {
@@ -18,9 +25,21 @@ namespace ProductionLineServerWEG
             }
         }
 
-        public static bool verificacao()
+        public bool verificacao()
         {
             return true;
+        }
+
+        public void threadEsteira()
+        {
+            while (true)
+            {
+                if (e.executeNextProcesses().Equals("kappa"))
+                {
+                    
+                }
+                Thread.Sleep(100);
+            }
         }
     }
 

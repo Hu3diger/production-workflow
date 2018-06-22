@@ -103,26 +103,26 @@ namespace ProductionLineServerWEG
     {
         public static void TesteProcesso1()
         {
-            Processo p1 = new ProcessoPeca(new BaseProcesso("kappa1", "", 1000));
-            Processo p11 = new ProcessoPeca(new BaseProcesso("kappa11", "", 1000));
-            Processo p111 = new ProcessoPeca(new BaseProcesso("kappa111", "", 1000));
-            Processo p112 = new ProcessoPeca(new BaseProcesso("kappa112", "", 1000));
-            Processo p113 = new ProcessoPeca(new BaseProcesso("kappa113", "", 1000));
-            Processo p1131 = new ProcessoPeca(new BaseProcesso("kappa1131", "", 1000));
-            Processo p12 = new ProcessoPeca(new BaseProcesso("kappa12", "", 1000));
-            Processo p121 = new ProcessoPeca(new BaseProcesso("kappa121", "", 1000));
-            Processo p1211 = new ProcessoPeca(new BaseProcesso("kappa1211", "", 1000));
-            Processo p122 = new ProcessoPeca(new BaseProcesso("kappa122", "", 1000));
-            Processo p1221 = new ProcessoPeca(new BaseProcesso("kappa1221", "", 1000));
-            Processo p123 = new ProcessoPeca(new BaseProcesso("kappa123", "", 1000));
-            Processo p13 = new ProcessoPeca(new BaseProcesso("kappa13", "", 1000));
-            Processo p14 = new ProcessoPeca(new BaseProcesso("kappa14", "", 1000));
-            Processo p141 = new ProcessoPeca(new BaseProcesso("kappa141", "", 1000));
-            Processo p142 = new ProcessoPeca(new BaseProcesso("kappa142", "", 1000));
-            Processo p1421 = new ProcessoPeca(new BaseProcesso("kappa1421", "", 1000));
-            Processo p143 = new ProcessoPeca(new BaseProcesso("kappa143", "", 1000));
-            Processo p15 = new ProcessoPeca(new BaseProcesso("kappa15", "", 1000));
-            Processo p151 = new ProcessoPeca(new BaseProcesso("kappa151", "", 1000));
+            Processo p1 = new Processo(new BaseProcesso("kappa1", "", 1000));
+            Processo p11 = new Processo(new BaseProcesso("kappa11", "", 1000));
+            Processo p111 = new Processo(new BaseProcesso("kappa111", "", 1000));
+            Processo p112 = new Processo(new BaseProcesso("kappa112", "", 1000));
+            Processo p113 = new Processo(new BaseProcesso("kappa113", "", 1000));
+            Processo p1131 = new Processo(new BaseProcesso("kappa1131", "", 1000));
+            Processo p12 = new Processo(new BaseProcesso("kappa12", "", 1000));
+            Processo p121 = new Processo(new BaseProcesso("kappa121", "", 1000));
+            Processo p1211 = new Processo(new BaseProcesso("kappa1211", "", 1000));
+            Processo p122 = new Processo(new BaseProcesso("kappa122", "", 1000));
+            Processo p1221 = new Processo(new BaseProcesso("kappa1221", "", 1000));
+            Processo p123 = new Processo(new BaseProcesso("kappa123", "", 1000));
+            Processo p13 = new Processo(new BaseProcesso("kappa13", "", 1000));
+            Processo p14 = new Processo(new BaseProcesso("kappa14", "", 1000));
+            Processo p141 = new Processo(new BaseProcesso("kappa141", "", 1000));
+            Processo p142 = new Processo(new BaseProcesso("kappa142", "", 1000));
+            Processo p1421 = new Processo(new BaseProcesso("kappa1421", "", 1000));
+            Processo p143 = new Processo(new BaseProcesso("kappa143", "", 1000));
+            Processo p15 = new Processo(new BaseProcesso("kappa15", "", 1000));
+            Processo p151 = new Processo(new BaseProcesso("kappa151", "", 1000));
 
 
             p1.AddInternalProcess(-1, p11);
@@ -203,8 +203,8 @@ namespace ProductionLineServerWEG
 
             BaseProcesso kappa = new BaseProcesso("kaaapa", "", 1000);
 
-            ProcessoPeca p1 = new ProcessoPeca(kappa);
-            ProcessoPeca p2 = new ProcessoPeca(kappa);
+            Processo p1 = new Processo(kappa);
+            Processo p2 = new Processo(kappa);
 
             p1.AddInternalProcess(0, p2);
 
@@ -216,7 +216,7 @@ namespace ProductionLineServerWEG
             WriteLine(p1.Name);
             WriteLine(p1.InProcess);
 
-            ProcessoPeca p3 = (ProcessoPeca)p1.Clone();
+            Processo p3 = (Processo)p1.Clone();
 
             kappa.Name = "Chupisco";
 
