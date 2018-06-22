@@ -276,36 +276,64 @@ namespace ProductionLineServerWEG
         }
     }
 
-    class ProcessoPeca : Processo
+    class ProcessManager
     {
-        private bool _done;
-        private bool _critical;
+        private List<Processo> _listOrdem;
+        private int _ordem;
 
-        public bool Done { get => _done; set => _done = value; }
-        public bool Critical { get => _critical; }
-
-        public ProcessoPeca(BaseProcesso baseProcess) : base(baseProcess)
+        public ProcessManager(Processo process)
         {
-            _critical = false;
-            _done = false;
+            _listOrdem = process.GetInternalOrderProcess();
+            _ordem = 0;
+        }
+
+        public void Reset()
+        {
+            _ordem = 0;
+        }
+
+        public Processo Next()
+        {
+            for (; _ordem < _listOrdem.Count; _ordem++)
+            {
+
+                if (_listOrdem[_ordem].Cascade > _listOrdem[_ordem - 1].Cascade)
+                {
+                    if (_listOrdem[_ordem].IsFinalProcess())
+                    {
+                        _listOrdem[_ordem].InProcess = true;
+                        _ordem++;
+                        return _listOrdem[_ordem - 1];
+                    }
+                }else if (_listOrdem[_ordem].Cascade == _listOrdem[_ordem - 1].Cascade)
+                {
+                    _listOrdem[_ordem - 1].InProcess = false;
+                    _ordem++;
+                    return _listOrdem[_ordem - 1];
+                }
+                else
+                {
+                    int i;
+                    for (i = _ordem - 1; _listOrdem[i].Cascade != _listOrdem[_ordem].Cascade; i--)
+                    {
+                        _listOrdem[i].InProcess = false;
+                    }
+                    
+                    _listOrdem[i].InProcess = false;
+
+                    // estuda isso
+                }
+
+                _listOrdem[_ordem].InProcess = true;
+            }
+
+            return null;
         }
     }
 
-    class ProcessoEsteira : Processo
+    class ProcessControl
     {
-        private int _pass;
 
-        public int Pass { get => _pass; }
-
-        public ProcessoEsteira(BaseProcesso baseProcess) : base(baseProcess)
-        {
-            _pass = 0;
-        }
-
-        public void IncrementPass()
-        {
-            _pass++;
-        }
     }
 
 

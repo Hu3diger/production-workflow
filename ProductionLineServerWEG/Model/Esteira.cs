@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ProductionLineServerWEG
 {
@@ -17,6 +18,8 @@ namespace ProductionLineServerWEG
         protected Queue<Peca> _queueOutputPecas;
 
         private Processo _processMaster;
+
+        private Thread thread;
 
         private List<EsteiraAbstrata> _esteiraOutput;
 
@@ -88,7 +91,11 @@ namespace ProductionLineServerWEG
         /// </returns>
         public Peca GetInputPieceNoRemove()
         {
-            return _queueInputPecas.Peek();
+            if (_queueInputPecas.Count != 0)
+            {
+                return _queueInputPecas.Peek();
+            }
+            return null;
         }
         /// <summary>
         /// Retorna o total de peça na fila da esteira.
@@ -105,7 +112,25 @@ namespace ProductionLineServerWEG
         /// </summary>
         public void TurnOn()
         {
+
+            cleanThread();
+
+            Threads t = new Threads(this);
+
+            thread = new Thread(t.threadEsteira);
+
+            thread.Start();
+
             Ligado = true;
+        }
+        private void cleanThread()
+        {
+            if (thread != null)
+            {
+                thread.Abort();
+            }
+
+            thread = null;
         }
         /// <summary>
         /// Desliga a esteira e impossibilita o trabalho dela
@@ -113,10 +138,16 @@ namespace ProductionLineServerWEG
         public void TurnOff()
         {
             Ligado = false;
-        }
-        public void executeProcesses()
-        {
 
+            cleanThread();
+        }
+        private Processo getNextProcess()
+        {
+            return null;
+        }
+        public string executeNextProcesses()
+        {
+            return "kappa";
         }
     }
 
