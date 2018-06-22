@@ -1,16 +1,31 @@
-$(document).ready(function () {
-  $('.sidenav').sidenav();
-  $('.collapsible').collapsible();
-  $('.tooltipped').tooltip();
-  $('.modal').modal();
-  
+$(document).ready(function() {
+  $(".sidenav").sidenav();
+  $(".collapsible").collapsible();
+  $(".tooltipped").tooltip();
+  $(".modal").modal();
+
   //setInterval(inserirT, 2000);
 });
+
+function enable() {
+
+  if ($("#name").attr("disabled")) {
+
+    $('#name').removeAttr("disabled");
+    $('#desc').removeAttr("disabled");
+    $('#temp').removeAttr("disabled");
+
+  } else {
+    $('#name').attr({disabled: "disabled"});
+    $('#desc').attr({disabled: "disabled"});
+    $('#temp').attr({disabled: "disabled"});
+  }
+}
 
 var json = [];
 
 function inserirT(m, c) {
-  $("#xuxu").html('');
+  $("#xuxu").html("");
   let teste = {
     horario: getHorario(),
     mensagem: m,
@@ -24,14 +39,21 @@ function inserirT(m, c) {
     }
   }
 
-  $(json).each(function () {
-    let btn = '';
-    if(this.critico){
+  $(json).each(function() {
+    let btn = "";
+    if (this.critico) {
       btn = '<a href="#">Details</a>';
     }
-    $("#xuxu").append("<tr><td>" + this.horario + "</td><td>" + this.mensagem + "</td><td>" + btn + "</td></tr>");
+    $("#xuxu").append(
+      "<tr><td>" +
+        this.horario +
+        "</td><td>" +
+        this.mensagem +
+        "</td><td>" +
+        btn +
+        "</td></tr>"
+    );
   });
-
 }
 function getHorario() {
   let today = new Date();
@@ -42,20 +64,20 @@ function getHorario() {
   let mn = today.getMinutes();
   let ss = today.getSeconds();
   if (dd < 10) {
-    dd = '0' + dd
+    dd = "0" + dd;
   }
   if (mm < 10) {
-    mm = '0' + mm
+    mm = "0" + mm;
   }
   if (hh < 10) {
-    hh = '0' + hh
+    hh = "0" + hh;
   }
   if (mn < 10) {
-    mn = '0' + mn
+    mn = "0" + mn;
   }
   if (ss < 10) {
-    ss = '0' + ss
+    ss = "0" + ss;
   }
-  today = mm + '/' + dd + '/' + yyyy + ' - ' + hh + ':' + mn + ':' + ss;
+  today = mm + "/" + dd + "/" + yyyy + " - " + hh + ":" + mn + ":" + ss;
   return today;
 }

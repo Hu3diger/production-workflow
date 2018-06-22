@@ -17,3 +17,18 @@
 .cpd{
 	color: red;
 }
+
+.kk{
+	padding: 0;
+	padding-left: 10%;
+	padding-top: 4%;
+}
+
+.op{
+	padding-left:  0 !important;
+}
+
+.h{
+	margin: 0 !important;
+	width: 20px !important;
+}
