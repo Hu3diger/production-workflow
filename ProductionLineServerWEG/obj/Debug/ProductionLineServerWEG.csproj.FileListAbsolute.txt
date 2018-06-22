@@ -32,3 +32,6 @@ E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLine
 E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.pdb
 D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.Form1.resources
 D:\Projetos\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.csproj.GenerateResource.cache
+E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.Form1.resources
+E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.csproj.GenerateResource.cache
+E:\Dados\GitHub\ProductionLines\ProductionLineServerWEG\obj\Debug\ProductionLineServerWEG.Properties.Resources.resources

@@ -10,11 +10,13 @@ namespace ProductionLineServerWEG
     abstract class EsteiraAbstrata
     {
         private static int _countId = 1;
-        
+
         private int _inputUse;
 
         protected Queue<Peca> _queueInputPecas;
         protected Queue<Peca> _queueOutputPecas;
+
+        private Processo _processMaster;
 
         private List<EsteiraAbstrata> _esteiraOutput;
 
@@ -55,6 +57,10 @@ namespace ProductionLineServerWEG
 
             _esteiraOutput = new List<EsteiraAbstrata>();
         }
+        public void insertMasterProcess(Processo p)
+        {
+            _processMaster = (Processo)p.Clone();
+        }
         /// <summary>
         /// Insere uma peça na lista e retorna se foi possivel ou não
         /// </summary>
@@ -69,77 +75,11 @@ namespace ProductionLineServerWEG
             {
                 _queueInputPecas.Enqueue(peca);
                 _inputUse++;
+                return true;
             }
 
-            return !BlockedEsteira;
+            return false;
         }
-
-        //public void EnterInNextProcess()
-        //{
-        //    _controlProcess.OrderBy(x => x.Order).ToList().ForEach(x => 
-        //    {
-        //        if (x.Order != 0)
-        //        {
-        //
-        //        }
-        //        else
-        //        {
-        //            if (x.Process.CurrentPiece != null)
-        //            {
-        //                setInProcess(x, _queueInputPecas.Dequeue());
-        //            }
-        //        }
-        //    });
-        //}
-        //
-        //protected Boolean OutputPieceSuccess(EsteiraAbstrata esteira)
-        //{
-        //    if (!esteira.BlockedEsteira)
-        //    {
-        //        esteira.InsertPiece(_queuePecas.Dequeue());
-        //        _produced++;
-        //        _success++;
-        //        _inputUse--;
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
-        //
-        //protected Boolean OutputPieceFail(EsteiraAbstrata esteira)
-        //{
-        //    if (!esteira.BlockedEsteira)
-        //    {
-        //        esteira.InsertPiece(_queuePecas.Dequeue());
-        //        _produced++;
-        //        _fail++;
-        //        _inputUse--;
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
-        //
-        //protected Boolean OutputPieceDefault(EsteiraAbstrata esteira, Boolean success)
-        //{
-        //    if (!esteira.BlockedEsteira)
-        //    {
-        //        esteira.InsertPiece(_queuePecas.Dequeue());
-        //        _produced++;
-        //        _fail++;
-        //        _inputUse--;
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
-
         /// <summary>
         /// Retorna a primeira peça na fila da esteira sem remove-la da fila
         /// </summary>
@@ -173,6 +113,10 @@ namespace ProductionLineServerWEG
         public void TurnOff()
         {
             Ligado = false;
+        }
+        public void executeProcesses()
+        {
+
         }
     }
 
@@ -218,24 +162,24 @@ namespace ProductionLineServerWEG
 
         void PieceTagged(EsteiraAbstrata esteira)
         {
-         //   OutputPieceSuccess(esteira);
+            //   OutputPieceSuccess(esteira);
         }
     }
 
-    class EsteiraVerificacao : EsteiraAbstrata
+    class EsteiraDesvio : EsteiraAbstrata
     {
-        public EsteiraVerificacao(string name, int limite) : base(name, limite)
+        public EsteiraDesvio(string name, int limite) : base(name, limite)
         {
         }
 
         void PiecePass(EsteiraAbstrata esteira)
         {
-        //    OutputPieceSuccess(esteira);
+            //    OutputPieceSuccess(esteira);
         }
 
         void PieceError(EsteiraAbstrata esteira)
         {
-        //    OutputPieceFail(esteira);
+            //    OutputPieceFail(esteira);
         }
     }
 }
