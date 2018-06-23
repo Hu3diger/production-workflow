@@ -14,21 +14,21 @@
 	color: #0d47a1 ;
 }
 
-.cpd{
-	color: red;
-}
-
-.kk{
+.padd{
 	padding: 0;
 	padding-left: 10%;
 	padding-top: 4%;
 }
 
-.op{
+.padl{
 	padding-left:  0 !important;
 }
 
-.h{
+.mw{
 	margin: 0 !important;
 	width: 20px !important;
+}
+
+.haha{
+	color: orange;
 }

@@ -3,6 +3,7 @@ $(document).ready(function() {
   $(".collapsible").collapsible();
   $(".tooltipped").tooltip();
   $(".modal").modal();
+  $(".collapsible-header").on("click", exibeInfo);
 
   //setInterval(inserirT, 2000);
 });
@@ -14,11 +15,13 @@ function enable() {
     $('#name').removeAttr("disabled");
     $('#desc').removeAttr("disabled");
     $('#temp').removeAttr("disabled");
+    $('#button').removeAttr("disabled");
 
   } else {
     $('#name').attr({disabled: "disabled"});
     $('#desc').attr({disabled: "disabled"});
     $('#temp').attr({disabled: "disabled"});
+    $('#button').attr({disabled: "disabled"});
   }
 }
 

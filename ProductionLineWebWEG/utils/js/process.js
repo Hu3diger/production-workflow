@@ -45,6 +45,47 @@ function showModal() {
     })
 }
 
+function exibeInfo(){
+  // let name = $(this).children().text().replace(/\s/g, '');
+  let name = $(this).children().data("text");
+  if (void 0 !== name) {
+    console.log(name);
+    $('#info').html('\
+    <div class="row">\
+    <form class="col s12">\
+      <div class="row">\
+        <div class="input-field col s12 m8 offset-m2">\
+          <input disabled value="'+ name +'" id="name" type="text" class="validate">\
+          <label class="active" for="name">Nome</label>\
+        </div>\
+        <div class="input-field col s12 m8 offset-m2">\
+          <input disabled value="Teste 123" id="desc" type="text" class="validate">\
+          <label class="active" for="desc">Descrição do processo</label>\
+        </div>\
+      </div>\
+      <div class="row">\
+        <div class="input-field col s12 m8 offset-m2">\
+          <input disabled value="333" id="temp" type="text" class="validate active">\
+          <label class="active" for="temp">Tempo de execução (ms)</label>\
+        </div>\
+      </div>\
+      <div class="row">\
+        <div class="col s12 m8 offset-m2">\
+          <a>\
+            <label>\
+              <input class="indeterminate-checkbox" onchange="enable();" type="checkbox" />\
+              <span>Editar</span>\
+            </label>\
+          </a>\
+          <a class="waves-effect waves-light btn right blue darken-4" disabled id="button"><i class="material-icons left">sd_card</i>salvar</a>\
+        </div>\
+      </div>\
+    </form>\
+  </div>\
+  ');
+  }
+}
+
 function dimissModal(Tipo) {
     $('.' + Tipo + '').modal("close");
     $("#" + Tipo + "").html("");
