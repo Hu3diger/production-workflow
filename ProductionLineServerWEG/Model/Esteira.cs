@@ -17,9 +17,8 @@ namespace ProductionLineServerWEG
         protected Queue<Peca> _queueInputPecas;
         protected Queue<Peca> _queueOutputPecas;
 
-        private Processo _processMaster;
-
         private Thread thread;
+
 
         private List<EsteiraAbstrata> _esteiraOutput;
 
@@ -60,10 +59,6 @@ namespace ProductionLineServerWEG
 
             _esteiraOutput = new List<EsteiraAbstrata>();
         }
-        public void insertMasterProcess(Processo p)
-        {
-            _processMaster = (Processo)p.Clone();
-        }
         /// <summary>
         /// Insere uma peça na lista e retorna se foi possivel ou não
         /// </summary>
@@ -83,6 +78,18 @@ namespace ProductionLineServerWEG
 
             return false;
         }
+
+        public Peca RemovePiece()
+        {
+            Peca p = _queueInputPecas.Dequeue();
+
+            if (p != null)
+            {
+                _inputUse--;
+            }
+
+            return p;
+        }
         /// <summary>
         /// Retorna a primeira peça na fila da esteira sem remove-la da fila
         /// </summary>
@@ -91,10 +98,11 @@ namespace ProductionLineServerWEG
         /// </returns>
         public Peca GetInputPieceNoRemove()
         {
-            if (_queueInputPecas.Count != 0)
+            if (CountInputPieces() != 0)
             {
                 return _queueInputPecas.Peek();
             }
+
             return null;
         }
         /// <summary>
@@ -110,12 +118,12 @@ namespace ProductionLineServerWEG
         /// <summary>
         /// Liga a esteira e possibilita o trabalho dela
         /// </summary>
-        public void TurnOn()
+        public void TurnOn(Form1 f)
         {
 
             cleanThread();
 
-            Threads t = new Threads(this);
+            Threads t = new Threads(this, f);
 
             thread = new Thread(t.threadEsteira);
 
@@ -123,6 +131,7 @@ namespace ProductionLineServerWEG
 
             Ligado = true;
         }
+
         private void cleanThread()
         {
             if (thread != null)
@@ -141,20 +150,49 @@ namespace ProductionLineServerWEG
 
             cleanThread();
         }
-        private Processo getNextProcess()
-        {
-            return null;
-        }
-        public string executeNextProcesses()
-        {
-            return "kappa";
-        }
+
+        public abstract bool executeNextProcesses();
     }
 
     class EsteiraModel : EsteiraAbstrata
     {
+
+        private Processo _processMaster;
+        private ProcessManager _processManager;
+
         public EsteiraModel(string name, int limite) : base(name, limite)
         {
+        }
+
+        public void insertMasterProcess(Processo p)
+        {
+            _processMaster = (Processo)p.Clone();
+            _processManager = new ProcessManager(_processMaster);
+        }
+
+        public bool IsInCondition()
+        {
+            return _processManager != null && _processMaster != null;
+        }
+
+        public bool hasNextProcess()
+        {
+            return _processManager.hasNext();
+        }
+
+        public void resetProcess()
+        {
+            _processManager.Reset();
+        }
+
+        public Processo nextProcess()
+        {
+            return _processManager.Next();
+        }
+
+        public override bool executeNextProcesses()
+        {
+            return false;
         }
     }
 
@@ -172,6 +210,11 @@ namespace ProductionLineServerWEG
         public List<Peca> List()
         {
             return _queueInputPecas.ToList();
+        }
+
+        public override bool executeNextProcesses()
+        {
+            return false;
         }
     }
 
@@ -195,6 +238,11 @@ namespace ProductionLineServerWEG
         {
             //   OutputPieceSuccess(esteira);
         }
+
+        public override bool executeNextProcesses()
+        {
+            return false;
+        }
     }
 
     class EsteiraDesvio : EsteiraAbstrata
@@ -211,6 +259,11 @@ namespace ProductionLineServerWEG
         void PieceError(EsteiraAbstrata esteira)
         {
             //    OutputPieceFail(esteira);
+        }
+
+        public override bool executeNextProcesses()
+        {
+            return false;
         }
     }
 }

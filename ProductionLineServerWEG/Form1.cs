@@ -30,6 +30,13 @@ namespace ProductionLineServerWEG
             InitializeComponent();
         }
 
+        public void ExternalTerminal(string msg)
+        {
+            Terminal.Invoke(new MethodInvoker(delegate {
+                Terminal.AppendText(msg);
+            }));
+        }
+
         private void BtnCriaProcesso_Click(object sender, EventArgs e)
         {
             listProcessos.Add(new Processo(new BaseProcesso(nomeP.Text, DescP.Text, int.Parse(RuntimeP.Text))));
@@ -129,7 +136,9 @@ namespace ProductionLineServerWEG
 
         private void BtnInserirPinE_Click(object sender, EventArgs e)
         {
-            listEsteiras.Find(x => x.Name.Equals(listBox4.GetItemText(listBox4.SelectedItem))).insertMasterProcess(listProcessos.Find(x => x.Name.Equals(listBox3.GetItemText(listBox3.SelectedItem))));
+            EsteiraModel em = (EsteiraModel)listEsteiras.Find(x => x.Name.Equals(listBox4.GetItemText(listBox4.SelectedItem)));
+
+            em.insertMasterProcess(listProcessos.Find(x => x.Name.Equals(listBox3.GetItemText(listBox3.SelectedItem))));
 
             Terminal.AppendText("Processo inserido na esteira\n");
 
@@ -145,6 +154,9 @@ namespace ProductionLineServerWEG
             listProcessos.Add(new Processo(new BaseProcesso("e", "Processo qualquer", 1000)));
             listProcessos.Add(new Processo(new BaseProcesso("f", "Processo qualquer", 1000)));
             listProcessos.Add(new Processo(new BaseProcesso("g", "Processo qualquer", 1000)));
+            listProcessos.Add(new Processo(new BaseProcesso("h", "Processo qualquer", 1000)));
+            listProcessos.Add(new Processo(new BaseProcesso("i", "Processo qualquer", 1000)));
+            listProcessos.Add(new Processo(new BaseProcesso("j", "Processo qualquer", 1000)));
 
             listProcessos[0].AddInternalProcess(-1, listProcessos[1]);
             listProcessos[0].AddInternalProcess(-1, listProcessos[3]);
@@ -154,6 +166,11 @@ namespace ProductionLineServerWEG
 
             listProcessos[3].AddInternalProcess(-1, listProcessos[4]);
             listProcessos[3].AddInternalProcess(-1, listProcessos[5]);
+
+            listProcessos[6].AddInternalProcess(-1, listProcessos[7]);
+
+            listProcessos[7].AddInternalProcess(-1, listProcessos[8]);
+            listProcessos[7].AddInternalProcess(-1, listProcessos[9]);
 
             attAllListBox();
 
@@ -186,12 +203,56 @@ namespace ProductionLineServerWEG
 
         private void BtnLigarE_Click(object sender, EventArgs e)
         {
-            listEsteiras.Find(x => x.Name.Equals(listBox5.GetItemText(listBox5.SelectedItem))).TurnOn();
+            listEsteiras.Find(x => x.Name.Equals(listBox5.GetItemText(listBox5.SelectedItem))).TurnOn(this);
         }
 
         private void BtnDesligarE_Click(object sender, EventArgs e)
         {
+            listEsteiras.Find(x => x.Name.Equals(listBox5.GetItemText(listBox5.SelectedItem))).TurnOff();
+        }
 
+        private void BtnTesteProcessManager_Click(object sender, EventArgs e)
+        {
+            ProcessManager pm = new ProcessManager(listProcessos[0]);
+
+            Processo p = null;
+
+            Terminal.AppendText("\nIniciando Teste do ProcessManager\n");
+
+            while (true)
+            {
+                p = pm.Next();
+
+                if (p != null)
+                {
+                    Terminal.AppendText("retorno: " + p.Name + " / " + p.InProcess + "\n");
+                    listProcessos.Where(x => x.getFather() == null).ToList().ForEach(y => y.GetInternalOrderProcess().ForEach(x => escreverListWithInP(x)));
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            Terminal.AppendText("Lista do processos depois da conclusão\n");
+
+            listProcessos.Where(x => x.getFather() == null).ToList().ForEach(y => y.GetInternalOrderProcess().ForEach(x => escreverListWithInP(x)));
+
+            Terminal.AppendText("\nFim do Teste do ProcessManager\n");
+        }
+
+        private void escreverListWithInP(Processo x)
+        {
+            Terminal.AppendText(x.Order + " | ");
+            for (int i = 0; i < x.Cascade; i++)
+            {
+                Terminal.AppendText("   ");
+                if (i == x.Cascade - 1)
+                {
+                    Terminal.AppendText("ட");
+                }
+            }
+            Terminal.AppendText(x.Cascade + " | " + x.Name + " / " + x.InProcess + "\n");
         }
     }
 }

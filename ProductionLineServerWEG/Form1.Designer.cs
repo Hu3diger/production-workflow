@@ -60,6 +60,8 @@
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabTal = new System.Windows.Forms.TabPage();
             this.tabControle = new System.Windows.Forms.TabPage();
+            this.BtnDesligarE = new System.Windows.Forms.Button();
+            this.BtnLigarE = new System.Windows.Forms.Button();
             this.listBox5 = new System.Windows.Forms.ListBox();
             this.BtnInsertPiece = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -68,8 +70,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.BtnStop = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.BtnLigarE = new System.Windows.Forms.Button();
-            this.BtnDesligarE = new System.Windows.Forms.Button();
+            this.BtnTesteProcessManager = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabProcesso.SuspendLayout();
             this.tabEsteiras.SuspendLayout();
@@ -368,6 +369,7 @@
             // 
             // tabTal
             // 
+            this.tabTal.Controls.Add(this.BtnTesteProcessManager);
             this.tabTal.Controls.Add(this.BtnPreLoadProcess);
             this.tabTal.Location = new System.Drawing.Point(4, 22);
             this.tabTal.Name = "tabTal";
@@ -390,6 +392,26 @@
             this.tabControle.TabIndex = 1;
             this.tabControle.Text = "Controle";
             this.tabControle.UseVisualStyleBackColor = true;
+            // 
+            // BtnDesligarE
+            // 
+            this.BtnDesligarE.Location = new System.Drawing.Point(135, 123);
+            this.BtnDesligarE.Name = "BtnDesligarE";
+            this.BtnDesligarE.Size = new System.Drawing.Size(76, 23);
+            this.BtnDesligarE.TabIndex = 27;
+            this.BtnDesligarE.Text = "Desligar E";
+            this.BtnDesligarE.UseVisualStyleBackColor = true;
+            this.BtnDesligarE.Click += new System.EventHandler(this.BtnDesligarE_Click);
+            // 
+            // BtnLigarE
+            // 
+            this.BtnLigarE.Location = new System.Drawing.Point(53, 123);
+            this.BtnLigarE.Name = "BtnLigarE";
+            this.BtnLigarE.Size = new System.Drawing.Size(76, 23);
+            this.BtnLigarE.TabIndex = 26;
+            this.BtnLigarE.Text = "Ligar E";
+            this.BtnLigarE.UseVisualStyleBackColor = true;
+            this.BtnLigarE.Click += new System.EventHandler(this.BtnLigarE_Click);
             // 
             // listBox5
             // 
@@ -458,25 +480,15 @@
             this.toolStripLabel2.Size = new System.Drawing.Size(91, 22);
             this.toolStripLabel2.Text = "Stop Simulation";
             // 
-            // BtnLigarE
+            // BtnTesteProcessManager
             // 
-            this.BtnLigarE.Location = new System.Drawing.Point(53, 123);
-            this.BtnLigarE.Name = "BtnLigarE";
-            this.BtnLigarE.Size = new System.Drawing.Size(76, 23);
-            this.BtnLigarE.TabIndex = 26;
-            this.BtnLigarE.Text = "Ligar E";
-            this.BtnLigarE.UseVisualStyleBackColor = true;
-            this.BtnLigarE.Click += new System.EventHandler(this.BtnLigarE_Click);
-            // 
-            // BtnDesligarE
-            // 
-            this.BtnDesligarE.Location = new System.Drawing.Point(135, 123);
-            this.BtnDesligarE.Name = "BtnDesligarE";
-            this.BtnDesligarE.Size = new System.Drawing.Size(76, 23);
-            this.BtnDesligarE.TabIndex = 27;
-            this.BtnDesligarE.Text = "Desligar E";
-            this.BtnDesligarE.UseVisualStyleBackColor = true;
-            this.BtnDesligarE.Click += new System.EventHandler(this.BtnDesligarE_Click);
+            this.BtnTesteProcessManager.Location = new System.Drawing.Point(53, 408);
+            this.BtnTesteProcessManager.Name = "BtnTesteProcessManager";
+            this.BtnTesteProcessManager.Size = new System.Drawing.Size(158, 23);
+            this.BtnTesteProcessManager.TabIndex = 27;
+            this.BtnTesteProcessManager.Text = "Teste ProcessManager (P a)";
+            this.BtnTesteProcessManager.UseVisualStyleBackColor = true;
+            this.BtnTesteProcessManager.Click += new System.EventHandler(this.BtnTesteProcessManager_Click);
             // 
             // Form1
             // 
@@ -546,5 +558,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Button BtnDesligarE;
         private System.Windows.Forms.Button BtnLigarE;
+        private System.Windows.Forms.Button BtnTesteProcessManager;
     }
 }

@@ -9,10 +9,12 @@ namespace ProductionLineServerWEG
     class Threads
     {
         private EsteiraAbstrata e;
+        private Form1 f;
 
-        public Threads(EsteiraAbstrata e)
+        public Threads(EsteiraAbstrata e, Form1 f)
         {
             this.e = e;
+            this.f = f;
         }
 
         public void mainThread()
@@ -32,13 +34,67 @@ namespace ProductionLineServerWEG
 
         public void threadEsteira()
         {
-            while (true)
+            if (e is EsteiraModel)
             {
-                if (e.executeNextProcesses().Equals("kappa"))
+                EsteiraModel em = (EsteiraModel)e;
+
+                while (true)
                 {
-                    
+                    if (em.IsInCondition())
+                    {
+                        if (em.hasNextProcess())
+                        {
+                            Peca pc = em.GetInputPieceNoRemove();
+
+                            if (pc != null)
+                            {
+                                Processo p = em.nextProcess();
+
+                                f.ExternalTerminal(p.Name + " Executando \n");
+
+                                pc.insertAtributo(p.Name, "Kappa value", Atributo.FAZENDO);
+
+                                Thread.Sleep(p.Runtime);
+
+                                pc.insertAtributo(p.Name, "Kappa value", Atributo.FEITO);
+
+                                f.ExternalTerminal(p.Name + " Finalizado \n");
+                            }
+                            else
+                            {
+                                f.ExternalTerminal("Esperando Peça\n");
+                                Thread.Sleep(250);
+                            }
+                        }
+                        else
+                        {
+                            em.resetProcess();
+                            Peca p = em.RemovePiece();
+
+                            f.ExternalTerminal("Exibindo atributos da peca recém 'feita': \n");
+
+                            p.ListAtributos.ForEach(x => f.ExternalTerminal("Processo: " + x.Name + " / Estado: " + x.Estado + "\n"));
+
+                            f.ExternalTerminal("Droped First / End\n");
+                        }
+                    }
+                    else
+                    {
+                        f.ExternalTerminal("Insert a master process in Esteira\n");
+                        break;
+                    }
                 }
-                Thread.Sleep(100);
+            }
+            else
+            {
+                while (true)
+                {
+                    if (!e.executeNextProcesses())
+                    {
+                        Thread.Sleep(100);
+
+                    }
+                }
             }
         }
     }

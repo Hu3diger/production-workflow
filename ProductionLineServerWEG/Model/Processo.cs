@@ -247,9 +247,9 @@ namespace ProductionLineServerWEG
 
             p._processos = CloneList();
 
-            this._father = null;
+            p._father = null;
 
-            _processos.ForEach(x =>
+            p._processos.ForEach(x =>
             {
                 x._father = p;
             });
@@ -268,7 +268,6 @@ namespace ProductionLineServerWEG
 
             _processos.ForEach(x =>
             {
-                x._processos = x.CloneList();
                 p.Add((Processo)x.Clone());
             });
 
@@ -284,7 +283,7 @@ namespace ProductionLineServerWEG
         public ProcessManager(Processo process)
         {
             _listOrdem = process.GetInternalOrderProcess();
-            _ordem = 0;
+            Reset();
         }
 
         public void Reset()
@@ -292,39 +291,61 @@ namespace ProductionLineServerWEG
             _ordem = 0;
         }
 
+        public bool hasNext()
+        {
+            return _ordem < _listOrdem.Count;
+        }
+
+        public void finalize()
+        {
+            int j;
+            for (j = _ordem - 1; _listOrdem[j].Cascade != 0; j--)
+            {
+                _listOrdem[j].InProcess = false;
+            }
+
+            _listOrdem[j].InProcess = false;
+        }
+
         public Processo Next()
         {
+            if (_ordem == 0)
+            {
+                _listOrdem[_ordem].InProcess = true;
+
+                _ordem++;
+
+                if (_listOrdem[_ordem - 1].IsFinalProcess())
+                {
+                    return _listOrdem[_ordem - 1];
+                }
+            }
+
             for (; _ordem < _listOrdem.Count; _ordem++)
             {
 
-                if (_listOrdem[_ordem].Cascade > _listOrdem[_ordem - 1].Cascade)
-                {
-                    if (_listOrdem[_ordem].IsFinalProcess())
-                    {
-                        _listOrdem[_ordem].InProcess = true;
-                        _ordem++;
-                        return _listOrdem[_ordem - 1];
-                    }
-                }else if (_listOrdem[_ordem].Cascade == _listOrdem[_ordem - 1].Cascade)
+                if (_listOrdem[_ordem].Cascade == _listOrdem[_ordem - 1].Cascade)
                 {
                     _listOrdem[_ordem - 1].InProcess = false;
-                    _ordem++;
-                    return _listOrdem[_ordem - 1];
                 }
-                else
+                else if (_listOrdem[_ordem].Cascade < _listOrdem[_ordem - 1].Cascade)
                 {
                     int i;
                     for (i = _ordem - 1; _listOrdem[i].Cascade != _listOrdem[_ordem].Cascade; i--)
                     {
                         _listOrdem[i].InProcess = false;
                     }
-                    
-                    _listOrdem[i].InProcess = false;
 
-                    // estuda isso
+                    _listOrdem[i].InProcess = false;
                 }
 
                 _listOrdem[_ordem].InProcess = true;
+
+                if (_listOrdem[_ordem].IsFinalProcess())
+                {
+                    _ordem++;
+                    return _listOrdem[_ordem - 1];
+                }
             }
 
             return null;

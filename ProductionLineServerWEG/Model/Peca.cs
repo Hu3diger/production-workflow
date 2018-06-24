@@ -11,6 +11,7 @@ namespace ProductionLineServerWEG
         private long _tag;
 
         public long Tag { get => _tag; set => _tag = value; }
+        public List<Atributo> ListAtributos { get; private set; }
 
         /// <summary>
         /// Construtor da classa Peca, que inicializa a lista interna de processos e inicia com a tag -1
@@ -18,6 +19,25 @@ namespace ProductionLineServerWEG
         public Peca()
         {
             _tag = -1;
+            ListAtributos = new List<Atributo>();
+        }
+
+        public void insertAtributo(string name, string value, string estado)
+        {
+            Atributo at = ListAtributos.Find(x => x.Name.Equals(name));
+
+            if (at == null)
+            {
+                at = new Atributo(name);
+                at.Value = value;
+                at.Estado = estado;
+                ListAtributos.Add(at);
+            }
+            else
+            {
+                at.Estado = estado;
+                at.Value = value;
+            }
         }
 
         //Boolean Printed { get; set; }
