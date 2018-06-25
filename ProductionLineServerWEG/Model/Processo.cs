@@ -289,6 +289,11 @@ namespace ProductionLineServerWEG
         public void Reset()
         {
             _ordem = 0;
+            while (hasNext())
+            {
+                Next();
+            }
+            finalize();
         }
 
         public bool hasNext()

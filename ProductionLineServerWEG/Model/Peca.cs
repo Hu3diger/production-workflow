@@ -22,7 +22,7 @@ namespace ProductionLineServerWEG
             ListAtributos = new List<Atributo>();
         }
 
-        public void insertAtributo(string name, string value, string estado)
+        public void setAtributo(string name, string value, string estado)
         {
             Atributo at = ListAtributos.Find(x => x.Name.Equals(name));
 

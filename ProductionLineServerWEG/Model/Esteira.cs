@@ -149,6 +149,13 @@ namespace ProductionLineServerWEG
             Ligado = false;
 
             cleanThread();
+
+            GetInputPieceNoRemove().ListAtributos.ForEach(x => {
+                if (x.Estado.Equals(Atributo.FAZENDO))
+                {
+                    x.Estado = Atributo.INTERROMPIDO;
+                }
+            });
         }
 
         public abstract bool executeNextProcesses();
@@ -190,9 +197,35 @@ namespace ProductionLineServerWEG
             return _processManager.Next();
         }
 
+        public void initializeProcess()
+        {
+            _processManager.Reset();
+        }
+
+        public void finalizeProcess()
+        {
+            _processManager.finalize();
+            _processManager.Reset();
+        }
+
+        public void setAttributes()
+        {
+            Peca pc = GetInputPieceNoRemove();
+
+            if (pc != null)
+            {
+                
+            }
+        }
+
         public override bool executeNextProcesses()
         {
             return false;
+        }
+
+        public new void TurnOff()
+        {
+
         }
     }
 

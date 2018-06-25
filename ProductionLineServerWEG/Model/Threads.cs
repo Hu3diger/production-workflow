@@ -42,33 +42,29 @@ namespace ProductionLineServerWEG
                 {
                     if (em.IsInCondition())
                     {
-                        if (em.hasNextProcess())
-                        {
-                            Peca pc = em.GetInputPieceNoRemove();
+                        Peca pc = em.GetInputPieceNoRemove();
 
-                            if (pc != null)
-                            {
-                                Processo p = em.nextProcess();
-
-                                f.ExternalTerminal(p.Name + " Executando \n");
-
-                                pc.insertAtributo(p.Name, "Kappa value", Atributo.FAZENDO);
-
-                                Thread.Sleep(p.Runtime);
-
-                                pc.insertAtributo(p.Name, "Kappa value", Atributo.FEITO);
-
-                                f.ExternalTerminal(p.Name + " Finalizado \n");
-                            }
-                            else
-                            {
-                                f.ExternalTerminal("Esperando Peça\n");
-                                Thread.Sleep(250);
-                            }
-                        }
-                        else
+                        if (pc != null)
                         {
                             em.resetProcess();
+
+                            while (em.hasNextProcess())
+                            {
+                                Processo ps = em.nextProcess();
+
+                                f.ExternalTerminal(ps.Name + " Executando \n");
+
+                                pc.setAtributo(ps.Name, "Kappa value", Atributo.FAZENDO);
+
+                                Thread.Sleep(ps.Runtime);
+
+                                pc.setAtributo(ps.Name, "Kappa value", Atributo.FEITO);
+
+                                f.ExternalTerminal(ps.Name + " Finalizado \n");
+                            }
+
+                            em.finalizeProcess();
+
                             Peca p = em.RemovePiece();
 
                             f.ExternalTerminal("Exibindo atributos da peca recém 'feita': \n");
@@ -76,6 +72,11 @@ namespace ProductionLineServerWEG
                             p.ListAtributos.ForEach(x => f.ExternalTerminal("Processo: " + x.Name + " / Estado: " + x.Estado + "\n"));
 
                             f.ExternalTerminal("Droped First / End\n");
+                        }
+                        else
+                        {
+                            f.ExternalTerminal("Esperando Peça\n");
+                            Thread.Sleep(250);
                         }
                     }
                     else
