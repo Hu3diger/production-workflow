@@ -59,6 +59,7 @@
             this.BtnPreLoadProcess = new System.Windows.Forms.Button();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabTal = new System.Windows.Forms.TabPage();
+            this.BtnTesteProcessManager = new System.Windows.Forms.Button();
             this.tabControle = new System.Windows.Forms.TabPage();
             this.BtnDesligarE = new System.Windows.Forms.Button();
             this.BtnLigarE = new System.Windows.Forms.Button();
@@ -70,7 +71,9 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.BtnStop = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.BtnTesteProcessManager = new System.Windows.Forms.Button();
+            this.listBox6 = new System.Windows.Forms.ListBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.BtnInsertEinE = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabProcesso.SuspendLayout();
             this.tabEsteiras.SuspendLayout();
@@ -379,8 +382,21 @@
             this.tabTal.Text = "TabTal";
             this.tabTal.UseVisualStyleBackColor = true;
             // 
+            // BtnTesteProcessManager
+            // 
+            this.BtnTesteProcessManager.Location = new System.Drawing.Point(53, 408);
+            this.BtnTesteProcessManager.Name = "BtnTesteProcessManager";
+            this.BtnTesteProcessManager.Size = new System.Drawing.Size(158, 23);
+            this.BtnTesteProcessManager.TabIndex = 27;
+            this.BtnTesteProcessManager.Text = "Teste ProcessManager (P a)";
+            this.BtnTesteProcessManager.UseVisualStyleBackColor = true;
+            this.BtnTesteProcessManager.Click += new System.EventHandler(this.BtnTesteProcessManager_Click);
+            // 
             // tabControle
             // 
+            this.tabControle.Controls.Add(this.BtnInsertEinE);
+            this.tabControle.Controls.Add(this.label9);
+            this.tabControle.Controls.Add(this.listBox6);
             this.tabControle.Controls.Add(this.BtnDesligarE);
             this.tabControle.Controls.Add(this.BtnLigarE);
             this.tabControle.Controls.Add(this.listBox5);
@@ -480,15 +496,32 @@
             this.toolStripLabel2.Size = new System.Drawing.Size(91, 22);
             this.toolStripLabel2.Text = "Stop Simulation";
             // 
-            // BtnTesteProcessManager
+            // listBox6
             // 
-            this.BtnTesteProcessManager.Location = new System.Drawing.Point(53, 408);
-            this.BtnTesteProcessManager.Name = "BtnTesteProcessManager";
-            this.BtnTesteProcessManager.Size = new System.Drawing.Size(158, 23);
-            this.BtnTesteProcessManager.TabIndex = 27;
-            this.BtnTesteProcessManager.Text = "Teste ProcessManager (P a)";
-            this.BtnTesteProcessManager.UseVisualStyleBackColor = true;
-            this.BtnTesteProcessManager.Click += new System.EventHandler(this.BtnTesteProcessManager_Click);
+            this.listBox6.FormattingEnabled = true;
+            this.listBox6.Location = new System.Drawing.Point(53, 167);
+            this.listBox6.Name = "listBox6";
+            this.listBox6.Size = new System.Drawing.Size(158, 82);
+            this.listBox6.TabIndex = 28;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(123, 150);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(15, 13);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "in";
+            // 
+            // BtnInsertEinE
+            // 
+            this.BtnInsertEinE.Location = new System.Drawing.Point(53, 255);
+            this.BtnInsertEinE.Name = "BtnInsertEinE";
+            this.BtnInsertEinE.Size = new System.Drawing.Size(158, 23);
+            this.BtnInsertEinE.TabIndex = 29;
+            this.BtnInsertEinE.Text = "Insert";
+            this.BtnInsertEinE.UseVisualStyleBackColor = true;
+            this.BtnInsertEinE.Click += new System.EventHandler(this.BtnInsertEinE_Click);
             // 
             // Form1
             // 
@@ -509,6 +542,7 @@
             this.tabControl2.ResumeLayout(false);
             this.tabTal.ResumeLayout(false);
             this.tabControle.ResumeLayout(false);
+            this.tabControle.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -559,5 +593,8 @@
         private System.Windows.Forms.Button BtnDesligarE;
         private System.Windows.Forms.Button BtnLigarE;
         private System.Windows.Forms.Button BtnTesteProcessManager;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ListBox listBox6;
+        private System.Windows.Forms.Button BtnInsertEinE;
     }
 }

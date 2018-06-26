@@ -75,7 +75,7 @@ namespace ProductionLineServerWEG
                         }
                         else
                         {
-                            f.ExternalTerminal("Esperando Peça\n");
+                            f.ExternalTerminal(em.Name + "Esperando Peça\n");
                             Thread.Sleep(250);
                         }
                     }

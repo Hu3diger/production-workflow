@@ -254,5 +254,10 @@ namespace ProductionLineServerWEG
             }
             Terminal.AppendText(x.Cascade + " | " + x.Name + " / " + x.InProcess + "\n");
         }
+
+        private void BtnInsertEinE_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
