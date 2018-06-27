@@ -145,7 +145,6 @@ namespace ProductionLineServerWEG
             p1.AddInternalProcess(-1, p15);
             p15.AddInternalProcess(-1, p151);
 
-            p1.Reorder(0);
             p1.FindInternalProcess(null);
 
             while (true)
@@ -164,14 +163,14 @@ namespace ProductionLineServerWEG
                         break;
 
                     case "list":
-                        p1.GetInternalOrderProcess().ForEach(x => WriteLine(x.Order + " | " + x.Cascade + " | " + x.Name));
+                        p1.GetInternalOrderProcess().ForEach(x => WriteLine(x.Cascade + " | " + x.Name));
                         break;
 
                     case "listthis":
                         Processo p2 = (Processo)p1.Clone();
-                        p1.GetInternalOrderProcess().ForEach(x => WriteLine(x.Order + " | " + x.Name));
+                        p1.GetInternalOrderProcess().ForEach(x => WriteLine(" | " + x.Name));
                         WriteLine("P2===============");
-                        p2.GetInternalOrderProcess().ForEach(x => WriteLine(x.Order + " | " + x.Name));
+                        p2.GetInternalOrderProcess().ForEach(x => WriteLine(" | " + x.Name));
                         break;
 
                     default:

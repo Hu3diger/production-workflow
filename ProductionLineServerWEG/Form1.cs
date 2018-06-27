@@ -71,7 +71,6 @@ namespace ProductionLineServerWEG
 
         private void escreverList(Processo x)
         {
-            Terminal.AppendText(x.Order + " | ");
             for (int i = 0; i < x.Cascade; i++)
             {
                 Terminal.AppendText("   ");
@@ -249,7 +248,6 @@ namespace ProductionLineServerWEG
 
         private void escreverListWithInP(Processo x)
         {
-            Terminal.AppendText(x.Order + " | ");
             for (int i = 0; i < x.Cascade; i++)
             {
                 Terminal.AppendText("   ");
@@ -301,13 +299,75 @@ namespace ProductionLineServerWEG
 
             for (int i = 0; i < l.Count; i++)
             {
-                Terminal2.AppendText(l[i].Name + " - ");
-                
-                Terminal2.AppendText("\n");
+                //  ManagePrint.listEsteiraRecursivo(l[i]);
+            }
+        }
+    }
+
+    class ManagePrint
+    {
+        static int comprimento = 0;
+        static int inside = 0;
+
+        static EsteiraAbstrata[,] mtxE;
+        static int wE = 0;
+        static int hE = 1;
+
+        public static void listEsteiraRecursivo(EsteiraAbstrata e)
+        {
+            mtxReset();
+            runNext(e);
+
+            wE = inside + comprimento;
+
+            mtxE = new EsteiraAbstrata[hE, wE];
+        }
+
+        private static void runNext(EsteiraAbstrata e)
+        {
+            runBack(e, (comprimento * -1));
+            comprimento++;
+            if (e.EsteiraOutput != null)
+            {
+                runNext(e.EsteiraOutput);
             }
         }
 
-        private void listEsteiraRecursivo()
+        private static void runBack(EsteiraAbstrata e, int ccd)
+        {
+            if (e.EsteiraInput.Count != 0)
+            {
+                if (e.EsteiraInput.Count > hE)
+                {
+                    hE = e.EsteiraInput.Count;
+                }
+
+                for (int i = 0; i < e.EsteiraInput.Count; i++)
+                {
+                    runBack(e.EsteiraInput[i], ccd + 1);
+                }
+            }
+
+            if (ccd > inside)
+            {
+                inside = ccd;
+            }
+        }
+
+        static string[,] mtx;
+        static int mtxHeigth = 0;
+        static int mtxWidth = 0;
+
+        private static void mtxReset()
+        {
+            mtxHeigth = 0;
+            mtxWidth = 0;
+            hE = 1;
+            comprimento = 0;
+            mtx = null;
+        }
+
+        private static void mtxWriteln(string msg)
         {
 
         }

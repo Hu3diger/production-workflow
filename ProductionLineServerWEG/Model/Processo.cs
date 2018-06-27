@@ -31,8 +31,7 @@ namespace ProductionLineServerWEG
 
         public Processo _father;
         private List<Processo> _processos;
-
-        private int _order;
+        
         private int _cascade;
         private Double _errorProbability;
 
@@ -42,7 +41,6 @@ namespace ProductionLineServerWEG
 
         public int Errors { get => _errors; }
         public bool InProcess { get => _inProcess; set => _inProcess = value; }
-        public int Order { get => _order; }
         public int Cascade { get => _cascade; }
         public double ErrorProbability { get => _errorProbability; set => _errorProbability = value; }
 
@@ -56,7 +54,6 @@ namespace ProductionLineServerWEG
             _errors = 0;
             _inProcess = false;
             _processos = new List<Processo>();
-            _order = 0;
         }
         /// <summary>
         /// Incrementa em 1 os erros que conteve na "execução" do processo.
@@ -203,17 +200,6 @@ namespace ProductionLineServerWEG
         /// <returns>
         /// int (valor do ultimo item da lista)
         /// </returns>
-        public int Reorder(int index)
-        {
-
-            _processos.ForEach(x =>
-            {
-                index = x.Reorder(index);
-                x._order = index++;
-            });
-
-            return index;
-        }
         /// <summary>
         /// Limpa a lista de processos internos.
         /// </summary>
@@ -232,7 +218,7 @@ namespace ProductionLineServerWEG
 
                 p.TestProcess();
 
-                Console.WriteLine(p.Name + " || order: " + p._order + " || index: " + i);
+                Console.WriteLine(p.Name + " || index: " + i);
             }
         }
         /// <summary>
@@ -253,6 +239,8 @@ namespace ProductionLineServerWEG
             {
                 x._father = p;
             });
+
+            p.ReorderCascade();
 
             return p;
         }
@@ -303,13 +291,17 @@ namespace ProductionLineServerWEG
 
         public void finalize()
         {
-            int j;
-            for (j = _ordem - 1; _listOrdem[j].Cascade != 0; j--)
+            if (_ordem != 0)
             {
+                int j;
+                for (j = _ordem - 1; _listOrdem[j].Cascade != 0; j--)
+                {
+                    _listOrdem[j].InProcess = false;
+                }
+
                 _listOrdem[j].InProcess = false;
             }
-
-            _listOrdem[j].InProcess = false;
+            _ordem = 0;
         }
 
         public Processo Next()

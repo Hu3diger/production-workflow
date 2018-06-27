@@ -205,17 +205,20 @@ namespace ProductionLineServerWEG
 
             cleanThread();
 
-            GetInputPieceNoRemove().ListAtributos.ForEach(x =>
+            if (GetInputPieceNoRemove() != null)
             {
-                if (x.Estado.Equals(Atributo.FAZENDO))
+                GetInputPieceNoRemove().ListAtributos.ForEach(x =>
                 {
-                    x.Estado = Atributo.INTERROMPIDO;
-                }
-            });
+                    if (x.Estado.Equals(Atributo.FAZENDO))
+                    {
+                        x.Estado = Atributo.INTERROMPIDO;
+                    }
+                });
+            }
         }
     }
 
-    class SetableOutput : EsteiraAbstrata
+    abstract class SetableOutput : EsteiraAbstrata
     {
         public SetableOutput(string name, int limite) : base(name, limite)
         {

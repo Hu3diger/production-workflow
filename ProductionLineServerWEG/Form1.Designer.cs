@@ -33,6 +33,7 @@
             this.BtnPreLoadProcess = new System.Windows.Forms.Button();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabTal = new System.Windows.Forms.TabPage();
+            this.BtnPreLoadEsteiras = new System.Windows.Forms.Button();
             this.BtnTesteProcessManager = new System.Windows.Forms.Button();
             this.tabControle = new System.Windows.Forms.TabPage();
             this.BtnInsertEinE = new System.Windows.Forms.Button();
@@ -48,34 +49,33 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.BtnStop = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.BtnPreLoadEsteiras = new System.Windows.Forms.Button();
             this.tabEsteiras = new System.Windows.Forms.TabPage();
-            this.NomeE = new System.Windows.Forms.TextBox();
-            this.InLimitE = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.BtnCriarEsteira = new System.Windows.Forms.Button();
-            this.listBox3 = new System.Windows.Forms.ListBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.listBox4 = new System.Windows.Forms.ListBox();
+            this.BtnListEsterias = new System.Windows.Forms.Button();
             this.BtnInserirPinE = new System.Windows.Forms.Button();
+            this.listBox4 = new System.Windows.Forms.ListBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.listBox3 = new System.Windows.Forms.ListBox();
+            this.BtnCriarEsteira = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.InLimitE = new System.Windows.Forms.TextBox();
+            this.NomeE = new System.Windows.Forms.TextBox();
             this.tabProcesso = new System.Windows.Forms.TabPage();
-            this.BtnCriaProcesso = new System.Windows.Forms.Button();
-            this.nomeP = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.DescP = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.RuntimeP = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.listBox2 = new System.Windows.Forms.ListBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.BtnInsertProcesso = new System.Windows.Forms.Button();
             this.BtnListProcesso = new System.Windows.Forms.Button();
+            this.BtnInsertProcesso = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.RuntimeP = new System.Windows.Forms.TextBox();
+            this.DescP = new System.Windows.Forms.TextBox();
+            this.nomeP = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.BtnCriaProcesso = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Terminal2 = new System.Windows.Forms.RichTextBox();
-            this.BtnListEsterias = new System.Windows.Forms.Button();
             this.tabControl2.SuspendLayout();
             this.tabTal.SuspendLayout();
             this.tabControle.SuspendLayout();
@@ -96,7 +96,6 @@
             this.Terminal.Size = new System.Drawing.Size(497, 359);
             this.Terminal.TabIndex = 1;
             this.Terminal.Text = "";
-            this.Terminal.UseWaitCursor = true;
             this.Terminal.TextChanged += new System.EventHandler(this.Terminal_TextChanged);
             // 
             // BtnPreLoadProcess
@@ -131,6 +130,16 @@
             this.tabTal.TabIndex = 0;
             this.tabTal.Text = "TabTal";
             this.tabTal.UseVisualStyleBackColor = true;
+            // 
+            // BtnPreLoadEsteiras
+            // 
+            this.BtnPreLoadEsteiras.Location = new System.Drawing.Point(53, 35);
+            this.BtnPreLoadEsteiras.Name = "BtnPreLoadEsteiras";
+            this.BtnPreLoadEsteiras.Size = new System.Drawing.Size(158, 23);
+            this.BtnPreLoadEsteiras.TabIndex = 28;
+            this.BtnPreLoadEsteiras.Text = "Pré Load Esteiras";
+            this.BtnPreLoadEsteiras.UseVisualStyleBackColor = true;
+            this.BtnPreLoadEsteiras.Click += new System.EventHandler(this.BtnPreLoadEsteiras_Click);
             // 
             // BtnTesteProcessManager
             // 
@@ -273,16 +282,6 @@
             this.toolStripLabel2.Size = new System.Drawing.Size(91, 22);
             this.toolStripLabel2.Text = "Stop Simulation";
             // 
-            // BtnPreLoadEsteiras
-            // 
-            this.BtnPreLoadEsteiras.Location = new System.Drawing.Point(53, 35);
-            this.BtnPreLoadEsteiras.Name = "BtnPreLoadEsteiras";
-            this.BtnPreLoadEsteiras.Size = new System.Drawing.Size(158, 23);
-            this.BtnPreLoadEsteiras.TabIndex = 28;
-            this.BtnPreLoadEsteiras.Text = "Pré Load Esteiras";
-            this.BtnPreLoadEsteiras.UseVisualStyleBackColor = true;
-            this.BtnPreLoadEsteiras.Click += new System.EventHandler(this.BtnPreLoadEsteiras_Click);
-            // 
             // tabEsteiras
             // 
             this.tabEsteiras.Controls.Add(this.BtnListEsterias);
@@ -304,37 +303,59 @@
             this.tabEsteiras.Text = "Esteiras";
             this.tabEsteiras.UseVisualStyleBackColor = true;
             // 
-            // NomeE
+            // BtnListEsterias
             // 
-            this.NomeE.Location = new System.Drawing.Point(111, 6);
-            this.NomeE.Name = "NomeE";
-            this.NomeE.Size = new System.Drawing.Size(100, 20);
-            this.NomeE.TabIndex = 1;
+            this.BtnListEsterias.Location = new System.Drawing.Point(53, 343);
+            this.BtnListEsterias.Name = "BtnListEsterias";
+            this.BtnListEsterias.Size = new System.Drawing.Size(158, 23);
+            this.BtnListEsterias.TabIndex = 26;
+            this.BtnListEsterias.Text = "List";
+            this.BtnListEsterias.UseVisualStyleBackColor = true;
+            this.BtnListEsterias.Click += new System.EventHandler(this.BtnListEsterias_Click);
             // 
-            // InLimitE
+            // BtnInserirPinE
             // 
-            this.InLimitE.Location = new System.Drawing.Point(111, 32);
-            this.InLimitE.Name = "InLimitE";
-            this.InLimitE.Size = new System.Drawing.Size(100, 20);
-            this.InLimitE.TabIndex = 2;
+            this.BtnInserirPinE.Location = new System.Drawing.Point(53, 314);
+            this.BtnInserirPinE.Name = "BtnInserirPinE";
+            this.BtnInserirPinE.Size = new System.Drawing.Size(158, 23);
+            this.BtnInserirPinE.TabIndex = 25;
+            this.BtnInserirPinE.Text = "Inserir";
+            this.BtnInserirPinE.UseVisualStyleBackColor = true;
+            this.BtnInserirPinE.Click += new System.EventHandler(this.BtnInserirPinE_Click);
             // 
-            // label5
+            // listBox4
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(70, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(35, 13);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Nome";
+            this.listBox4.FormattingEnabled = true;
+            this.listBox4.Location = new System.Drawing.Point(53, 226);
+            this.listBox4.Name = "listBox4";
+            this.listBox4.Size = new System.Drawing.Size(158, 82);
+            this.listBox4.TabIndex = 24;
             // 
-            // label6
+            // label8
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 35);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(89, 13);
-            this.label6.TabIndex = 17;
-            this.label6.Text = "Limite de Entrada";
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(125, 209);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(15, 13);
+            this.label8.TabIndex = 23;
+            this.label8.Text = "in";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(50, 106);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(165, 13);
+            this.label7.TabIndex = 22;
+            this.label7.Text = "Inserir Processo mestre na esteira";
+            // 
+            // listBox3
+            // 
+            this.listBox3.FormattingEnabled = true;
+            this.listBox3.Location = new System.Drawing.Point(53, 123);
+            this.listBox3.Name = "listBox3";
+            this.listBox3.Size = new System.Drawing.Size(158, 82);
+            this.listBox3.TabIndex = 21;
             // 
             // BtnCriarEsteira
             // 
@@ -346,49 +367,37 @@
             this.BtnCriarEsteira.UseVisualStyleBackColor = true;
             this.BtnCriarEsteira.Click += new System.EventHandler(this.BtnCriarEsteira_Click);
             // 
-            // listBox3
+            // label6
             // 
-            this.listBox3.FormattingEnabled = true;
-            this.listBox3.Location = new System.Drawing.Point(53, 123);
-            this.listBox3.Name = "listBox3";
-            this.listBox3.Size = new System.Drawing.Size(158, 82);
-            this.listBox3.TabIndex = 21;
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(16, 35);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 13);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "Limite de Entrada";
             // 
-            // label7
+            // label5
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(50, 106);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(165, 13);
-            this.label7.TabIndex = 22;
-            this.label7.Text = "Inserir Processo mestre na esteira";
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(70, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(35, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Nome";
             // 
-            // label8
+            // InLimitE
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(125, 209);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(15, 13);
-            this.label8.TabIndex = 23;
-            this.label8.Text = "in";
+            this.InLimitE.Location = new System.Drawing.Point(111, 32);
+            this.InLimitE.Name = "InLimitE";
+            this.InLimitE.Size = new System.Drawing.Size(100, 20);
+            this.InLimitE.TabIndex = 2;
             // 
-            // listBox4
+            // NomeE
             // 
-            this.listBox4.FormattingEnabled = true;
-            this.listBox4.Location = new System.Drawing.Point(53, 226);
-            this.listBox4.Name = "listBox4";
-            this.listBox4.Size = new System.Drawing.Size(158, 82);
-            this.listBox4.TabIndex = 24;
-            // 
-            // BtnInserirPinE
-            // 
-            this.BtnInserirPinE.Location = new System.Drawing.Point(53, 314);
-            this.BtnInserirPinE.Name = "BtnInserirPinE";
-            this.BtnInserirPinE.Size = new System.Drawing.Size(158, 23);
-            this.BtnInserirPinE.TabIndex = 25;
-            this.BtnInserirPinE.Text = "Inserir";
-            this.BtnInserirPinE.UseVisualStyleBackColor = true;
-            this.BtnInserirPinE.Click += new System.EventHandler(this.BtnInserirPinE_Click);
+            this.NomeE.Location = new System.Drawing.Point(111, 6);
+            this.NomeE.Name = "NomeE";
+            this.NomeE.Size = new System.Drawing.Size(100, 20);
+            this.NomeE.TabIndex = 1;
             // 
             // tabProcesso
             // 
@@ -412,89 +421,15 @@
             this.tabProcesso.Text = "Processo";
             this.tabProcesso.UseVisualStyleBackColor = true;
             // 
-            // BtnCriaProcesso
+            // BtnListProcesso
             // 
-            this.BtnCriaProcesso.Location = new System.Drawing.Point(53, 84);
-            this.BtnCriaProcesso.Name = "BtnCriaProcesso";
-            this.BtnCriaProcesso.Size = new System.Drawing.Size(158, 23);
-            this.BtnCriaProcesso.TabIndex = 13;
-            this.BtnCriaProcesso.Text = "Criar Processo";
-            this.BtnCriaProcesso.UseVisualStyleBackColor = true;
-            this.BtnCriaProcesso.Click += new System.EventHandler(this.BtnCriaProcesso_Click);
-            // 
-            // nomeP
-            // 
-            this.nomeP.Location = new System.Drawing.Point(111, 6);
-            this.nomeP.Name = "nomeP";
-            this.nomeP.Size = new System.Drawing.Size(100, 20);
-            this.nomeP.TabIndex = 14;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(70, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "Nome";
-            // 
-            // DescP
-            // 
-            this.DescP.Location = new System.Drawing.Point(111, 32);
-            this.DescP.Name = "DescP";
-            this.DescP.Size = new System.Drawing.Size(100, 20);
-            this.DescP.TabIndex = 16;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(50, 35);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 13);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Descrição";
-            // 
-            // RuntimeP
-            // 
-            this.RuntimeP.Location = new System.Drawing.Point(111, 58);
-            this.RuntimeP.Name = "RuntimeP";
-            this.RuntimeP.Size = new System.Drawing.Size(100, 20);
-            this.RuntimeP.TabIndex = 18;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(59, 61);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 13);
-            this.label3.TabIndex = 19;
-            this.label3.Text = "Runtime";
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(53, 130);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(158, 82);
-            this.listBox1.TabIndex = 20;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-            // 
-            // listBox2
-            // 
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(53, 233);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(158, 82);
-            this.listBox2.TabIndex = 21;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(124, 216);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(15, 13);
-            this.label4.TabIndex = 22;
-            this.label4.Text = "in";
+            this.BtnListProcesso.Location = new System.Drawing.Point(53, 350);
+            this.BtnListProcesso.Name = "BtnListProcesso";
+            this.BtnListProcesso.Size = new System.Drawing.Size(158, 23);
+            this.BtnListProcesso.TabIndex = 24;
+            this.BtnListProcesso.Text = "List";
+            this.BtnListProcesso.UseVisualStyleBackColor = true;
+            this.BtnListProcesso.Click += new System.EventHandler(this.BtnListProcesso_Click);
             // 
             // BtnInsertProcesso
             // 
@@ -506,15 +441,89 @@
             this.BtnInsertProcesso.UseVisualStyleBackColor = true;
             this.BtnInsertProcesso.Click += new System.EventHandler(this.BtnInsertProcesso_Click);
             // 
-            // BtnListProcesso
+            // label4
             // 
-            this.BtnListProcesso.Location = new System.Drawing.Point(53, 350);
-            this.BtnListProcesso.Name = "BtnListProcesso";
-            this.BtnListProcesso.Size = new System.Drawing.Size(158, 23);
-            this.BtnListProcesso.TabIndex = 24;
-            this.BtnListProcesso.Text = "List";
-            this.BtnListProcesso.UseVisualStyleBackColor = true;
-            this.BtnListProcesso.Click += new System.EventHandler(this.BtnListProcesso_Click);
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(124, 216);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(15, 13);
+            this.label4.TabIndex = 22;
+            this.label4.Text = "in";
+            // 
+            // listBox2
+            // 
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.Location = new System.Drawing.Point(53, 233);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(158, 82);
+            this.listBox2.TabIndex = 21;
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(53, 130);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(158, 82);
+            this.listBox1.TabIndex = 20;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(59, 61);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(46, 13);
+            this.label3.TabIndex = 19;
+            this.label3.Text = "Runtime";
+            // 
+            // RuntimeP
+            // 
+            this.RuntimeP.Location = new System.Drawing.Point(111, 58);
+            this.RuntimeP.Name = "RuntimeP";
+            this.RuntimeP.Size = new System.Drawing.Size(100, 20);
+            this.RuntimeP.TabIndex = 18;
+            // 
+            // DescP
+            // 
+            this.DescP.Location = new System.Drawing.Point(111, 32);
+            this.DescP.Name = "DescP";
+            this.DescP.Size = new System.Drawing.Size(100, 20);
+            this.DescP.TabIndex = 16;
+            // 
+            // nomeP
+            // 
+            this.nomeP.Location = new System.Drawing.Point(111, 6);
+            this.nomeP.Name = "nomeP";
+            this.nomeP.Size = new System.Drawing.Size(100, 20);
+            this.nomeP.TabIndex = 14;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(50, 35);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Descrição";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(70, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Nome";
+            // 
+            // BtnCriaProcesso
+            // 
+            this.BtnCriaProcesso.Location = new System.Drawing.Point(53, 84);
+            this.BtnCriaProcesso.Name = "BtnCriaProcesso";
+            this.BtnCriaProcesso.Size = new System.Drawing.Size(158, 23);
+            this.BtnCriaProcesso.TabIndex = 13;
+            this.BtnCriaProcesso.Text = "Criar Processo";
+            this.BtnCriaProcesso.UseVisualStyleBackColor = true;
+            this.BtnCriaProcesso.Click += new System.EventHandler(this.BtnCriaProcesso_Click);
             // 
             // tabControl1
             // 
@@ -537,18 +546,7 @@
             this.Terminal2.Size = new System.Drawing.Size(497, 98);
             this.Terminal2.TabIndex = 16;
             this.Terminal2.Text = "";
-            this.Terminal2.UseWaitCursor = true;
             this.Terminal2.TextChanged += new System.EventHandler(this.Terminal2_TextChanged);
-            // 
-            // BtnListEsterias
-            // 
-            this.BtnListEsterias.Location = new System.Drawing.Point(53, 343);
-            this.BtnListEsterias.Name = "BtnListEsterias";
-            this.BtnListEsterias.Size = new System.Drawing.Size(158, 23);
-            this.BtnListEsterias.TabIndex = 26;
-            this.BtnListEsterias.Text = "List";
-            this.BtnListEsterias.UseVisualStyleBackColor = true;
-            this.BtnListEsterias.Click += new System.EventHandler(this.BtnListEsterias_Click);
             // 
             // Form1
             // 
