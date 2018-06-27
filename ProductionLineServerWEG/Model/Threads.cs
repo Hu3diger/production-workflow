@@ -88,14 +88,10 @@ namespace ProductionLineServerWEG
             }
             else
             {
-                while (true)
-                {
-                    if (!e.executeNextProcesses())
-                    {
-                        Thread.Sleep(100);
-
-                    }
-                }
+                //while (true)
+                //{
+                    
+                //}
             }
         }
     }

@@ -19,8 +19,8 @@ namespace ProductionLineServerWEG
 
         private Thread thread;
 
-
-        private List<EsteiraAbstrata> _esteiraOutput;
+        public EsteiraAbstrata EsteiraOutput { get; private set; }
+        public List<EsteiraAbstrata> EsteiraInput { get; private set; }
 
 
         public int Id { get; private set; }
@@ -33,7 +33,6 @@ namespace ProductionLineServerWEG
 
         protected bool BlockedEsteira { get => _inputUse >= InLimit && InLimit != -1; }
 
-        internal List<EsteiraAbstrata> EsteiraOutput { get => _esteiraOutput; }
         /// <summary>
         /// Construtor abstrato que recebe um nome o limite de entrada na esteira
         /// </summary>
@@ -57,7 +56,7 @@ namespace ProductionLineServerWEG
             _queueInputPecas = new Queue<Peca>();
             _queueOutputPecas = new Queue<Peca>();
 
-            _esteiraOutput = new List<EsteiraAbstrata>();
+            EsteiraInput = new List<EsteiraAbstrata>();
         }
         /// <summary>
         /// Insere uma peça na lista e retorna se foi possivel ou não
@@ -77,6 +76,62 @@ namespace ProductionLineServerWEG
             }
 
             return false;
+        }
+
+        public void insertBefore(EsteiraAbstrata e)
+        {
+            e.releaseAndConnect();
+
+            EsteiraInput.ForEach(x => x.setOutput(e));
+            e.EsteiraInput = EsteiraInput;
+
+            this.EsteiraInput = new List<EsteiraAbstrata>();
+            this.setInput(e);
+
+            e.setOutput(this);
+        }
+
+        public void setOutput(EsteiraAbstrata e)
+        {
+            EsteiraOutput = e;
+        }
+
+        public void setInput(EsteiraAbstrata e)
+        {
+            int i;
+            for (i = 0; i < EsteiraInput.Count; i++)
+            {
+                if (EsteiraInput[i].Id == e.Id) break;
+            }
+
+            if (i == EsteiraInput.Count)
+            {
+                EsteiraInput.Add(e);
+            }
+            else
+            {
+                EsteiraInput[i] = e;
+            }
+        }
+
+        public void removeInput(EsteiraAbstrata e)
+        {
+            int i = EsteiraInput.FindIndex(x => x.Id == e.Id);
+
+            if (i != -1)
+            {
+                EsteiraInput.RemoveAt(i);
+            }
+        }
+
+        public void releaseAndConnect()
+        {
+            if (EsteiraOutput != null)
+            {
+                EsteiraOutput.EsteiraInput = EsteiraInput;
+            }
+
+            EsteiraInput.ForEach(x => x.setOutput(EsteiraOutput));
         }
 
         public Peca RemovePiece()
@@ -150,18 +205,37 @@ namespace ProductionLineServerWEG
 
             cleanThread();
 
-            GetInputPieceNoRemove().ListAtributos.ForEach(x => {
+            GetInputPieceNoRemove().ListAtributos.ForEach(x =>
+            {
                 if (x.Estado.Equals(Atributo.FAZENDO))
                 {
                     x.Estado = Atributo.INTERROMPIDO;
                 }
             });
         }
-
-        public abstract bool executeNextProcesses();
     }
 
-    class EsteiraModel : EsteiraAbstrata
+    class SetableOutput : EsteiraAbstrata
+    {
+        public SetableOutput(string name, int limite) : base(name, limite)
+        {
+        }
+
+        public void insertAfter(EsteiraAbstrata e)
+        {
+            e.releaseAndConnect();
+            if (this.EsteiraOutput != null)
+            {
+                this.EsteiraOutput.removeInput(this);
+                this.EsteiraOutput.setInput(e);
+            }
+            e.setOutput(EsteiraOutput);
+            e.setInput(this);
+            this.setOutput(e);
+        }
+    }
+
+    class EsteiraModel : SetableOutput
     {
 
         private Processo _processMaster;
@@ -214,22 +288,12 @@ namespace ProductionLineServerWEG
 
             if (pc != null)
             {
-                
+
             }
-        }
-
-        public override bool executeNextProcesses()
-        {
-            return false;
-        }
-
-        public new void TurnOff()
-        {
-
         }
     }
 
-    class EsteiraArmazenamento : EsteiraAbstrata
+    class EsteiraArmazenamento : SetableOutput
     {
         public EsteiraArmazenamento(string name, int limite) : base(name, limite)
         {
@@ -244,14 +308,9 @@ namespace ProductionLineServerWEG
         {
             return _queueInputPecas.ToList();
         }
-
-        public override bool executeNextProcesses()
-        {
-            return false;
-        }
     }
 
-    class EsteiraEtiquetadora : EsteiraAbstrata
+    class EsteiraEtiquetadora : SetableOutput
     {
         private static long _tags = 100001;
 
@@ -271,11 +330,6 @@ namespace ProductionLineServerWEG
         {
             //   OutputPieceSuccess(esteira);
         }
-
-        public override bool executeNextProcesses()
-        {
-            return false;
-        }
     }
 
     class EsteiraDesvio : EsteiraAbstrata
@@ -292,11 +346,6 @@ namespace ProductionLineServerWEG
         void PieceError(EsteiraAbstrata esteira)
         {
             //    OutputPieceFail(esteira);
-        }
-
-        public override bool executeNextProcesses()
-        {
-            return false;
         }
     }
 }

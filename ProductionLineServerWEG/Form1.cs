@@ -32,7 +32,8 @@ namespace ProductionLineServerWEG
 
         public void ExternalTerminal(string msg)
         {
-            Terminal.Invoke(new MethodInvoker(delegate {
+            Terminal.Invoke(new MethodInvoker(delegate
+            {
                 Terminal.AppendText(msg);
             }));
         }
@@ -147,6 +148,11 @@ namespace ProductionLineServerWEG
 
         private void BtnPreLoadProcess_Click(object sender, EventArgs e)
         {
+            for (int i = listProcessos.Count - 1; i >= 0; i--)
+            {
+                listProcessos.RemoveAt(i);
+            }
+
             listProcessos.Add(new Processo(new BaseProcesso("a", "Processo qualquer", 1000)));
             listProcessos.Add(new Processo(new BaseProcesso("b", "Processo qualquer", 1000)));
             listProcessos.Add(new Processo(new BaseProcesso("c", "Processo qualquer", 1000)));
@@ -256,6 +262,52 @@ namespace ProductionLineServerWEG
         }
 
         private void BtnInsertEinE_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnPreLoadEsteiras_Click(object sender, EventArgs e)
+        {
+            for (int i = listEsteiras.Count - 1; i >= 0; i--)
+            {
+                listEsteiras.RemoveAt(i);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                listEsteiras.Add(new EsteiraModel("Teste " + i, 5));
+            }
+
+            SetableOutput sa = (SetableOutput)listEsteiras[0];
+
+            sa.insertAfter(listEsteiras[1]);
+
+            attAllListBox();
+
+            Terminal.AppendText("Sistema pré-carregado com esteiras e limite de 5\n");
+        }
+
+        private void Terminal2_TextChanged(object sender, EventArgs e)
+        {
+            // set the current caret position to the end
+            Terminal2.SelectionStart = Terminal2.Text.Length;
+            // scroll it automatically
+            Terminal2.ScrollToCaret();
+        }
+
+        private void BtnListEsterias_Click(object sender, EventArgs e)
+        {
+            List<EsteiraAbstrata> l = listEsteiras.FindAll(x => x.EsteiraInput.Count == 0);
+
+            for (int i = 0; i < l.Count; i++)
+            {
+                Terminal2.AppendText(l[i].Name + " - ");
+                
+                Terminal2.AppendText("\n");
+            }
+        }
+
+        private void listEsteiraRecursivo()
         {
 
         }
