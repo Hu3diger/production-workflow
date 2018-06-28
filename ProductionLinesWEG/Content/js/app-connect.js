@@ -1,6 +1,9 @@
 ﻿var connector = connector || {};
 
 $(function () {
-    connector = $.connection;
-    $.connection.hub.start();
+    connector = $.connection.masterHub;
+
+    ServerReciveMethods();
+
+    $.connection.hub.start().done();
 });

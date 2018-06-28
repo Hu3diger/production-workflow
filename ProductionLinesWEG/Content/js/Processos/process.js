@@ -1,24 +1,24 @@
-function showModal() {
+function showModalProcesso() {
     $("#modal1").append('\
     <div class="modal-content">\
         <h5>Cadastrar nova esteira</h5>\
         <div class="row"></div>\
         <div class="row">\
           <div class="input-field col s12 m10 offset-m1">\
-            <input id="name_Process" type="text" class="validate">\
-            <label for="name_Process">Nome</label>\
+            <input id="nameModal" type="text" class="validate">\
+            <label for="nameModal">Nome</label>\
           </div>\
         </div>\
         <div class="row">\
           <div class="input-field col s12 m10 offset-m1">\
-            <textarea id="description_tx" class="materialize-textarea"></textarea>\
-            <label for="description_tx">Descrição do processo</label>\
+            <textarea id="descModal" class="materialize-textarea"></textarea>\
+            <label for="descModal">Descrição do processo</label>\
           </div>\
         </div>\
         <div class="row">\
           <div class="input-field col s12 m10 offset-m1">\
-            <input id="runTime_Process" type="number" class="validate">\
-            <label for="runTime_Process">Tempo de execução (ms)</label>\
+            <input id="runtimeModal" type="number" class="validate">\
+            <label for="runtimeModal">Tempo de execução (ms)</label>\
           </div>\
         </div>\
         <div class="row">\
@@ -29,19 +29,19 @@ function showModal() {
         </div>\
       </div>\
       <div class="modal-footer">\
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="dimissModal(\'modal1\');">Cancelar</a>\
-        <a href="#!" class="waves-effect waves-green btn-flat" onclick="dimissModal(\'modal1\');">Salvar</a>\
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="dimissModalProcesso(\'modal1\');">Cancelar</a>\
+        <a href="#!" class="waves-effect waves-green btn-flat" onclick="dimissModalProcesso(\'modal1\');">Salvar</a>\
       </div>\
     ');
     $('select').formSelect();
 
     $('body').keyup(function (e) {
-        if (e.keyCode == 27) dimissModal("modal1");
+        if (e.keyCode == 27) dimissModalProcesso("modal1");
     });
 
     $(document).mouseup(function (e) {
         let container = $("#modal1");
-        if (!container.is(e.target) && container.has(e.target).length === 0) dimissModal("modal1");
+        if (!container.is(e.target) && container.has(e.target).length === 0) dimissModalProcesso("modal1");
     })
 }
 
@@ -55,18 +55,18 @@ function exibeInfo(){
     <form class="col s12">\
       <div class="row">\
         <div class="input-field col s12 m8 offset-m2">\
-          <input disabled value="'+ name +'" id="name" type="text" class="validate">\
-          <label class="active" for="name">Nome</label>\
+          <input disabled value="'+ name +'" id="nameInfo" type="text" class="validate">\
+          <label class="active" for="nameInfo">Nome</label>\
         </div>\
         <div class="input-field col s12 m8 offset-m2">\
-          <input disabled value="Teste 123" id="desc" type="text" class="validate">\
-          <label class="active" for="desc">Descrição do processo</label>\
+          <input disabled value="Teste 123" id="descInfo" type="text" class="validate">\
+          <label class="active" for="descInfo">Descrição do processo</label>\
         </div>\
       </div>\
       <div class="row">\
         <div class="input-field col s12 m8 offset-m2">\
-          <input disabled value="333" id="temp" type="text" class="validate active">\
-          <label class="active" for="temp">Tempo de execução (ms)</label>\
+          <input disabled value="333" id="runtimeInfo" type="text" class="validate active">\
+          <label class="active" for="runtimeInfo">Tempo de execução (ms)</label>\
         </div>\
       </div>\
       <div class="row">\
@@ -77,7 +77,7 @@ function exibeInfo(){
               <span>Editar</span>\
             </label>\
           </a>\
-          <a class="waves-effect waves-light btn right blue darken-4" disabled id="button"><i class="material-icons left">sd_card</i>salvar</a>\
+          <a class="waves-effect waves-light btn right blue darken-4" disabled id="saveProcess"><i class="material-icons left">sd_card</i>salvar</a>\
         </div>\
       </div>\
     </form>\
@@ -86,7 +86,9 @@ function exibeInfo(){
   }
 }
 
-function dimissModal(Tipo) {
+function dimissModalProcesso(Tipo) {
+    connector.server.changingProcess($("#nameModal").val(), $("#descModal").val(), $("#runtimeModal").val());
+
     $('.' + Tipo + '').modal("close");
     $("#" + Tipo + "").html("");
 }

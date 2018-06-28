@@ -119,11 +119,12 @@
     <Content Include="Content\images\wega.png" />
     <Content Include="Content\images\wumpus.png" />
     <Content Include="Content\js\app-connect.js" />
-    <Content Include="Content\js\esteiras.js" />
+    <Content Include="Content\js\Esteiras\esteiras.js" />
     <Content Include="Content\js\main.js" />
+    <Content Include="Content\js\ServerRecive.js" />
     <Content Include="Scripts\materialize.js" />
     <Content Include="Scripts\materialize.min.js" />
-    <Content Include="Content\js\process.js" />
+    <Content Include="Content\js\Processos\process.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\css\fonts\materialize_icons.woff2" />
     <Content Include="Content\css\fonts\pacific.woff2" />
@@ -151,6 +152,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hub\MasterHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

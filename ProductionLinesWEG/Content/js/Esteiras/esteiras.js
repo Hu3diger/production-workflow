@@ -1,4 +1,4 @@
-function showModal() {
+function showModalEsteira() {
     $("#modal1").append('\
       <div class="modal-content">\
         <h5>Cadastrar nova esteira</h5>\
@@ -23,23 +23,23 @@ function showModal() {
         </div>\
       </div>\
       <div class="modal-footer">\
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="dimissModal(\'modal1\');">Cancelar</a>\
-        <a href="#!" class="waves-effect waves-green btn-flat" onclick="dimissModal(\'modal1\');">Salvar</a>\
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="dimissModalEsteira(\'modal1\');">Cancelar</a>\
+        <a href="#!" class="waves-effect waves-green btn-flat" onclick="dimissModalEsteira(\'modal1\');">Salvar</a>\
       </div>\
     ');
     $('select').formSelect();
 
     $('body').keyup(function(e) {
-      if(e.keyCode  == 27) dimissModal("modal1");
+      if(e.keyCode  == 27) dimissModalEsteira("modal1");
     });
 
     $(document).mouseup(function(e) {
       let container = $("#modal1");
-      if(!container.is(e.target) && container.has(e.target).length === 0) dimissModal("modal1");
+      if(!container.is(e.target) && container.has(e.target).length === 0) dimissModalEsteira("modal1");
     })
   }
 
-function dimissModal(Tipo) {
+function dimissModalEsteira(Tipo) {
     $('.'+Tipo+'').modal("close");
     $("#"+Tipo+"").html("");
 }
