@@ -110,17 +110,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\css\fonts.css" />
+    <Content Include="Content\css\main.css" />
+    <Content Include="Content\css\materialize.css" />
+    <Content Include="Content\css\materialize.min.css" />
+    <Content Include="Content\css\Site.css" />
+    <Content Include="Content\images\weg.png" />
+    <Content Include="Content\images\wega.png" />
+    <Content Include="Content\images\wumpus.png" />
+    <Content Include="Content\js\esteiras.js" />
+    <Content Include="Content\js\main.js" />
+    <Content Include="Scripts\materialize.js" />
+    <Content Include="Scripts\materialize.min.js" />
+    <Content Include="Content\js\process.js" />
     <Content Include="Global.asax" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\css\fonts\materialize_icons.woff2" />
+    <Content Include="Content\css\fonts\pacific.woff2" />
+    <Content Include="Content\css\fonts\pacific2.woff2" />
+    <Content Include="Content\css\fonts\pacific3.woff2" />
+    <Content Include="Content\css\fonts\pacific4.woff2" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -135,6 +144,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EsteirasController.cs" />
+    <Compile Include="Controllers\ProcessosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -147,6 +158,8 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <Content Include="Views\Esteiras\Index.cshtml" />
+    <Content Include="Views\Processos\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
