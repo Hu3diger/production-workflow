@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title - Esteiras Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/materialize.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/fonts.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/main.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+</head>
+
+<body>
+    <!-- Nav Bar -->
+    <div class="navbar-fixed">
+        <nav class="light-blue darken-2">
+            <div class="nav-wrapper">
+                <a href="#" data-target="mobile-menu" class="sidenav-trigger">
+                    <i class="material-icons">menu</i>
+                </a>
+                <a href="@Url.Action("Index", "Home")" class="brand-logo center">
+                    <img src="~/Content/images/wega.png" width="50" style="margin-top: 15px">
+                </a>
+                <ul class="left hide-on-med-and-down">
+                    <li @if (ViewBag.Screen == "Dashboard") { @: class="active"
+                        }>
+                        <a href="@Url.Action("Index", "Home")">Dashboard</a>
+                    </li>
+                    <li @if (ViewBag.Screen == "Esteiras") { @: class="active"
+                        }>
+                        <a href="@Url.Action("Index", "Esteiras")">Esteiras</a>
+                    </li>
+                    <li @if (ViewBag.Screen == "Processos") { @: class="active"
+                        }>
+                        <a href="@Url.Action("Index", "Processos")">Processos</a>
+                    </li>
+                    <li @if (ViewBag.Screen == "Produção") { @: class="active"
+                        }>
+                        <a href="#">Produção</a>
+                    </li>
+                </ul>
+            </div>
+
+            <ul class="sidenav" id="mobile-menu">
+                <li>
+                    <a class="close-button-a">
+                        <i class="material-icons sidenav-close close-button">close</i>
+                    </a>
+                </li>
+                <li @if (ViewBag.Screen == "Dashboard") { @: class="active"
+                    }>
+                    <a href="@Url.Action("Index", "Home")">Dashboard</a>
+                </li>
+                <li @if (ViewBag.Screen == "Esteiras") { @: class="active"
+                    }>
+                    <a href="@Url.Action("Index", "Esteiras")">Esteiras</a>
+                </li>
+                <li @if (ViewBag.Screen == "Processos") { @: class="active"
+                    }>
+                    <a href="@Url.Action("Index", "Processos")">Processos</a>
+                </li>
+                <li @if (ViewBag.Screen == "Produção") { @: class="active"
+                    }>
+                    <a href="#">Produção</a>
+                </li>
+            </ul>
+
+        </nav>
+    </div>
+
+    <!-- Page content -->
+    @RenderBody()
+
+    <!-- JS in the end of file to optimize loading -->
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/materialize.min.js"></script>
+
+    <script src="~/Content/js/main.js"></script>
+</body>
+
+</html>
