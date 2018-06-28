@@ -118,6 +118,7 @@
     <Content Include="Content\images\weg.png" />
     <Content Include="Content\images\wega.png" />
     <Content Include="Content\images\wumpus.png" />
+    <Content Include="Content\js\app-connect.js" />
     <Content Include="Content\js\esteiras.js" />
     <Content Include="Content\js\main.js" />
     <Content Include="Scripts\materialize.js" />
