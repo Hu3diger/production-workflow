@@ -12,8 +12,21 @@ namespace ProductionLinesWEG.Hub
         public void ChangingProcess(string name, string description, int runTime)
         {
             Debug.WriteLine("{0}, {1}, {2}: {3}", name, description, runTime, Context.ConnectionId);
-            //Clients.Client(Context.ConnectionId).showToast("ckasdi", "Recived");
-            Clients.All.showToast("Recived");
+
+            Clients.Caller.showToast("Recived");
+        }
+
+        public void requestLogin(string name, string password)
+        {
+
+            if (name.Equals("kappa") && password.Equals("kappasenha"))
+            {
+                Clients.Caller.acceptLoginUser();
+            }
+            else
+            {
+                Clients.Caller.showToast("Login Refused");
+            }
         }
 
         public override Task OnConnected()
