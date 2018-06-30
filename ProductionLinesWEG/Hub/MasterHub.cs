@@ -21,12 +21,18 @@ namespace ProductionLinesWEG.Hub
 
             if (name.Equals("kappa") && password.Equals("kappasenha"))
             {
-                Clients.Caller.acceptLoginUser();
+                Clients.Caller.acceptLoginUser("daskdasuhsad-kappa-key");
+                Debug.WriteLine("Logado");
             }
             else
             {
                 Clients.Caller.showToast("Login Refused");
             }
+        }
+
+        public void logOut()
+        {
+            Debug.WriteLine("Deslogado");
         }
 
         public override Task OnConnected()

@@ -5,5 +5,5 @@ $(function () {
 
     ServerReciveMethods();
 
-    $.connection.hub.start().done(init);
+    $.connection.hub.start().done(function () { console.log("Conected"); });
 });

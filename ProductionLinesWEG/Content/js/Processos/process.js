@@ -87,7 +87,7 @@ function exibeInfo(){
 }
 
 function dimissModalProcesso(Tipo) {
-    connector.server.changingProcess($("#nameModal").val(), $("#descModal").val(), $("#runtimeModal").val());
+    changingProcess($("#nameModal").val(), $("#descModal").val(), $("#runtimeModal").val());
 
     $('.' + Tipo + '').modal("close");
     $("#" + Tipo + "").html("");

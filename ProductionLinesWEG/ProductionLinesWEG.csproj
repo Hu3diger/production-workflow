@@ -121,7 +121,8 @@
     <Content Include="Content\js\app-connect.js" />
     <Content Include="Content\js\Esteiras\esteiras.js" />
     <Content Include="Content\js\main.js" />
-    <Content Include="Content\js\ServerRecive.js" />
+    <Content Include="Content\js\serverRecive.js" />
+    <Content Include="Content\js\serverSend.js" />
     <Content Include="Scripts\jquery-cookie.js" />
     <Content Include="Scripts\materialize.js" />
     <Content Include="Scripts\materialize.min.js" />

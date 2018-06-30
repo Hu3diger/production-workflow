@@ -54,7 +54,7 @@
                         </li>
                     </ul>
 
-                    <a href="@Url.Action("Index", "Login")" class="right" style="padding-right: 20px">Log out</a>
+                    <a href="#" onclick="logOut()" class="right" style="padding-right: 20px">Log out</a>
                 </div>
 
                 <ul class="sidenav" id="mobile-menu">
@@ -95,22 +95,9 @@
     <script src="~/Scripts/jquery.signalR-2.3.0.js"></script>
 
     <!-- todos os methodos do servidor > cliente, dentro dessa função -->
-    <script>
-
-        function ServerReciveMethods() {
-
-            connector.client.acceptLoginUser = function () {
-                window.location.href = '@Url.Action("Index", "Dashboard")';
-            };
-
-            connector.client.showToast = function (message) {
-                M.toast({ html: message })
-            };
-
-        };
-
-    </script>
+    <script src="~/Content/js/serverRecive.js"></script>
     <!-- ------------------------------------------------------------ -->
+    <script src="~/Content/js/serverSend.js"></script>
 
     <script src="~/Content/js/app-connect.js"></script>
 

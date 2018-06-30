@@ -24,18 +24,10 @@
                     <span>Lembrar senha</span>
                 </label>
             </a>
-            <a onclick="login()" class="btn waves-effect waves-light right teal darken-3">
+            <a onclick='requestLogin($("#user").val(), $("#password").val())' class="btn waves-effect waves-light right teal darken-3">
                 Entrar
                 <i class="material-icons right">send</i>
             </a>
         </div>
     </div>
 </div>
-
-<script>
-    function login() {
-        $.cookie('loginAuth', 'kappa');
-
-        connector.server.requestLogin($("#user").val(), $("#password").val());
-    }
-</script>
