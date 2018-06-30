@@ -94,21 +94,25 @@
     <script src="~/Scripts/materialize.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.3.0.js"></script>
 
-    <script src="~/Content/js/app-connect.js"></script>
+    <!-- todos os methodos do servidor > cliente, dentro dessa função -->
     <script>
 
         function ServerReciveMethods() {
 
-    connector.client.acceptLoginUser = function () {
-        window.location.href = '@Url.Action("Index", "Dashboard")';
-    };
+            connector.client.acceptLoginUser = function () {
+                window.location.href = '@Url.Action("Index", "Dashboard")';
+            };
 
-    connector.client.showToast = function (message) {
-        M.toast({ html: message })
-    };
+            connector.client.showToast = function (message) {
+                M.toast({ html: message })
+            };
 
-};
+        };
+
     </script>
+    <!-- ------------------------------------------------------------ -->
+
+    <script src="~/Content/js/app-connect.js"></script>
 
     <script src="~/Content/js/main.js"></script>
 
@@ -119,3 +123,4 @@
 </body>
 
 </html>
+

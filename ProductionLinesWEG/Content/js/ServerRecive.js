@@ -2,8 +2,7 @@
 function ServerReciveMethods() {
 
     connector.client.acceptLoginUser = function () {
-        M.toast({ html: "Recived" })
-        //window.location.href = '@Url.Action("Index", "Dashboard")';
+        window.location.href = '@Url.Action("Index", "Dashboard")';
     };
 
     connector.client.showToast = function (message) {
