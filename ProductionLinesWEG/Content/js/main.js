@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
   $(".sidenav").sidenav();
   $(".collapsible").collapsible();
   $(".tooltipped").tooltip();
@@ -58,6 +58,7 @@ function inserirT(m, c) {
     );
   });
 }
+
 function getHorario() {
   let today = new Date();
   let dd = today.getDate();

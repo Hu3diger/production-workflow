@@ -158,6 +158,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hub\MasterHub.cs" />
+    <Compile Include="Models\Atributo.cs" />
+    <Compile Include="Models\Delegates.cs" />
+    <Compile Include="Models\Esteira.cs" />
+    <Compile Include="Models\Peca.cs" />
+    <Compile Include="Models\Processo.cs" />
+    <Compile Include="Models\Threads.cs" />
+    <Compile Include="Models\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -177,7 +184,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

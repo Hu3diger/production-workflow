@@ -15,9 +15,15 @@ namespace ProductionLinesWEG
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
+                url: "{controller}",
+                defaults: new { controller = "Login", action = "Index" }
             );
+
+            //routes.MapRoute(
+            //    name: "Default",
+            //    url: "{controller}/{action}/{id}",
+            //    defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
+            //);
         }
     }
 }

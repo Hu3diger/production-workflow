@@ -1,18 +1,129 @@
-﻿using System;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
+using ProductionLinesWEG.Models;
 
 namespace ProductionLinesWEG.Hub
 {
     public class MasterHub : Microsoft.AspNet.SignalR.Hub
     {
+        public static readonly ConcurrentDictionary<string, HashSet<string>> sessions = new ConcurrentDictionary<string, HashSet<string>>();
+
+        public static IEnumerable<string> GetAllConnectionIds(string connectionId)
+        {
+            foreach (var session in sessions)
+            {
+                if (session.Value.Contains(connectionId) == true)
+                {
+                    return session.Value;
+                }
+            }
+
+            return Enumerable.Empty<string>();
+        }
+
+        public override Task OnConnected()
+        {
+            this.EnsureGroups();
+
+            return base.OnConnected();
+        }
+
+        public override Task OnReconnected()
+        {
+            this.EnsureGroups();
+
+            return base.OnReconnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            this.DisconnectGroups();
+
+            return base.OnDisconnected(stopCalled);
+        }
+
+        private void EnsureGroups()
+        {
+            var connectionIds = null as HashSet<string>;
+            var sessionId = this.Context.QueryString["SessionId"];
+            var connectionId = this.Context.ConnectionId;
+
+            Debug.WriteLine("cookie: " + sessionId);
+
+            if (sessionId == null || sessionId.Equals(""))
+            {
+                string key = Utils.generateUniqueKey();
+
+                sessionId = key;
+
+                Clients.Caller.cookie("SessionId", key);
+            }
+
+            if (sessions.TryGetValue(sessionId, out connectionIds) == false)
+            {
+                connectionIds = sessions[sessionId] = new HashSet<string>();
+            }
+
+            connectionIds.Add(connectionId);
+        }
+
+        private void DisconnectGroups()
+        {
+            var connectionIds = null as HashSet<string>;
+            var sessionId = this.Context.QueryString["SessionId"];
+            var connectionId = this.Context.ConnectionId;
+
+            if (sessions.TryGetValue(sessionId, out connectionIds) == false)
+            {
+                foreach (var session in sessions)
+                {
+                    if (session.Value.Contains(connectionId) == true)
+                    {
+                        sessionId = session.Key;
+                        sessions.TryGetValue(sessionId, out connectionIds);
+                    }
+                }
+            }
+
+            connectionIds.Remove(connectionId);
+
+            if (connectionIds.Count == 0)
+            {
+                sessions.TryRemove(sessionId, out connectionIds);
+            }
+
+            sessions.TryGetValue(sessionId, out connectionIds);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public void ChangingProcess(string name, string description, int runTime)
         {
-            Debug.WriteLine("{0}, {1}, {2}: {3}", name, description, runTime, Context.ConnectionId);
-
             Clients.Caller.showToast("Recived");
         }
 
@@ -21,8 +132,7 @@ namespace ProductionLinesWEG.Hub
 
             if (name.Equals("kappa") && password.Equals("kappasenha"))
             {
-                Clients.Caller.acceptLoginUser("daskdasuhsad-kappa-key");
-                Debug.WriteLine("Logado");
+                Clients.Caller.acceptLoginUser(Utils.generateUniqueKey());
             }
             else
             {
@@ -32,41 +142,8 @@ namespace ProductionLinesWEG.Hub
 
         public void logOut()
         {
-            Debug.WriteLine("Deslogado");
+
         }
-
-        public override Task OnConnected()
-        {
-            // Add your own code here.
-            // For example: in a chat application, record the association between
-            // the current connection ID and user name, and mark the user as online.
-            // After the code in this method completes, the client is informed that
-            // the connection is established; for example, in a JavaScript client,
-            // the start().done callback is executed.
-
-            Debug.WriteLine("kappa conectado {0}", Context.ConnectionId);
-            return base.OnConnected();
-        }
-
-        public override Task OnDisconnected(bool stopCalled)
-        {
-            // Add your own code here.
-            // For example: in a chat application, mark the user as offline, 
-            // delete the association between the current connection id and user name.
-
-            Debug.WriteLine("kappa desconectado");
-            return base.OnDisconnected(stopCalled);
-        }
-
-        public override Task OnReconnected()
-        {
-            // Add your own code here.
-            // For example: in a chat application, you might have marked the
-            // user as offline after a period of inactivity; in that case 
-            // mark the user as online again.
-
-            Debug.WriteLine("kappa reconectado");
-            return base.OnReconnected();
-        }
+        
     }
 }

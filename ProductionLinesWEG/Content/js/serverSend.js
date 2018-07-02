@@ -6,7 +6,7 @@
 
 function logOut() {
 
-    $.removeCookie('loginAuthKey');
+    $.removeCookie('AuthId');
 
     connector.server.logOut().done(function () {
         window.location.href = '/Login';

@@ -11,7 +11,12 @@ namespace ProductionLinesWEG.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            HttpCookie cookie = Request.Cookies.Get("AuthId");
+            if (cookie == null || cookie.Value.Equals(""))
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }
