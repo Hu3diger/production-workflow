@@ -1,36 +1,25 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
+using ProductionLinesWEG.Hub;
+using ProductionLinesWEG.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
+using System.Web.Script.Serialization;
 
-namespace ProductionLineServerWEG.Models
+namespace ProductionLinesWEG.Models
 {
     class Threads
     {
+        private readonly IHubConnectionContext<dynamic> Clients = GlobalHost.ConnectionManager.GetHubContext<MasterHub>().Clients;
+        private readonly List<Dashboard> listDashboard = new List<Dashboard>();
         private EsteiraAbstrata e;
+
         //private Form1 f;
 
-        //public Threads(EsteiraAbstrata e, Form1 f)
         public Threads(EsteiraAbstrata e)
         {
             this.e = e;
-            //this.f = f;
-        }
-
-        public void mainThread()
-        {
-            if (verificacao())
-            {
-
-
-
-            }
-        }
-
-        public bool verificacao()
-        {
-            return true;
         }
 
         public void threadEsteira()
@@ -53,7 +42,7 @@ namespace ProductionLineServerWEG.Models
                             {
                                 Processo ps = em.nextProcess();
 
-                                //f.ExternalTerminal(ps.Name + " Executando \n");
+                                toDashboard(ps.Name + " Executando");
 
                                 pc.setAtributo(ps.Name, "Kappa value", Atributo.FAZENDO);
 
@@ -61,28 +50,28 @@ namespace ProductionLineServerWEG.Models
 
                                 pc.setAtributo(ps.Name, "Kappa value", Atributo.FEITO);
 
-                                //f.ExternalTerminal(ps.Name + " Finalizado \n");
+                                toDashboard(ps.Name + " Finalizado");
                             }
 
                             em.finalizeProcess();
 
                             Peca p = em.RemovePiece();
 
-                            //f.ExternalTerminal("Exibindo atributos da peca recém 'feita': \n");
+                            toDashboard("Exibindo atributos da peca recém 'feita':");
 
-                            //p.ListAtributos.ForEach(x => f.ExternalTerminal("Processo: " + x.Name + " / Estado: " + x.Estado + "\n"));
+                            p.ListAtributos.ForEach(x => toDashboard("Processo: " + x.Name + " / Estado: " + x.Estado));
 
-                            //f.ExternalTerminal("Droped First / End\n");
+                            toDashboard("Droped First / End\n");
                         }
                         else
                         {
-                            //f.ExternalTerminal(em.Name + "Esperando Peça\n");
+                            toDashboard(em.Name + "Esperando Peça");
                             Thread.Sleep(250);
                         }
                     }
                     else
                     {
-                        //f.ExternalTerminal("Insert a master process in Esteira\n");
+                        toDashboard("Insert a master process in Esteira");
                         break;
                     }
                 }
@@ -91,8 +80,31 @@ namespace ProductionLineServerWEG.Models
             {
                 //while (true)
                 //{
-                    
+
                 //}
+            }
+        }
+
+        private void toDashboard(string message, bool critico)
+        {
+            listDashboard.Insert(0, new Dashboard(new DateTime(), message, critico));
+            verificarDashboard();
+        }
+
+        private void toDashboard(string message)
+        {
+            listDashboard.Insert(0, new Dashboard(new DateTime(), message, false));
+            verificarDashboard();
+        }
+
+        private void verificarDashboard()
+        {
+            if (listDashboard.Count > 10)
+            {
+                if (!listDashboard[5].Critico)
+                {
+                    listDashboard.RemoveAt(5);
+                }
             }
         }
     }

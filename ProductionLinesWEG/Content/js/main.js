@@ -3,7 +3,7 @@ $(document).ready(function () {
   $(".collapsible").collapsible();
   $(".tooltipped").tooltip();
   $(".modal").modal();
-  $(".collapsible-header").on("click", exibeInfo);
+    $(".collapsible-header").on("click", exibeInfo);
 
   //setInterval(inserirT, 2000);
 });
@@ -11,7 +11,7 @@ $(document).ready(function () {
 function enable() {
 
   if ($("#name").attr("disabled")) {
-
+      
     $('#name').removeAttr("disabled");
     $('#desc').removeAttr("disabled");
     $('#temp').removeAttr("disabled");

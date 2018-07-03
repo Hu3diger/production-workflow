@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductionLineServerWEG.Models
+namespace ProductionLinesWEG.Models
 {
     /// <summary>
     /// Classe Base onde conterá o nome em comum entre todos os processos, podendo ser alterado ao longo do tempo

@@ -159,8 +159,10 @@
     </Compile>
     <Compile Include="Hub\MasterHub.cs" />
     <Compile Include="Models\Atributo.cs" />
+    <Compile Include="Models\ClassWeb.cs" />
     <Compile Include="Models\Delegates.cs" />
     <Compile Include="Models\Esteira.cs" />
+    <Compile Include="Models\Program.cs" />
     <Compile Include="Models\Peca.cs" />
     <Compile Include="Models\Processo.cs" />
     <Compile Include="Models\Threads.cs" />
@@ -184,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\Others\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

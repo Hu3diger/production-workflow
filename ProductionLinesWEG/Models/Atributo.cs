@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductionLineServerWEG.Models
+namespace ProductionLinesWEG.Models
 {
     class Atributo
     {
