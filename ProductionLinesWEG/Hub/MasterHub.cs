@@ -28,6 +28,7 @@ namespace ProductionLinesWEG.Hub
     {
         public string AuthId { get; set; }
         public HashSet<string> SessionGroup { get; set; }
+        public Program Program { get; set; }
 
         public SessionAuth(string authId, HashSet<string> sessionGroup)
         {
@@ -38,7 +39,27 @@ namespace ProductionLinesWEG.Hub
 
     public class MasterHub : Microsoft.AspNet.SignalR.Hub
     {
-        private static readonly List<Program> listProgram = new List<Program>();
+        private static readonly List<Program> listProgram = new List<Program>() {
+            new Program("OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
+            new Program("SKB/minqyPAptFbdNxdRMUJRyequO3vV3JLXd1DlnNo="),
+            new Program("R73l6UpSa0m2TKAwVfZWjlDwKbRUBF60Nz+lvo5zNsY="),
+            new Program("DY0EW9LSaamcN2kElmjBMj8O7ueqnA0eR/bsVjI5p+4="),
+            new Program("ZENQihH1ELif/yBmtQ7LpfBBgxja1IQ1rrX83UAsg1k="),
+            new Program("hDIOcptrDXxpgF2uR5vac0rwCp+2oL0O0tDYbbPTJ3Q="),
+            new Program("ZwRQjIzNwlWGlUtEw3ZLH4QNbgIuhfMRlvNnuIpFwk8="),
+            new Program("OcuBennwdzY0eaPwdQVpjEi4PkixkDizuvf+ONhGhhE="),
+            new Program("uaC/BujQFm3HsZv3cJy9oEQPMU1z6KUbTOfzx9dA8dw="),
+            new Program("m+YxKSQTbs60IkCgpXeNTXA71nCyuD22s9CCk5AceRg="),
+            new Program("9IiTO6J5/Qpfm3GxsI1BdI4LBJijxxUhPdXsvJ9Br68="),
+            new Program("XsVZlNM1vdTBMnRwXRXX2og+DGwtnsFFBuUoNtUt0HQ="),
+            new Program("rFjRfLB4yfWrXsDI/yfV+KqxaDXNcPbZ0/LftOBbte0="),
+            new Program("qAsFeFMMKHR0BW+j/B+UJHyPldMUhb1NG4ckRfWkMQU="),
+            new Program("HICxhJwT407lxTdFXC0ZuSDkjcUXXwUCvOyv2KEMBdA="),
+            new Program("kum72wJmLuL7meRQ/FlcRnV0AjEElHQXZiWq7rNnb7A="),
+            new Program("0va/K0rIllLzjg9TUE27PgjoIJp3OSaxMPxGGVjDMcE="),
+            new Program("QtrUsnpimPQ6hJxLE0JHFx6aRrZscqmzECLgGH3Q+WU="),
+            new Program("n1ePewjNIpySkXfpU+Ylf4nsQfhZgNKxDQ8vOptDVsg="),
+        };
         
         private static readonly List<Logins> _listLogins = new List<Logins> {
             new Logins("teste1",  "senha123", "OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
@@ -63,6 +84,7 @@ namespace ProductionLinesWEG.Hub
         };
 
         public static readonly ConcurrentDictionary<string, SessionAuth> sessions = new ConcurrentDictionary<string, SessionAuth>();
+        internal const string SessionId = "SessionId";
 
         public static HubConnectionContext toClientsByAuthId(string AuthId)
         {
@@ -73,7 +95,7 @@ namespace ProductionLinesWEG.Hub
         {
             foreach (var session in sessions)
             {
-                if (!session.Value.SessionGroup.Contains(connectionId))
+                if (session.Value.SessionGroup.Contains(connectionId) == true)
                 {
                     return session.Value.SessionGroup;
                 }
@@ -86,7 +108,7 @@ namespace ProductionLinesWEG.Hub
         {
             foreach (var session in sessions)
             {
-                if (session.Key.Equals(sessionId))
+                if (session.Key.Equals(sessionId) == true)
                 {
                     return session.Value.SessionGroup;
                 }
@@ -99,7 +121,7 @@ namespace ProductionLinesWEG.Hub
         {
             foreach (var session in sessions)
             {
-                if (session.Value.AuthId.Equals(authId))
+                if (session.Value.AuthId.Equals(authId) == true)
                 {
                     return session.Value.SessionGroup;
                 }
@@ -132,7 +154,7 @@ namespace ProductionLinesWEG.Hub
         private void EnsureGroups()
         {
             var connectionIds = null as SessionAuth;
-            var sessionId = this.Context.QueryString["SessionId"];
+            var sessionId = this.Context.QueryString[SessionId];
             var connectionId = this.Context.ConnectionId;
 
             if (sessionId == null || sessionId.Equals(""))
@@ -144,7 +166,7 @@ namespace ProductionLinesWEG.Hub
                 Clients.Caller.cookie("SessionId", key);
             }
 
-            if (!sessions.TryGetValue(sessionId, out connectionIds))
+            if (sessions.TryGetValue(sessionId, out connectionIds) == false)
             {
                 connectionIds = sessions[sessionId] = new SessionAuth("", new HashSet<string>());
             }
@@ -155,14 +177,14 @@ namespace ProductionLinesWEG.Hub
         private void DisconnectGroups()
         {
             var connectionIds = null as SessionAuth;
-            var sessionId = this.Context.QueryString["SessionId"];
+            var sessionId = this.Context.QueryString[SessionId];
             var connectionId = this.Context.ConnectionId;
 
-            if (!sessions.TryGetValue(sessionId, out connectionIds))
+            if (sessions.TryGetValue(sessionId, out connectionIds) == false)
             {
                 foreach (var session in sessions)
                 {
-                    if (!session.Value.SessionGroup.Contains(connectionId))
+                    if (session.Value.SessionGroup.Contains(connectionId) == true)
                     {
                         sessionId = session.Key;
                         sessions.TryGetValue(sessionId, out connectionIds);

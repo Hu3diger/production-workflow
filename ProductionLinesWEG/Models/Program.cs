@@ -4,13 +4,18 @@ using System.Linq;
 
 namespace ProductionLinesWEG.Models
 {
-    class Program
+    public class Program
     {
-        private string authId;
+        public string AuthId { get; set; }
 
-        private List<Processo> listProcessos = new List<Processo>();
-        private List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
+        private readonly List<Processo> listProcessos = new List<Processo>();
+        private readonly List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
         private readonly List<Dashboard> listDashboard = new List<Dashboard>();
+
+        public Program(string authId)
+        {
+            AuthId = authId;
+        }
 
         public void toDashboard(string message, bool critico)
         {
