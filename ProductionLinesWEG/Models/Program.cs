@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ProductionLinesWEG.Models
 {
@@ -8,60 +10,56 @@ namespace ProductionLinesWEG.Models
 
         private List<Processo> listProcessos = new List<Processo>();
         private List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
+        private readonly List<Dashboard> listDashboard = new List<Dashboard>();
 
-        public void ExternalTerminal(string msg)
+        public void toDashboard(string message, bool critico)
         {
-            Terminal.Invoke(new MethodInvoker(delegate
+            listDashboard.Insert(0, new Dashboard(new DateTime(), message, critico));
+            verificarDashboard();
+        }
+
+        public void toDashboard(string message)
+        {
+            listDashboard.Insert(0, new Dashboard(new DateTime(), message, false));
+            verificarDashboard();
+        }
+
+        private void verificarDashboard()
+        {
+            if (listDashboard.Count > 10)
             {
-                Terminal.AppendText(msg);
-            }));
+                if (!listDashboard[5].Critico)
+                {
+                    listDashboard.RemoveAt(5);
+                }
+            }
         }
 
-        private void BtnCriaProcesso_Click(object sender, EventArgs e)
+        public void CriaProcesso(string nome, string desc, int runtime)
         {
-            listProcessos.Add(new Processo(new BaseProcesso(nomeP.Text, DescP.Text, int.Parse(RuntimeP.Text))));
-            Terminal.AppendText("Processo add\n");
+            listProcessos.Add(new Processo(new BaseProcesso(nome, desc, runtime)));
+            toDashboard("Processo add\n");
 
             attAllListBox();
         }
 
-        private void BtnInsertProcesso_Click(object sender, EventArgs e)
+        public void InsertProcesso(string processo1, string processo2)
         {
-            listProcessos.Find(x => x.Name.Equals(listBox2.GetItemText(listBox2.SelectedItem))).AddInternalProcess(-1, listProcessos.Find(x => x.Name.Equals(listBox1.GetItemText(listBox1.SelectedItem))));
+            listProcessos.Find(x => x.Name.Equals(processo1)).AddInternalProcess(-1, listProcessos.Find(x => x.Name.Equals(processo2)));
 
-            Terminal.AppendText("Processo adicionado\n");
+            toDashboard("Processo adicionado\n");
 
             attAllListBox();
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        public void listBox1_SelectedIndexChanged()
         {
-            string value = listBox1.GetItemText(listBox1.SelectedItem);
+            //string value = listBox1.GetItemText(listBox1.SelectedItem);
 
             attListBox2();
         }
 
-        private void BtnListProcesso_Click(object sender, EventArgs e)
-        {
-            listProcessos.Where(x => x.getFather() == null).ToList().ForEach(y => y.GetInternalOrderProcess().ForEach(x => escreverList(x)));
-
-            attAllListBox();
-        }
-
-        private void escreverList(Processo x)
-        {
-            for (int i = 0; i < x.Cascade; i++)
-            {
-                Terminal.AppendText("   ");
-                if (i == x.Cascade - 1)
-                {
-                    Terminal.AppendText("ட");
-                }
-            }
-            Terminal.AppendText(x.Cascade + " | " + x.Name + "\n");
-        }
-
-        private void attAllListBox()
+        public void attAllListBox()
         {
             attListBox1();
             attListBox2();
@@ -70,61 +68,53 @@ namespace ProductionLinesWEG.Models
             attListBox5();
         }
 
-        private void attListBox1()
+        public void attListBox1()
         {
-            listBox1.DataSource = listProcessos.Where(x => x.getFather() == null).Select(x => x.Name).ToList();
+            //listBox1.DataSource = listProcessos.Where(x => x.getFather() == null).Select(x => x.Name).ToList();
         }
 
-        private void attListBox2()
+        public void attListBox2()
         {
 
-            listBox2.DataSource = listProcessos.Where(x => x.GetFathersProcess().Find(y => y.Name.Equals(listBox1.GetItemText(listBox1.SelectedItem))) == null).Select(x => x.Name).ToList();
+            //listBox2.DataSource = listProcessos.Where(x => x.GetFathersProcess().Find(y => y.Name.Equals(listBox1.GetItemText(listBox1.SelectedItem))) == null).Select(x => x.Name).ToList();
         }
 
-        private void attListBox3()
+        public void attListBox3()
         {
-            listBox3.DataSource = listProcessos.Select(x => x.Name).ToList();
+            //listBox3.DataSource = listProcessos.Select(x => x.Name).ToList();
         }
 
-        private void attListBox4()
+        public void attListBox4()
         {
-            listBox4.DataSource = listEsteiras.Select(x => x.Name).ToList();
+            //listBox4.DataSource = listEsteiras.Select(x => x.Name).ToList();
         }
 
-        private void attListBox5()
+        public void attListBox5()
         {
-            listBox5.DataSource = listEsteiras.Select(x => x.Name).ToList();
+            //listBox5.DataSource = listEsteiras.Select(x => x.Name).ToList();
         }
 
-        private void Terminal_TextChanged(object sender, EventArgs e)
+        public void CriarEsteira(string nome, int inLimit)
         {
-            // set the current caret position to the end
-            Terminal.SelectionStart = Terminal.Text.Length;
-            // scroll it automatically
-            Terminal.ScrollToCaret();
-        }
+            listEsteiras.Add(new EsteiraModel(nome, inLimit));
 
-        private void BtnCriarEsteira_Click(object sender, EventArgs e)
-        {
-            listEsteiras.Add(new EsteiraModel(NomeE.Text, int.Parse(InLimitE.Text)));
-
-            Terminal.AppendText("Esteira add\n");
+            toDashboard("Esteira add\n");
 
             attAllListBox();
         }
 
-        private void BtnInserirPinE_Click(object sender, EventArgs e)
+        public void InserirPinE(string processo, string esteira)
         {
-            EsteiraModel em = (EsteiraModel)listEsteiras.Find(x => x.Name.Equals(listBox4.GetItemText(listBox4.SelectedItem)));
+            EsteiraModel em = (EsteiraModel)listEsteiras.Find(x => x.Name.Equals(esteira));
 
-            em.insertMasterProcess(listProcessos.Find(x => x.Name.Equals(listBox3.GetItemText(listBox3.SelectedItem))));
+            em.insertMasterProcess(listProcessos.Find(x => x.Name.Equals(processo)));
 
-            Terminal.AppendText("Processo inserido na esteira\n");
+            toDashboard("Processo inserido na esteira\n");
 
             attAllListBox();
         }
 
-        private void BtnPreLoadProcess_Click(object sender, EventArgs e)
+        public void BtnPreLoadProcess_Click(object sender, EventArgs e)
         {
             for (int i = listProcessos.Count - 1; i >= 0; i--)
             {
@@ -158,92 +148,34 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
 
-            Terminal.AppendText("Sistema pré-carregado com processos\n");
+            toDashboard("Sistema pré-carregado com processos\n");
         }
 
-        private void BtnInsertPiece_Click(object sender, EventArgs e)
+        public void InsertPiece(string esteira)
         {
             Peca pc = new Peca();
 
-            if (listEsteiras.Find(x => x.Name.Equals(listBox5.GetItemText(listBox5.SelectedItem))).InsertPiece(pc))
+            if (listEsteiras.Find(x => x.Name.Equals(esteira)).InsertPiece(pc))
             {
-                Terminal.AppendText("Peça inserida na esteira selecionada\n");
+                toDashboard("Peça inserida na esteira selecionada\n");
             }
             else
             {
-                Terminal.AppendText("Esteira lotada, não é possivel inserir mais peças\n");
+                toDashboard("Esteira lotada, não é possivel inserir mais peças\n");
             }
         }
 
-        private void BtnStart_Click(object sender, EventArgs e)
+        public void LigarEsteira(string esteira)
         {
-
+            listEsteiras.Find(x => x.Name.Equals(esteira)).TurnOn(this);
         }
 
-        private void BtnStop_Click(object sender, EventArgs e)
+        public void DesligarEsteira(string esteira)
         {
-
+            listEsteiras.Find(x => x.Name.Equals(esteira)).TurnOff();
         }
 
-        private void BtnLigarE_Click(object sender, EventArgs e)
-        {
-            listEsteiras.Find(x => x.Name.Equals(listBox5.GetItemText(listBox5.SelectedItem))).TurnOn(this);
-        }
-
-        private void BtnDesligarE_Click(object sender, EventArgs e)
-        {
-            listEsteiras.Find(x => x.Name.Equals(listBox5.GetItemText(listBox5.SelectedItem))).TurnOff();
-        }
-
-        private void BtnTesteProcessManager_Click(object sender, EventArgs e)
-        {
-            ProcessManager pm = new ProcessManager(listProcessos[0]);
-
-            Processo p = null;
-
-            Terminal.AppendText("\nIniciando Teste do ProcessManager\n");
-
-            while (true)
-            {
-                p = pm.Next();
-
-                if (p != null)
-                {
-                    Terminal.AppendText("retorno: " + p.Name + " / " + p.InProcess + "\n");
-                    listProcessos.Where(x => x.getFather() == null).ToList().ForEach(y => y.GetInternalOrderProcess().ForEach(x => escreverListWithInP(x)));
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            Terminal.AppendText("Lista do processos depois da conclusão\n");
-
-            listProcessos.Where(x => x.getFather() == null).ToList().ForEach(y => y.GetInternalOrderProcess().ForEach(x => escreverListWithInP(x)));
-
-            Terminal.AppendText("\nFim do Teste do ProcessManager\n");
-        }
-
-        private void escreverListWithInP(Processo x)
-        {
-            for (int i = 0; i < x.Cascade; i++)
-            {
-                Terminal.AppendText("   ");
-                if (i == x.Cascade - 1)
-                {
-                    Terminal.AppendText("ட");
-                }
-            }
-            Terminal.AppendText(x.Cascade + " | " + x.Name + " / " + x.InProcess + "\n");
-        }
-
-        private void BtnInsertEinE_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void BtnPreLoadEsteiras_Click(object sender, EventArgs e)
+        public void BtnPreLoadEsteiras_Click(object sender, EventArgs e)
         {
             for (int i = listEsteiras.Count - 1; i >= 0; i--)
             {
@@ -261,26 +193,7 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
 
-            Terminal.AppendText("Sistema pré-carregado com esteiras e limite de 5\n");
+            toDashboard("Sistema pré-carregado com esteiras e limite de 5\n");
         }
-
-        private void Terminal2_TextChanged(object sender, EventArgs e)
-        {
-            // set the current caret position to the end
-            Terminal2.SelectionStart = Terminal2.Text.Length;
-            // scroll it automatically
-            Terminal2.ScrollToCaret();
-        }
-
-        private void BtnListEsterias_Click(object sender, EventArgs e)
-        {
-            List<EsteiraAbstrata> l = listEsteiras.FindAll(x => x.EsteiraInput.Count == 0);
-
-            for (int i = 0; i < l.Count; i++)
-            {
-                //  ManagePrint.listEsteiraRecursivo(l[i]);
-            }
-        }
-
     }
 }

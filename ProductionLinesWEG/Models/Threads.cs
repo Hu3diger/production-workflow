@@ -12,14 +12,14 @@ namespace ProductionLinesWEG.Models
     class Threads
     {
         private readonly IHubConnectionContext<dynamic> Clients = GlobalHost.ConnectionManager.GetHubContext<MasterHub>().Clients;
-        private readonly List<Dashboard> listDashboard = new List<Dashboard>();
         private EsteiraAbstrata e;
 
-        //private Form1 f;
+        private Program program;
 
-        public Threads(EsteiraAbstrata e)
+        public Threads(EsteiraAbstrata e, Program p)
         {
             this.e = e;
+            program = p;
         }
 
         public void threadEsteira()
@@ -42,7 +42,7 @@ namespace ProductionLinesWEG.Models
                             {
                                 Processo ps = em.nextProcess();
 
-                                toDashboard(ps.Name + " Executando");
+                                program.toDashboard(ps.Name + " Executando");
 
                                 pc.setAtributo(ps.Name, "Kappa value", Atributo.FAZENDO);
 
@@ -50,28 +50,28 @@ namespace ProductionLinesWEG.Models
 
                                 pc.setAtributo(ps.Name, "Kappa value", Atributo.FEITO);
 
-                                toDashboard(ps.Name + " Finalizado");
+                                program.toDashboard(ps.Name + " Finalizado");
                             }
 
                             em.finalizeProcess();
 
                             Peca p = em.RemovePiece();
 
-                            toDashboard("Exibindo atributos da peca recém 'feita':");
+                            program.toDashboard("Exibindo atributos da peca recém 'feita':");
 
-                            p.ListAtributos.ForEach(x => toDashboard("Processo: " + x.Name + " / Estado: " + x.Estado));
+                            p.ListAtributos.ForEach(x => program.toDashboard("Processo: " + x.Name + " / Estado: " + x.Estado));
 
-                            toDashboard("Droped First / End\n");
+                            program.toDashboard("Droped First / End\n");
                         }
                         else
                         {
-                            toDashboard(em.Name + "Esperando Peça");
+                            program.toDashboard(em.Name + "Esperando Peça");
                             Thread.Sleep(250);
                         }
                     }
                     else
                     {
-                        toDashboard("Insert a master process in Esteira");
+                        program.toDashboard("Insert a master process in Esteira");
                         break;
                     }
                 }
@@ -82,29 +82,6 @@ namespace ProductionLinesWEG.Models
                 //{
 
                 //}
-            }
-        }
-
-        private void toDashboard(string message, bool critico)
-        {
-            listDashboard.Insert(0, new Dashboard(new DateTime(), message, critico));
-            verificarDashboard();
-        }
-
-        private void toDashboard(string message)
-        {
-            listDashboard.Insert(0, new Dashboard(new DateTime(), message, false));
-            verificarDashboard();
-        }
-
-        private void verificarDashboard()
-        {
-            if (listDashboard.Count > 10)
-            {
-                if (!listDashboard[5].Critico)
-                {
-                    listDashboard.RemoveAt(5);
-                }
             }
         }
     }
