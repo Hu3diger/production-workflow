@@ -143,6 +143,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Content\css\login.css" />
     <None Include="Views\Login\Index.cshtml" />
+    <Content Include="Scripts\redips-drag-min.js" />
     <Content Include="Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ProducaoController.cs" />
     <Compile Include="Controllers\LoginController .cs" />
     <Compile Include="Controllers\EsteirasController.cs" />
     <Compile Include="Controllers\ProcessosController.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Models\Program.cs" />
     <Compile Include="Models\Peca.cs" />
     <Compile Include="Models\Processo.cs" />
+    <Compile Include="Models\Testes.cs" />
     <Compile Include="Models\Threads.cs" />
     <Compile Include="Models\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -177,6 +180,7 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Views\Esteiras\Index.cshtml" />
     <Content Include="Views\Processos\Index.cshtml" />
+    <Content Include="Views\Producao\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

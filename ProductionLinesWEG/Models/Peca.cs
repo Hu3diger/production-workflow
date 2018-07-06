@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProductionLinesWEG.Models
 {
-    class Peca
+    public class Peca
     {
         private long _tag;
 

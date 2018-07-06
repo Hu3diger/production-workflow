@@ -32,3 +32,17 @@
 .haha{
 	color: orange;
 }
+
+.esteira{
+	width: 100px; 
+	border-radius: 5px 15px 15px 5px; 
+	height: 50px; 
+	background-color: #880e4f;
+}
+
+.scroll{
+	overflow: auto;
+	white-space: nowrap;
+	border: #880e4f solid 1px;
+	margin-top: 5vh;
+}

@@ -15,4 +15,10 @@ function ServerReciveMethods() {
         M.toast({ html: message })
     };
 
+    connector.client.listProcessos = function (jsonRecived) {
+        $("#listProcesso").html("");
+
+        generateList(jsonRecived, $("#listProcesso"));
+    }
+
 };

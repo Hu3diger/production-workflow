@@ -48,9 +48,9 @@
                             }>
                             <a href="@Url.Action("Index", "Processos")">Processos</a>
                         </li>
-                        <li @if (ViewBag.Screen == "Produção") { @: class="active"
+                        <li @if (ViewBag.Screen == "Producao") { @: class="active"
                             }>
-                            <a href="#">Produção</a>
+                            <a href="@Url.Action("Index", "Producao")">Produção</a>
                         </li>
                     </ul>
 
@@ -75,9 +75,9 @@
                         }>
                         <a href="@Url.Action("Index", "Processos")">Processos</a>
                     </li>
-                    <li @if (ViewBag.Screen == "Produção") { @: class="active"
+                    <li @if (ViewBag.Screen == "Producao") { @: class="active"
                         }>
-                        <a href="#">Produção</a>
+                        <a href="@Url.Action("Index", "Producao")">Produção</a>
                     </li>
                 </ul>
 
@@ -93,6 +93,7 @@
     <script src="~/Scripts/jquery-cookie.js"></script>
     <script src="~/Scripts/materialize.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.3.0.js"></script>
+    <script src="~/Scripts/redips-drag-min.js"></script>
 
     <!-- todos os methodos do servidor > cliente, dentro dessa função -->
     <script src="~/Content/js/serverRecive.js"></script>

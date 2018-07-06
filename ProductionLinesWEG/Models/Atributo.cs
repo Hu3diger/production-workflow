@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProductionLinesWEG.Models
 {
-    class Atributo
+    public class Atributo
     {
         public string Name { get; private set; }
         public string Value { get; set; }

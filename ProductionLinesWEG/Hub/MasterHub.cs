@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using ProductionLinesWEG.Models;
@@ -28,7 +29,6 @@ namespace ProductionLinesWEG.Hub
     {
         public string AuthId { get; set; }
         public HashSet<string> SessionGroup { get; set; }
-        public Program Program { get; set; }
 
         public SessionAuth(string authId, HashSet<string> sessionGroup)
         {
@@ -58,9 +58,9 @@ namespace ProductionLinesWEG.Hub
             new Program("kum72wJmLuL7meRQ/FlcRnV0AjEElHQXZiWq7rNnb7A="),
             new Program("0va/K0rIllLzjg9TUE27PgjoIJp3OSaxMPxGGVjDMcE="),
             new Program("QtrUsnpimPQ6hJxLE0JHFx6aRrZscqmzECLgGH3Q+WU="),
-            new Program("n1ePewjNIpySkXfpU+Ylf4nsQfhZgNKxDQ8vOptDVsg="),
+            Testes.loadProgramTeste()
         };
-        
+
         private static readonly List<Logins> _listLogins = new List<Logins> {
             new Logins("teste1",  "senha123", "OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
             new Logins("teste2",  "senha123", "SKB/minqyPAptFbdNxdRMUJRyequO3vV3JLXd1DlnNo="),
@@ -104,30 +104,35 @@ namespace ProductionLinesWEG.Hub
             return Enumerable.Empty<string>();
         }
 
-        public static IEnumerable<string> GetAllConnectionIdsBySessionId(string sessionId)
+        public static string GetAuthIdByConnectionId(string connectionId)
         {
             foreach (var session in sessions)
             {
-                if (session.Key.Equals(sessionId) == true)
+                if (session.Value.SessionGroup.Contains(connectionId) == true)
                 {
-                    return session.Value.SessionGroup;
+                    return session.Value.AuthId;
                 }
             }
 
-            return Enumerable.Empty<string>();
+            return null;
         }
 
         public static IEnumerable<string> GetAllConnectionIdsByAuthId(string authId)
         {
+            HashSet<string> kappa = new HashSet<string>();
+
             foreach (var session in sessions)
             {
                 if (session.Value.AuthId.Equals(authId) == true)
                 {
-                    return session.Value.SessionGroup;
+                    foreach (var item in session.Value.SessionGroup)
+                    {
+                        kappa.Add(item);
+                    }
                 }
             }
 
-            return Enumerable.Empty<string>();
+            return kappa;
         }
 
         public override Task OnConnected()
@@ -155,6 +160,7 @@ namespace ProductionLinesWEG.Hub
         {
             var connectionIds = null as SessionAuth;
             var sessionId = this.Context.QueryString[SessionId];
+            var AuthId = this.Context.QueryString["AuthId"];
             var connectionId = this.Context.ConnectionId;
 
             if (sessionId == null || sessionId.Equals(""))
@@ -168,7 +174,7 @@ namespace ProductionLinesWEG.Hub
 
             if (sessions.TryGetValue(sessionId, out connectionIds) == false)
             {
-                connectionIds = sessions[sessionId] = new SessionAuth("", new HashSet<string>());
+                connectionIds = sessions[sessionId] = new SessionAuth(AuthId, new HashSet<string>());
             }
 
             connectionIds.SessionGroup.Add(connectionId);
@@ -200,42 +206,12 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public void ChangingProcess(string name, string description, int runTime)
-        {
-            Clients.Caller.showToast("Recived");
-        }
-
         public void requestLogin(string user, string password)
         {
             Logins l = _listLogins.Find(x => x.User.Equals(user) && x.Password.Equals(password));
 
             if (l != null)
             {
-                Clients.Caller.acceptLoginUser(l.AuthId);
 
                 foreach (var session in sessions)
                 {
@@ -244,6 +220,8 @@ namespace ProductionLinesWEG.Hub
                         session.Value.AuthId = l.AuthId;
                     }
                 }
+
+                Clients.Caller.acceptLoginUser(l.AuthId);
 
             }
             else
@@ -262,6 +240,190 @@ namespace ProductionLinesWEG.Hub
                 }
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public void CreateProcess(string name, string description, int runTime)
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
+
+            Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+            if (pgm != null)
+            {
+                pgm.CriaProcesso(name, description, runTime);
+                Clients.Caller.showToast("Processo '" + name + "' Criado");
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
+            }
+
+        }
+
+        public void ChangingProcess(string oldName, string newName, string description, int runTime)
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
+
+            Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+            if (pgm != null)
+            {
+                Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(oldName));
+                if (pcss != null)
+                {
+                    pcss.BaseProcesso.Name = newName;
+                    pcss.BaseProcesso.Description = description;
+                    pcss.BaseProcesso.Runtime = runTime;
+
+                    Clients.Caller.showToast("Processo '" + newName + "' Alerado");
+                }
+                else
+                {
+                    Clients.Caller.showToast("Error: Find Process: '" + oldName + "'");
+                }
+
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
+            }
+
+        }
+
+        public void DeleteProcess(string name)
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
+
+            Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+            if (pgm != null)
+            {
+                if (pgm.listProcessos.Remove(pgm.listProcessos.Find(x => x.Name.Equals(name))))
+                {
+                    Clients.Caller.showToast("Processo '" + name + "' Deletado");
+                }
+                else
+                {
+                    Clients.Caller.showToast("Error: Find Process: '" + name + "'");
+                }
+
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
+            }
+
+        }
+
+        public List<string> ListFatherProcess(string name)
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
+
+            Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+            Debug.WriteLine("entrou");
+
+            if (pgm != null)
+            {
+                return pgm.listFatherProcess(name);
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
+            }
+
+            return new List<string>();
+
+        }
+
+        public void InsertProcess(string processo1, string processo2)
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
+
+            Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+            if (pgm != null)
+            {
+                Processo p1 = pgm.listProcessos.Find(x => x.Name.Equals(processo1));
+                Processo p2 = pgm.listProcessos.Find(x => x.Name.Equals(processo2));
+
+                if (p1 != null && p2 != null)
+                {
+                    pgm.InsertProcesso(processo1, processo2);
+                    Clients.Caller.showToast("Processo '" + processo1 + "' Adicionado dentro do Processo '" + processo2 + "'");
+                }
+                else
+                {
+                    Clients.Caller.showToast("Error: Find Process: '" + processo1 + "' or '" + processo2 + "'");
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
+            }
+
+        }
+
+        public void callListProcess()
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            if (!AuthId.Equals(""))
+            {
+                var connections = GetAllConnectionIdsByAuthId(AuthId).ToList();
+
+                Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+                if (pgm != null)
+                {
+                    Clients.Clients(connections).listProcessos(pgm.getProcessoToClient());
+                }
+                else
+                {
+                    Clients.Caller.showToast("Error: CallListProcess");
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: no Login");
+            }
+        }
+
+
+
 
     }
 }

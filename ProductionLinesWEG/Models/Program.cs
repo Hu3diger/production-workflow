@@ -8,9 +8,9 @@ namespace ProductionLinesWEG.Models
     {
         public string AuthId { get; set; }
 
-        private readonly List<Processo> listProcessos = new List<Processo>();
-        private readonly List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
-        private readonly List<Dashboard> listDashboard = new List<Dashboard>();
+        public readonly List<Processo> listProcessos = new List<Processo>();
+        public readonly List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
+        public readonly List<Dashboard> listDashboard = new List<Dashboard>();
 
         public Program(string authId)
         {
@@ -119,7 +119,7 @@ namespace ProductionLinesWEG.Models
             attAllListBox();
         }
 
-        public void BtnPreLoadProcess_Click(object sender, EventArgs e)
+        public void PreLoadProcess()
         {
             for (int i = listProcessos.Count - 1; i >= 0; i--)
             {
@@ -180,7 +180,7 @@ namespace ProductionLinesWEG.Models
             listEsteiras.Find(x => x.Name.Equals(esteira)).TurnOff();
         }
 
-        public void BtnPreLoadEsteiras_Click(object sender, EventArgs e)
+        public void PreLoadEsteiras()
         {
             for (int i = listEsteiras.Count - 1; i >= 0; i--)
             {
@@ -199,6 +199,35 @@ namespace ProductionLinesWEG.Models
             attAllListBox();
 
             toDashboard("Sistema pré-carregado com esteiras e limite de 5\n");
+        }
+
+        public List<Processo> getProcessoToClient()
+        {
+            Processo p = new Processo(new BaseProcesso("x", "x", 0));
+
+            p.insertList(listProcessos.Where(x => x.Father == null).ToList());
+
+            List<Processo> lp = new List<Processo>();
+
+            lp = p.CloneList();
+
+            ListWithOutFather(lp);
+
+            return lp.Where(x => x.Father == null).ToList();
+        }
+
+        public List<string> listFatherProcess(string processName)
+        {
+            return listProcessos.Where(x => x.GetFathersProcess().Find(y => y.Name.Equals(processName)) == null).Select(x => x.Name).ToList();
+        }
+
+        private void ListWithOutFather(List<Processo> p)
+        {
+            for (int i = 0; i < p.Count; i++)
+            {
+                p[i].alterFather();
+                ListWithOutFather(p[i].ListProcessos);
+            }
         }
     }
 }

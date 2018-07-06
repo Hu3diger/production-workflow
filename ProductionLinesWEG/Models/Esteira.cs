@@ -8,7 +8,7 @@ using System.Threading;
 namespace ProductionLinesWEG.Models
 {
 
-    abstract class EsteiraAbstrata
+    public abstract class EsteiraAbstrata
     {
         private static int _countId = 1;
 
@@ -177,7 +177,7 @@ namespace ProductionLinesWEG.Models
         {
 
             cleanThread();
-            
+
             Threads t = new Threads(this, program);
 
             thread = new Thread(t.threadEsteira);
@@ -218,7 +218,7 @@ namespace ProductionLinesWEG.Models
         }
     }
 
-    abstract class SetableOutput : EsteiraAbstrata
+    public abstract class SetableOutput : EsteiraAbstrata
     {
         public SetableOutput(string name, int limite) : base(name, limite)
         {
@@ -238,7 +238,7 @@ namespace ProductionLinesWEG.Models
         }
     }
 
-    class EsteiraModel : SetableOutput
+    public class EsteiraModel : SetableOutput
     {
 
         private Processo _processMaster;
@@ -296,7 +296,7 @@ namespace ProductionLinesWEG.Models
         }
     }
 
-    class EsteiraArmazenamento : SetableOutput
+    public class EsteiraArmazenamento : SetableOutput
     {
         public EsteiraArmazenamento(string name, int limite) : base(name, limite)
         {
@@ -313,7 +313,7 @@ namespace ProductionLinesWEG.Models
         }
     }
 
-    class EsteiraEtiquetadora : SetableOutput
+    public class EsteiraEtiquetadora : SetableOutput
     {
         private static long _tags = 100001;
 
@@ -335,7 +335,7 @@ namespace ProductionLinesWEG.Models
         }
     }
 
-    class EsteiraDesvio : EsteiraAbstrata
+    public class EsteiraDesvio : EsteiraAbstrata
     {
         public EsteiraDesvio(string name, int limite) : base(name, limite)
         {

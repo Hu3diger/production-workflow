@@ -14,8 +14,26 @@ function logOut() {
 
 }
 
-function changingProcess(name, desc, runtime) {
+function createProcess(name, desc, runtime) {
 
-    connector.server.changingProcess(name, desc, runtime);
+    connector.server.createProcess(name, desc, runtime);
+
+}
+
+function changingProcess(oldname, newname, desc, runtime) {
+
+    connector.server.changingProcess(oldname, newname, desc, runtime);
+
+}
+
+function deleteProcess(name) {
+
+    connector.server.deleteProcess(name);
+
+}
+
+function callListProcess() {
+
+    connector.server.callListProcess();
 
 }

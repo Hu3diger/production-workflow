@@ -3,8 +3,10 @@ $(document).ready(function () {
   $(".collapsible").collapsible();
   $(".tooltipped").tooltip();
   $(".modal").modal();
-    $(".collapsible-header").on("click", exibeInfo);
-
+  $(".collapsible-header").on("click", exibeInfo);
+  $('.tabs').tabs();
+  $('select').formSelect();
+  
   //setInterval(inserirT, 2000);
 });
 
