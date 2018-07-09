@@ -46,3 +46,7 @@
 	border: #880e4f solid 1px;
 	margin-top: 5vh;
 }
+
+.desabled{
+	color: rgba(0,0,0,0.3) !important;
+}

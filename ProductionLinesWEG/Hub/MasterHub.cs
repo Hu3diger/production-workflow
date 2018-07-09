@@ -114,7 +114,7 @@ namespace ProductionLinesWEG.Hub
                 }
             }
 
-            return null;
+            return "";
         }
 
         public static IEnumerable<string> GetAllConnectionIdsByAuthId(string authId)
@@ -241,6 +241,10 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
+        public void ShowDebug(string msg)
+        {
+            Debug.WriteLine(msg);
+        }
 
 
 
@@ -265,7 +269,8 @@ namespace ProductionLinesWEG.Hub
 
 
 
-        public void CreateProcess(string name, string description, int runTime)
+
+        public void CreateProcess(string name, string description, int runTime, string nameFather)
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
@@ -275,8 +280,37 @@ namespace ProductionLinesWEG.Hub
 
             if (pgm != null)
             {
-                pgm.CriaProcesso(name, description, runTime);
-                Clients.Caller.showToast("Processo '" + name + "' Criado");
+                if (pgm.listProcessos.Find(x => x.Name.Equals(name)) == null)
+                {
+                    Processo p = pgm.CriaProcesso(name, description, runTime);
+
+                    if (!nameFather.Equals(""))
+                    {
+                        Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(nameFather));
+                        if (pcss != null)
+                        {
+                            if (pcss.FindInternalProcess(name) == null)
+                            {
+                                pcss.AddInternalProcess(-1, p);
+                            }
+                            else
+                            {
+                                Clients.Caller.showToast("Error: In Create: '" + name + "' Internal Process Found");
+                            }
+                        }
+                        else
+                        {
+                            Clients.Caller.showToast("Pai '" + nameFather + "' não encontrado");
+                        }
+                    }
+
+
+                    Clients.Caller.showToast("Processo '" + name + "' Criado");
+                }
+                else
+                {
+                    Clients.Caller.showToast("Processo '" + name + "' já existente");
+                }
             }
             else
             {
@@ -285,7 +319,7 @@ namespace ProductionLinesWEG.Hub
 
         }
 
-        public void ChangingProcess(string oldName, string newName, string description, int runTime)
+        public void ChangingProcess(string oldName, string newName, string description, int runTime, string nameFather)
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
@@ -295,20 +329,47 @@ namespace ProductionLinesWEG.Hub
 
             if (pgm != null)
             {
-                Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(oldName));
-                if (pcss != null)
-                {
-                    pcss.BaseProcesso.Name = newName;
-                    pcss.BaseProcesso.Description = description;
-                    pcss.BaseProcesso.Runtime = runTime;
 
-                    Clients.Caller.showToast("Processo '" + newName + "' Alerado");
+                if (oldName.Equals(newName) || pgm.listProcessos.Find(x => x.Name.Equals(newName)) == null)
+                {
+
+                    Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(oldName));
+                    if (pcss != null)
+                    {
+                        pcss.BaseProcesso.Name = newName;
+                        pcss.BaseProcesso.Description = description;
+                        pcss.BaseProcesso.Runtime = runTime;
+
+                        if (!nameFather.Equals(""))
+                        {
+                            Processo pcssF = pgm.listProcessos.Find(x => x.Name.Equals(nameFather));
+
+                            if (pcssF != null)
+                            {
+                                pcss.removerFather();
+                                pcssF.AddInternalProcess(-1, pcss);
+                            }
+                            else
+                            {
+                                Clients.Caller.showToast("Pai '" + nameFather + "' não encontrado");
+                            }
+                        }
+                        else
+                        {
+                            pcss.removerFather();
+                        }
+
+                        Clients.Caller.showToast("Processo '" + newName + "' Alterado");
+                    }
+                    else
+                    {
+                        Clients.Caller.showToast("Error: Find Process: '" + oldName + "'");
+                    }
                 }
                 else
                 {
-                    Clients.Caller.showToast("Error: Find Process: '" + oldName + "'");
+                    Clients.Caller.showToast("Processo '" + newName + "' já existente");
                 }
-
             }
             else
             {

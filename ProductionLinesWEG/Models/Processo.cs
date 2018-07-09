@@ -42,6 +42,8 @@ namespace ProductionLinesWEG.Models
         public List<Processo> ListProcessos { get; private set; }
         public Processo Father { get; private set; }
 
+        public int Position { get; private set; }
+
         /// <summary>
         /// Construtor da classe Processo onde BaseProcesso é o nome em comum entre todos os processos criados
         /// </summary>
@@ -77,7 +79,7 @@ namespace ProductionLinesWEG.Models
         {
             if (Father != null)
             {
-                Father = new Processo(new BaseProcesso(Father.Name,"",0));
+                Father = new Processo(new BaseProcesso(Father.Name, "", 0));
             }
         }
         /// <summary>
@@ -88,27 +90,43 @@ namespace ProductionLinesWEG.Models
         {
             process.Cascade = this.Cascade + 1;
 
-            if (index != -1)
+            process.Father = this;
+
+            if (index < 0)
             {
-                if ((index > ListProcessos.Count && ListProcessos.Count != 0) || index < 0)
-                {
-                    throw new Exception("Wrong Position");
-                }
-
-                process.Father = this;
-
+                ListProcessos.Insert(0, process);
+            }
+            else if (index < ListProcessos.Count)
+            {
                 ListProcessos.Insert(index, process);
             }
             else
             {
-                process.Father = this;
-
                 ListProcessos.Add(process);
             }
 
-            ReorderCascade();
+            ReorderAttributes();
         }
-        public void ReorderCascade()
+
+        public void removerFather()
+        {
+            if (Father != null)
+            {
+                Father.ListProcessos.Remove(this);
+                Father.ReorderAttributes();
+
+                Father = null;
+            }
+        }
+
+        public void ReorderAttributes()
+        {
+            ReorderCascade();
+
+            OrderPosition();
+        }
+
+        private void ReorderCascade()
         {
             if (Father != null)
             {
@@ -120,6 +138,15 @@ namespace ProductionLinesWEG.Models
             }
 
             ListProcessos.ForEach(x => x.ReorderCascade());
+        }
+
+        private void OrderPosition()
+        {
+            for (int i = 0; i < ListProcessos.Count; i++)
+            {
+                ListProcessos[i].Position = i + 1;
+                ListProcessos[i].OrderPosition();
+            }
         }
         /// <summary>
         /// Retorna o Processo especificado buscando dentro do processso a ser executado.
@@ -240,7 +267,7 @@ namespace ProductionLinesWEG.Models
                 x.Father = p;
             });
 
-            p.ReorderCascade();
+            p.ReorderAttributes();
 
             return p;
         }

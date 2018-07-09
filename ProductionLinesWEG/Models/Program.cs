@@ -40,12 +40,16 @@ namespace ProductionLinesWEG.Models
             }
         }
 
-        public void CriaProcesso(string nome, string desc, int runtime)
+        public Processo CriaProcesso(string nome, string desc, int runtime)
         {
-            listProcessos.Add(new Processo(new BaseProcesso(nome, desc, runtime)));
+            Processo p = new Processo(new BaseProcesso(nome, desc, runtime));
+
+            listProcessos.Add(p);
             toDashboard("Processo add\n");
 
             attAllListBox();
+
+            return p;
         }
 
         public void InsertProcesso(string processo1, string processo2)

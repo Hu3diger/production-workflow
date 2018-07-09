@@ -6,17 +6,21 @@ function criaProcesso() {
         <div class="row">\
           <div class="input-field col s12 m8 offset-m2">\
             <input value="" id="nameP" type="text" class="validate">\
-            <label class="active" for="nameP">Nome</label>\
+            <label for="nameP">Nome</label>\
           </div>\
         <div class="input-field col s12 m8 offset-m2">\
             <input value="" id="descP" type="text" class="validate">\
-            <label class="active" for="descP">Descrição do processo</label>\
+            <label for="descP">Descrição do processo</label>\
         </div>\
       </div>\
       <div class="row">\
-        <div class="input-field col s12 m8 offset-m2">\
-          <input value="" id="runtimeP" type="number" class="validate active">\
-          <label class="active" for="runtimeP">Tempo de execução (ms)</label>\
+        <div class="input-field col s12 m6 offset-m2">\
+          <input value="" id="runtimeP" type="number" class="validate">\
+          <label for="runtimeP">Tempo de execução (ms)</label>\
+        </div>\
+        <div class="input-field col s12 m2">\
+            <input value="" id="variation" type="number" class="validate">\
+            <label for="runtimeP">Variação (%)</label>\
         </div>\
       </div>\
       <div class="row">\
@@ -72,26 +76,32 @@ function exibeInfo(id) {
         </div>\
       </div>\
       <div class="row">\
-        <div class="input-field col s12 m8 offset-m2">\
+        <div class="input-field col s12 m6 offset-m2">\
           <input value="' + data.Runtime + '" id="runtimeP" type="number" class="validate active">\
           <label class="active" for="runtimeP">Tempo de execução (ms)</label>\
         </div>\
+        <div class="input-field col s12 m2">\
+            <input value="' + data.VariationRuntime + '" id="variation" type="number" class="validate active">\
+            <label class="active" for="variation">Variação (%)</label>\
+        </div>\
       </div>\
         <div class="row">\
-          <div class="input-field col s12 m8 offset-m2">\
-            <select>\
-            <option value = "0" disabled ' + (data.Father == null ? 'selected' : '') + '>Sem Processo Pai</option>\
+          <div class="input-field col s12 m6 offset-m2">\
+            <select id="processSelectFather">\
+            <option value = "0" ' + (data.Father == null ? 'selected' : '') + '>Sem Processo Pai</option>\
         ';
 
-            console.log(data);
-
-            for (var i = 0; i < json.length; i++) {
-                html += '<option value="' + i + (data.Father.Name == json[i] ? '" selected>' : '">') + json[i] + '</option>';
+            for (var i = 1; i < json.length + 1; i++) {
+                html += '<option value="' + i + (data.Father != null ? (data.Father.Name == json[i - 1] ? '" selected>' : '">') : '">') + json[i - 1] + '</option>';
             }
 
             html += '</select>\
             <label>Processo pai</label>\
-          </div>\
+            </div>\
+            <div class="input-field col s12 m2">\
+                 <input value="' + data.Position + '" id="position" type="number" class="validate active">\
+                <label class="active" for="position">Posição</label>\
+            </div>\
         </div>\
         <div class="row">\
             <div class="col s12 m8 offset-m2">\
@@ -112,11 +122,6 @@ function limpaInfo() {
 }
 
 function enviaProcess() {
-    createProcess(
-        $("#nameP").val(),
-        $("#descP").val(),
-        $("#runtimeP").val()
-    );
     if (
         $("#nameP").val() === "" ||
         $("#descP").val() === "" ||
@@ -124,18 +129,22 @@ function enviaProcess() {
     ) {
         M.toast({ html: 'Existem campos em branco' })
     } else {
+        let value = '';
+        if ($('#processSelectFather :selected').val() != '0') {
+            value = $('#processSelectFather :selected').text();
+        }
+        createProcess(
+            $("#nameP").val(),
+            $("#descP").val(),
+            $("#runtimeP").val(),
+            value
+        );
         $("#info").html("");
         callListProcess();
     }
 }
 
 function alteraProcess(oldname) {
-    changingProcess(
-        oldname,
-        $("#nameP").val(),
-        $("#descP").val(),
-        $("#runtimeP").val()
-    );
     if (
         $("#nameP").val() === "" ||
         $("#descP").val() === "" ||
@@ -143,7 +152,19 @@ function alteraProcess(oldname) {
     ) {
         M.toast({ html: 'Existem campos em branco' })
     } else {
+        let value = ''; 
+        if($('#processSelectFather :selected').val() != '0'){
+            value = $('#processSelectFather :selected').text();
+        }
+        changingProcess(
+            oldname,
+            $("#nameP").val(),
+            $("#descP").val(),
+            $("#runtimeP").val(),
+            value
+        );
         $("#info").html("");
+
         callListProcess();
     }
 }
@@ -168,6 +189,8 @@ function generateList(data, $e) {
         $("#" + id).data("Description", obj.Description);
         $("#" + id).data("Runtime", obj.Runtime);
         $("#" + id).data("Father", obj.Father);
+        $("#" + id).data("VariationRuntime", obj.VariationRuntime);
+        $("#" + id).data("Position", obj.Position);
 
         if (tf) {
             var div = $('<div class="collapsible-body padd">').appendTo(li);
@@ -184,6 +207,8 @@ function generateList(data, $e) {
     for (var i = 0; i < data.length; i++) {
         createInner(data[i], $e, "process" + i);
     }
+
+    console.log(data);
 
     $(".collapsible").collapsible();
 }
