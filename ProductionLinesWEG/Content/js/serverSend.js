@@ -14,15 +14,15 @@ function logOut() {
 
 }
 
-function createProcess(name, desc, runtime, nameFather) {
+function createProcess(name, desc, runtime, variationRuntime, nameFather, position) {
 
-    connector.server.createProcess(name, desc, runtime, nameFather);
+    connector.server.createProcess(name, desc, runtime, variationRuntime, nameFather, position);
 
 }
 
-function changingProcess(oldname, newname, desc, runtime, nameFather) {
+function changingProcess(oldname, newname, desc, runtime, variationRuntime, nameFather, position) {
 
-    connector.server.changingProcess(oldname, newname, desc, runtime, nameFather);
+    connector.server.changingProcess(oldname, newname, desc, runtime, variationRuntime, nameFather, position);
 
 }
 

@@ -270,7 +270,7 @@ namespace ProductionLinesWEG.Hub
 
 
 
-        public void CreateProcess(string name, string description, int runTime, string nameFather)
+        public void CreateProcess(string name, string description, int runTime, double variationRuntime, string nameFather, int position)
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
@@ -282,7 +282,7 @@ namespace ProductionLinesWEG.Hub
             {
                 if (pgm.listProcessos.Find(x => x.Name.Equals(name)) == null)
                 {
-                    Processo p = pgm.CriaProcesso(name, description, runTime);
+                    Processo p = pgm.CriaProcesso(name, description, runTime, variationRuntime);
 
                     if (!nameFather.Equals(""))
                     {
@@ -291,7 +291,7 @@ namespace ProductionLinesWEG.Hub
                         {
                             if (pcss.FindInternalProcess(name) == null)
                             {
-                                pcss.AddInternalProcess(-1, p);
+                                pcss.AddInternalProcess(position - 1, p);
                             }
                             else
                             {
@@ -319,7 +319,7 @@ namespace ProductionLinesWEG.Hub
 
         }
 
-        public void ChangingProcess(string oldName, string newName, string description, int runTime, string nameFather)
+        public void ChangingProcess(string oldName, string newName, string description, int runTime, double variationRuntime, string nameFather, int position)
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
@@ -339,6 +339,7 @@ namespace ProductionLinesWEG.Hub
                         pcss.BaseProcesso.Name = newName;
                         pcss.BaseProcesso.Description = description;
                         pcss.BaseProcesso.Runtime = runTime;
+                        pcss.BaseProcesso.VariationRuntime = variationRuntime;
 
                         if (!nameFather.Equals(""))
                         {
@@ -347,7 +348,7 @@ namespace ProductionLinesWEG.Hub
                             if (pcssF != null)
                             {
                                 pcss.removerFather();
-                                pcssF.AddInternalProcess(-1, pcss);
+                                pcssF.AddInternalProcess(position - 1, pcss);
                             }
                             else
                             {

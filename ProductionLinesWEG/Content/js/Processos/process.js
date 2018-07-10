@@ -19,8 +19,8 @@ function criaProcesso() {
           <label for="runtimeP">Tempo de execução (ms)</label>\
         </div>\
         <div class="input-field col s12 m2">\
-            <input value="" id="variation" type="number" class="validate">\
-            <label for="runtimeP">Variação (%)</label>\
+            <input value="" id="variationP" type="number" class="validate">\
+            <label for="variationP">Variação (%)</label>\
         </div>\
       </div>\
       <div class="row">\
@@ -81,8 +81,8 @@ function exibeInfo(id) {
           <label class="active" for="runtimeP">Tempo de execução (ms)</label>\
         </div>\
         <div class="input-field col s12 m2">\
-            <input value="' + data.VariationRuntime + '" id="variation" type="number" class="validate active">\
-            <label class="active" for="variation">Variação (%)</label>\
+            <input value="' + data.VariationRuntime + '" id="variationP" type="number" class="validate active">\
+            <label class="active" for="variationP">Variação (%)</label>\
         </div>\
       </div>\
         <div class="row">\
@@ -99,8 +99,8 @@ function exibeInfo(id) {
             <label>Processo pai</label>\
             </div>\
             <div class="input-field col s12 m2">\
-                 <input value="' + data.Position + '" id="position" type="number" class="validate active">\
-                <label class="active" for="position">Posição</label>\
+                 <input value="' + data.Position + '" id="positionP" type="number" class="validate active">\
+                <label class="active" for="positionP">Posição</label>\
             </div>\
         </div>\
         <div class="row">\
@@ -125,7 +125,8 @@ function enviaProcess() {
     if (
         $("#nameP").val() === "" ||
         $("#descP").val() === "" ||
-        $("#runtimeP").val() === ""
+        $("#runtimeP").val() === "" ||
+        $("#variationP").val() === ""
     ) {
         M.toast({ html: 'Existem campos em branco' })
     } else {
@@ -137,7 +138,9 @@ function enviaProcess() {
             $("#nameP").val(),
             $("#descP").val(),
             $("#runtimeP").val(),
-            value
+            $("#variationP").val(),
+            value,
+            0
         );
         $("#info").html("");
         callListProcess();
@@ -148,7 +151,9 @@ function alteraProcess(oldname) {
     if (
         $("#nameP").val() === "" ||
         $("#descP").val() === "" ||
-        $("#runtimeP").val() === ""
+        $("#runtimeP").val() === "" ||
+        $("#variationP").val() === "" ||
+        $("#positionP").val() === ""
     ) {
         M.toast({ html: 'Existem campos em branco' })
     } else {
@@ -161,7 +166,9 @@ function alteraProcess(oldname) {
             $("#nameP").val(),
             $("#descP").val(),
             $("#runtimeP").val(),
-            value
+            $("#variationP").val(),
+            value,
+            $("#positionP").val(),
         );
         $("#info").html("");
 

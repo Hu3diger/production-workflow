@@ -40,9 +40,11 @@ namespace ProductionLinesWEG.Models
             }
         }
 
-        public Processo CriaProcesso(string nome, string desc, int runtime)
+        public Processo CriaProcesso(string nome, string desc, int runTime, double variationRuntime)
         {
-            Processo p = new Processo(new BaseProcesso(nome, desc, runtime));
+            Processo p = new Processo(new BaseProcesso(nome, desc, runTime));
+            p.BaseProcesso.VariationRuntime = variationRuntime;
+
 
             listProcessos.Add(p);
             toDashboard("Processo add\n");
