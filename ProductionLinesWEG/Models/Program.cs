@@ -107,7 +107,7 @@ namespace ProductionLinesWEG.Models
 
         public void CriarEsteira(string nome, int inLimit)
         {
-            listEsteiras.Add(new EsteiraModel(nome, inLimit));
+            listEsteiras.Add(new EsteiraModel(nome,"", inLimit));
 
             toDashboard("Esteira add\n");
 
@@ -195,7 +195,7 @@ namespace ProductionLinesWEG.Models
 
             for (int i = 0; i < 10; i++)
             {
-                listEsteiras.Add(new EsteiraModel("Teste " + i, 5));
+                listEsteiras.Add(new EsteiraModel("Teste " + i, "", 5));
             }
 
             SetableOutput sa = (SetableOutput)listEsteiras[0];

@@ -1,6 +1,8 @@
-
 function criaProcesso() {
-    $("#info").html('\
+    $("#info").html('');
+
+    connector.server.listFatherProcess('').done(function (json) {
+        var html = '\
     <div class="row">\
       <form class="col s12">\
         <div class="row">\
@@ -15,46 +17,43 @@ function criaProcesso() {
       </div>\
       <div class="row">\
         <div class="input-field col s12 m6 offset-m2">\
-          <input value="" id="runtimeP" type="number" class="validate">\
-          <label for="runtimeP">Tempo de execução (ms)</label>\
+          <input value="0" id="runtimeP" type="number" class="validate active">\
+          <label class="active" for="runtimeP">Tempo de execução (ms)</label>\
         </div>\
         <div class="input-field col s12 m2">\
-            <input value="" id="variationP" type="number" class="validate">\
-            <label for="variationP">Variação (%)</label>\
+            <input value="0" id="variationP" type="number" class="validate active">\
+            <label class="active" for="variationP">Variação (%)</label>\
         </div>\
       </div>\
-      <div class="row">\
-        <div class="input-field col s12 m8 offset-m2">\
-          <select>\
-            <option value="" disabled selected>Selecione o processo pai</option>\
-            <option value="1">Option 1</option>\
-            <option value="2">Option 2</option>\
-            <option value="3">Option 3</option>\
-          </select>\
-          <label>Processo pai</label>\
+        <div class="row">\
+          <div class="input-field col s12 m6 offset-m2">\
+            <select id="processSelectFather">\
+            <option value = "0" selected>Sem Processo Pai</option>\
+        ';
+
+        for (var i = 1; i < json.length + 1; i++) {
+            html += '<option value="' + i + '">' + json[i - 1] + '</option>';
+        }
+
+        html += '</select>\
+            <label>Processo pai</label>\
+            </div>\
+            <div class="input-field col s12 m2">\
+                 <input value="0" id="positionP" type="number" class="validate active">\
+                <label class="active" for="positionP">Posição</label>\
+            </div>\
         </div>\
-      </div>\
-      <div class="row">\
+        <div class="row">\
         <div class="col s12 m8 offset-m2">\
           <a class="waves-effect waves-light btn left red darken-4" onclick="limpaInfo()"><i class="material-icons left">cancel</i>cancelar</a>\
           <a class="waves-effect waves-light btn right green darken-4" onclick="enviaProcess()"><i class="material-icons left">sd_card</i>criar</a>\
         </div>\
       </div>\
     </form>\
-    </div>'
-    );
-    $('select').formSelect();
-    // $("select").formSelect();
-
-    //$("body").keyup(function(e) {
-    //   if (e.keyCode == 27) dimissModalProcesso("modal1");
-    // });
-
-    // $(document).mouseup(function(e) {
-    //   let container = $("#modal1");
-    //   if (!container.is(e.target) && container.has(e.target).length === 0)
-    //     dimissModalProcesso("modal1");
-    //});
+  </div>';
+        $("#info").html(html);
+        $('select').formSelect();
+    });
 }
 
 function exibeInfo(id) {
@@ -126,7 +125,8 @@ function enviaProcess() {
         $("#nameP").val() === "" ||
         $("#descP").val() === "" ||
         $("#runtimeP").val() === "" ||
-        $("#variationP").val() === ""
+        $("#variationP").val() === "" ||
+        $("#positionP").val() === ""
     ) {
         M.toast({ html: 'Existem campos em branco' })
     } else {
@@ -140,7 +140,7 @@ function enviaProcess() {
             $("#runtimeP").val(),
             $("#variationP").val(),
             value,
-            0
+            $("#positionP").val(),
         );
         $("#info").html("");
         callListProcess();
@@ -157,8 +157,8 @@ function alteraProcess(oldname) {
     ) {
         M.toast({ html: 'Existem campos em branco' })
     } else {
-        let value = ''; 
-        if($('#processSelectFather :selected').val() != '0'){
+        let value = '';
+        if ($('#processSelectFather :selected').val() != '0') {
             value = $('#processSelectFather :selected').text();
         }
         changingProcess(
@@ -186,8 +186,8 @@ function generateList(data, $e) {
         li.append(
             '<div id="' + id + '" class="collapsible-header' + (tf ? " padl" : "") + '" tabindex="0" onclick="exibeInfo(this.id)">\
           <div class="col s12 m12' + (tf ? " padl" : "") + '">\
-            ' + (tf ? '<i class="material-icons t mw">chevron_right</i>' : "") + '\
-            <i class="fas fa-cogs t"></i>' + obj.Name + "\
+            ' + (tf ? '<i class="material-icons colorIconPrincipal mw">chevron_right</i>' : "") + '\
+            <i class="fas fa-cogs colorIconPrincipal"></i>' + obj.Name + "\
           </div>\
       </div>"
         );
@@ -214,8 +214,6 @@ function generateList(data, $e) {
     for (var i = 0; i < data.length; i++) {
         createInner(data[i], $e, "process" + i);
     }
-
-    console.log(data);
 
     $(".collapsible").collapsible();
 }

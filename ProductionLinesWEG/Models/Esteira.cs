@@ -26,6 +26,7 @@ namespace ProductionLinesWEG.Models
         public int Id { get; private set; }
         public bool Ligado { get; private set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public int InLimit { get; private set; }
         public int Fail { get; private set; }
         public int Success { get; private set; }
@@ -38,11 +39,12 @@ namespace ProductionLinesWEG.Models
         /// </summary>
         /// <param name="name">Nome da esteira</param>
         /// <param name="limite"></param>
-        public EsteiraAbstrata(string name, int limite)
+        public EsteiraAbstrata(string name, string description, int limite)
         {
             Id = _countId++;
 
             Name = name;
+            Description = description;
 
             Ligado = false;
 
@@ -220,7 +222,7 @@ namespace ProductionLinesWEG.Models
 
     public abstract class SetableOutput : EsteiraAbstrata
     {
-        public SetableOutput(string name, int limite) : base(name, limite)
+        public SetableOutput(string name, string description, int limite) : base(name, description, limite)
         {
         }
 
@@ -244,7 +246,7 @@ namespace ProductionLinesWEG.Models
         private Processo _processMaster;
         private ProcessManager _processManager;
 
-        public EsteiraModel(string name, int limite) : base(name, limite)
+        public EsteiraModel(string name, string description, int limite) : base(name, description, limite)
         {
         }
 
@@ -298,7 +300,7 @@ namespace ProductionLinesWEG.Models
 
     public class EsteiraArmazenamento : SetableOutput
     {
-        public EsteiraArmazenamento(string name, int limite) : base(name, limite)
+        public EsteiraArmazenamento(string name, string description, int limite) : base(name, description, limite)
         {
         }
 
@@ -317,7 +319,7 @@ namespace ProductionLinesWEG.Models
     {
         private static long _tags = 100001;
 
-        public EsteiraEtiquetadora(string name, int limite) : base(name, limite)
+        public EsteiraEtiquetadora(string name, string description, int limite) : base(name, description, limite)
         {
         }
 
@@ -337,7 +339,7 @@ namespace ProductionLinesWEG.Models
 
     public class EsteiraDesvio : EsteiraAbstrata
     {
-        public EsteiraDesvio(string name, int limite) : base(name, limite)
+        public EsteiraDesvio(string name, string description, int limite) : base(name, description, limite)
         {
         }
 

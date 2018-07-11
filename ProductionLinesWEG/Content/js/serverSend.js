@@ -35,7 +35,8 @@ function deleteProcess(name) {
 function callListProcess() {
 
     connector.server.callListProcess();
-
+    connector.server.callListProcess();
+    connector.server.callListProcess();
 }
 
 function showDebug(msg) {

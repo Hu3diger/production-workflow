@@ -120,7 +120,9 @@
     <Content Include="Content\images\wumpus.png" />
     <Content Include="Content\js\app-connect.js" />
     <Content Include="Content\js\Esteiras\esteiras.js" />
+    <Content Include="Content\js\login\login.js" />
     <Content Include="Content\js\main.js" />
+    <Content Include="Content\js\Producao\producao.js" />
     <Content Include="Content\js\serverRecive.js" />
     <Content Include="Content\js\serverSend.js" />
     <Content Include="Scripts\jquery-cookie.js" />

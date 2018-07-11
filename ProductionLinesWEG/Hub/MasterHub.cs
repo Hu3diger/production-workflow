@@ -37,6 +37,7 @@ namespace ProductionLinesWEG.Hub
         }
     }
 
+    // iisexpress-proxy 53139 to 3000
     public class MasterHub : Microsoft.AspNet.SignalR.Hub
     {
         private static readonly List<Program> listProgram = new List<Program>() {

@@ -6,100 +6,63 @@
 <!-- Page content -->
 <div class="content">
     <div class="row">
-        <div class="col s12 m2 offset-m2 mt">
-            <a class="btn-floating btn-large waves-effect waves-light red tooltipped modal-trigger" data-position="top" data-tooltip="Criar nova esteira" onclick="showModalEsteira();" href="#modal1"><i class="material-icons">add</i></a>
+        <div class="col s12 m2 offset-m1 mt">
+            <a class="btn-floating btn-large waves-effect waves-light green darken-4 tooltipped" data-position="top" data-tooltip="Criar nova esteira" onclick="showModalEsteira();"><i class="material-icons">add</i></a>
         </div>
     </div>
-    <div id="modal1" class="modal modal1 modal-fixed-footer">
     </div>
     <div class="row">
-        <div class="col s12 m8 offset-m2">
+        <div class="col s12 m3 offset-m1" id="listEsteiras">
             <ul class="collapsible">
                 <li>
-                    <div class="collapsible-header"><i class="fas fa-pallet t"></i>Esteira 1</div>
+                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras Modelo</div>
                     <div class="collapsible-body">
-                        <table class="responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Item</th>
-                                    <th>Item</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Alvin</td>
-                                    <td>Eclair</td>
-                                    <td>$0.87</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        
+                    <ul class="collapsible">
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira model 1</div></li>
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira model 3</div></li>
+                    </ul>
+
                     </div>
                 </li>
                 <li>
-                    <div class="collapsible-header"><i class="fas fa-pallet t"></i>Esteira 2</div>
+                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de armazenamento</div>
                     <div class="collapsible-body">
-                        <table class="responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Item</th>
-                                    <th>Item</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Alvin</td>
-                                    <td>Eclair</td>
-                                    <td>$0.87</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        
+                    <ul class="collapsible">
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira armazenadora 1</div></li>
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira armazenadora 3</div></li>
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira armazenadora 4</div></li>
+                    </ul>
+
                     </div>
                 </li>
                 <li>
-                    <div class="collapsible-header"><i class="fas fa-pallet t"></i>Esteira 3</div>
+                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras etiquetadoras</div>
                     <div class="collapsible-body">
-                        <table class="responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Item</th>
-                                    <th>Item</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Alvin</td>
-                                    <td>Eclair</td>
-                                    <td>$0.87</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    
+                    <ul class="collapsible">
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira etiquetadora 1</div></li>
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira etiquetadora 2</div></li>
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira etiquetadora 3</div></li>
+                        <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira etiquetadora 4</div></li>
+                    </ul>
+
                     </div>
                 </li>
                 <li>
-                    <div class="collapsible-header"><i class="fas fa-pallet t"></i>Esteira 4</div>
+                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de desvio</div>
                     <div class="collapsible-body">
-                        <table class="responsive-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Item</th>
-                                    <th>Item</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Alvin</td>
-                                    <td>Eclair</td>
-                                    <td>$0.87</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        
+                        <ul class="collapsible">
+                            <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira deviadora 1</div></li>
+                            <li><div class="collapsible-header" id="esteira"><i class="material-icons colorIconEsteiras">more_vert</i>Esteira deviadora 2</div></li>
+                        </ul>
+
                     </div>
                 </li>
             </ul>
         </div>
+        <div class="col s12 m6" id="aboutEsteira"></div>
     </div>
 </div>
