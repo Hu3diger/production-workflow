@@ -2,6 +2,7 @@
 
 namespace ProductionLinesWEG.Models
 {
+    // classe para criar as mensagens e suas informações
     public class Dashboard
     {
         public DateTime Date { get; set; }

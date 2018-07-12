@@ -22,6 +22,7 @@ namespace ProductionLinesWEG.Models
             ListAtributos = new List<Atributo>();
         }
 
+        // seta um atributo na peça
         public void setAtributo(string name, string value, string estado)
         {
             Atributo at = ListAtributos.Find(x => x.Name.Equals(name));

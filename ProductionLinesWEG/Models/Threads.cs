@@ -21,7 +21,9 @@ namespace ProductionLinesWEG.Models
             this.e = e;
             program = p;
         }
-
+        /// <summary>
+        /// Thread pricipal de controle da esteira
+        /// </summary>
         public void threadEsteira()
         {
             if (e is EsteiraModel)
@@ -30,35 +32,45 @@ namespace ProductionLinesWEG.Models
 
                 while (true)
                 {
+                    // verifica se a esteira esta em condição de operação (masterProcess existe) antes de iniciar
                     if (em.IsInCondition())
                     {
+                        // pega a primeira peça da fila
                         Peca pc = em.GetInputPieceNoRemove();
 
                         if (pc != null)
                         {
+                            // reseta o processo para iniciar o ciclo todo novamente
                             em.resetProcess();
 
+                            // verifica se existe processo adiante
                             while (em.hasNextProcess())
                             {
                                 Processo ps = em.nextProcess();
 
                                 program.toDashboard(ps.Name + " Executando");
 
+                                // seta atributo
                                 pc.setAtributo(ps.Name, "Kappa value", Atributo.FAZENDO);
 
+                                // simula o tempo de um proceso real 
                                 Thread.Sleep(ps.Runtime);
 
+                                // seta atributo
                                 pc.setAtributo(ps.Name, "Kappa value", Atributo.FEITO);
 
                                 program.toDashboard(ps.Name + " Finalizado");
                             }
 
+                            // finalia o processo para ter um novo ciclo
                             em.finalizeProcess();
 
+                            // remove a peça da esteira para que a proxima peça possa ser executada
                             Peca p = em.RemovePiece();
 
                             program.toDashboard("Exibindo atributos da peca recém 'feita':");
 
+                            // exibe todos os estados do processo (atributos)
                             p.ListAtributos.ForEach(x => program.toDashboard("Processo: " + x.Name + " / Estado: " + x.Estado));
 
                             program.toDashboard("Droped First / End\n");
@@ -66,6 +78,7 @@ namespace ProductionLinesWEG.Models
                         else
                         {
                             program.toDashboard(em.Name + "Esperando Peça");
+                            // fica esperando a peca (250ms para não sobrecarregar o servidor)
                             Thread.Sleep(250);
                         }
                     }

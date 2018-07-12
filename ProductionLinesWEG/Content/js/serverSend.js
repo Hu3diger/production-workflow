@@ -26,18 +26,39 @@ function changingProcess(oldname, newname, desc, runtime, variationRuntime, name
 
 }
 
+function createEsteira(name, desc, inlimit, type, additional) {
+
+    connector.server.createEsteira(name, desc, inlimit, type, additional);
+
+}
+
 function deleteProcess(name) {
 
     connector.server.deleteProcess(name);
 
 }
 
+function callListEsteira() {
+
+    connector.server.callListEsteira();
+
+}
+
 function callListProcess() {
 
     connector.server.callListProcess();
-    connector.server.callListProcess();
-    connector.server.callListProcess();
+
 }
+
+
+
+
+
+
+
+
+
+
 
 function showDebug(msg) {
 

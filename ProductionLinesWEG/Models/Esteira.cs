@@ -246,6 +246,8 @@ namespace ProductionLinesWEG.Models
         private Processo _processMaster;
         private ProcessManager _processManager;
 
+        public string NameProcessMaster { get => _processMaster.Name; }
+
         public EsteiraModel(string name, string description, int limite) : base(name, description, limite)
         {
         }
@@ -317,23 +319,43 @@ namespace ProductionLinesWEG.Models
 
     public class EsteiraEtiquetadora : SetableOutput
     {
-        private static long _tags = 100001;
+        private static List<EsteiraEtiquetadora> listE = new List<EsteiraEtiquetadora>();
+        public int InitialValue { get; set; }
+        private int currentTag;
 
-        public EsteiraEtiquetadora(string name, string description, int limite) : base(name, description, limite)
+        public EsteiraEtiquetadora(string name, string description, int limite, int initialValue) : base(name, description, limite)
         {
+            InitialValue = initialValue;
+            currentTag = initialValue;
+            listE.Add(this);
         }
 
-        void InsertTag()
+        public void InsertTag()
         {
+            OrderValues();
+
             if (GetInputPieceNoRemove().Tag == -1)
             {
-                GetInputPieceNoRemove().Tag = _tags++;
+                GetInputPieceNoRemove().Tag = currentTag++;
             }
         }
 
-        void PieceTagged(EsteiraAbstrata esteira)
+        private void OrderValues()
         {
-            //   OutputPieceSuccess(esteira);
+            foreach (var x in listE)
+            {
+                if (currentTag >= InitialValue && currentTag <= x.currentTag)
+                {
+                    currentTag = x.currentTag;
+                    OrderValues();
+                    break;
+                };
+            }
+        }
+
+        public void Destroi()
+        {
+            listE.Remove(this);
         }
     }
 

@@ -7,6 +7,7 @@ namespace ProductionLinesWEG.Models
 {
     public class Utils
     {
+        // gera uma key unica utilizando o sistema de encriptação
         public static string generateUniqueKey()
         {
             var rng = System.Security.Cryptography.RNGCryptoServiceProvider.Create();

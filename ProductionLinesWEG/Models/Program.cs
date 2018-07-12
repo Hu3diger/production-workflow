@@ -40,18 +40,12 @@ namespace ProductionLinesWEG.Models
             }
         }
 
-        public Processo CriaProcesso(string nome, string desc, int runTime, double variationRuntime)
+        public void CriaProcesso(Processo p)
         {
-            Processo p = new Processo(new BaseProcesso(nome, desc, runTime));
-            p.BaseProcesso.VariationRuntime = variationRuntime;
-
-
             listProcessos.Add(p);
             toDashboard("Processo add\n");
 
             attAllListBox();
-
-            return p;
         }
 
         public void InsertProcesso(string processo1, string processo2)
@@ -105,9 +99,9 @@ namespace ProductionLinesWEG.Models
             //listBox5.DataSource = listEsteiras.Select(x => x.Name).ToList();
         }
 
-        public void CriarEsteira(string nome, int inLimit)
+        public void CriarEsteira(EsteiraAbstrata e)
         {
-            listEsteiras.Add(new EsteiraModel(nome,"", inLimit));
+            listEsteiras.Add(e);
 
             toDashboard("Esteira add\n");
 
@@ -234,6 +228,44 @@ namespace ProductionLinesWEG.Models
                 p[i].alterFather();
                 ListWithOutFather(p[i].ListProcessos);
             }
+        }
+
+
+
+
+
+
+
+
+
+
+
+        public ListEsteiraClient getEsteirasToClient()
+        {
+            ListEsteiraClient list = new ListEsteiraClient();
+
+            listEsteiras.FindAll(x => x is EsteiraModel).ForEach(x => list.listModel.Add((EsteiraModel)x));
+            listEsteiras.FindAll(x => x is EsteiraArmazenamento).ForEach(x => list.listArmazenamento.Add((EsteiraArmazenamento)x));
+            listEsteiras.FindAll(x => x is EsteiraEtiquetadora).ForEach(x => list.listEtiquetadora.Add((EsteiraEtiquetadora)x));
+            listEsteiras.FindAll(x => x is EsteiraDesvio).ForEach(x => list.listDesvio.Add((EsteiraDesvio)x));
+
+            return list;
+        }
+    }
+
+    public class ListEsteiraClient
+    {
+        public List<EsteiraModel> listModel { get; private set; }
+        public List<EsteiraArmazenamento> listArmazenamento { get; private set; }
+        public List<EsteiraEtiquetadora> listEtiquetadora { get; private set; }
+        public List<EsteiraDesvio> listDesvio { get; private set; }
+
+        public ListEsteiraClient()
+        {
+            listModel = new List<EsteiraModel>();
+            listArmazenamento = new List<EsteiraArmazenamento>();
+            listEtiquetadora = new List<EsteiraEtiquetadora>();
+            listDesvio = new List<EsteiraDesvio>();
         }
     }
 }

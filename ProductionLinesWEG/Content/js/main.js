@@ -1,34 +1,17 @@
 $(document).ready(function () {
+  //declaração de classes do materialize, para o seu correto funcionamento
   $(".sidenav").sidenav();
   $(".collapsible").collapsible();
   $(".tooltipped").tooltip();
   $(".modal").modal();
   $(".collapsible-header").on("click", exibeInfo);
-  $('.tabs').tabs();
   $('select').formSelect();
-  
-  //setInterval(inserirT, 2000);
+
 });
-
-function enable() {
-
-  if ($("#name").attr("disabled")) {
-      
-    $('#name').removeAttr("disabled");
-    $('#desc').removeAttr("disabled");
-    $('#temp').removeAttr("disabled");
-    $('#button').removeAttr("disabled");
-
-  } else {
-    $('#name').attr({disabled: "disabled"});
-    $('#desc').attr({disabled: "disabled"});
-    $('#temp').attr({disabled: "disabled"});
-    $('#button').attr({disabled: "disabled"});
-  }
-}
 
 var json = [];
 
+//inserção dos itens na dashboard, vindo do servidor
 function inserirT(m, c) {
   $("#xuxu").html("");
   let teste = {
@@ -61,10 +44,11 @@ function inserirT(m, c) {
   });
 }
 
+//pega o horário do sistema para utilizar na inserção na dashboard
 function getHorario() {
   let today = new Date();
   let dd = today.getDate();
-  let mm = today.getMonth() + 1; //January is 0!
+  let mm = today.getMonth() + 1;
   let yyyy = today.getFullYear();
   let hh = today.getHours();
   let mn = today.getMinutes();

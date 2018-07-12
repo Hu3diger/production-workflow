@@ -10,6 +10,7 @@ using ProductionLinesWEG.Models;
 
 namespace ProductionLinesWEG.Hub
 {
+    // classe para armazenar os logins
     public class Logins
     {
         public string User { get; set; }
@@ -25,6 +26,7 @@ namespace ProductionLinesWEG.Hub
         }
     }
 
+    // classe para armazenar as sessões
     public class SessionAuth
     {
         public string AuthId { get; set; }
@@ -38,8 +40,10 @@ namespace ProductionLinesWEG.Hub
     }
 
     // iisexpress-proxy 53139 to 3000
+    // classe principal para a communicação com o servidor
     public class MasterHub : Microsoft.AspNet.SignalR.Hub
     {
+        // lista de programas, "sessões"
         private static readonly List<Program> listProgram = new List<Program>() {
             new Program("OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
             new Program("SKB/minqyPAptFbdNxdRMUJRyequO3vV3JLXd1DlnNo="),
@@ -62,6 +66,7 @@ namespace ProductionLinesWEG.Hub
             Testes.loadProgramTeste()
         };
 
+        // lista de logins para controle de acesso
         private static readonly List<Logins> _listLogins = new List<Logins> {
             new Logins("teste1",  "senha123", "OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
             new Logins("teste2",  "senha123", "SKB/minqyPAptFbdNxdRMUJRyequO3vV3JLXd1DlnNo="),
@@ -84,14 +89,11 @@ namespace ProductionLinesWEG.Hub
             new Logins("kappa", "kappasenha", "n1ePewjNIpySkXfpU+Ylf4nsQfhZgNKxDQ8vOptDVsg=")
         };
 
+        // lista de sessões para controle de usuarios
         public static readonly ConcurrentDictionary<string, SessionAuth> sessions = new ConcurrentDictionary<string, SessionAuth>();
         internal const string SessionId = "SessionId";
 
-        public static HubConnectionContext toClientsByAuthId(string AuthId)
-        {
-            return GlobalHost.ConnectionManager.GetHubContext<MasterHub>().Clients.Clients(GetAllConnectionIdsByAuthId(AuthId).ToList());
-        }
-
+        // retorna todos as conexões vinculadas as connectionId passado
         public static IEnumerable<string> GetAllConnectionIdsByConnectionId(string connectionId)
         {
             foreach (var session in sessions)
@@ -102,9 +104,11 @@ namespace ProductionLinesWEG.Hub
                 }
             }
 
+            // retorna vazio caso não encontre
             return Enumerable.Empty<string>();
         }
 
+        // retorna o AuthId de acordo com o connectionId (caso esteja logado)
         public static string GetAuthIdByConnectionId(string connectionId)
         {
             foreach (var session in sessions)
@@ -118,6 +122,7 @@ namespace ProductionLinesWEG.Hub
             return "";
         }
 
+        // retorna todas as conexões vinculadas os authId
         public static IEnumerable<string> GetAllConnectionIdsByAuthId(string authId)
         {
             HashSet<string> kappa = new HashSet<string>();
@@ -136,6 +141,7 @@ namespace ProductionLinesWEG.Hub
             return kappa;
         }
 
+        // sobrescreve o metodo onde é chamado quando um usuario se conecta com o servidor
         public override Task OnConnected()
         {
             this.EnsureGroups();
@@ -143,6 +149,7 @@ namespace ProductionLinesWEG.Hub
             return base.OnConnected();
         }
 
+        // sobrescreve o metodo onde é chamado quando um usuario se reconecta com o servidor
         public override Task OnReconnected()
         {
             this.EnsureGroups();
@@ -150,39 +157,12 @@ namespace ProductionLinesWEG.Hub
             return base.OnReconnected();
         }
 
+        // sobrescreve o metodo onde é chamado quando um usuario se desconecta do servidor
         public override Task OnDisconnected(bool stopCalled)
         {
-            this.DisconnectGroups();
 
-            return base.OnDisconnected(stopCalled);
-        }
+            // remove o usuario (apenas uma conexão por vez) da lista de usuarios (sessions)
 
-        private void EnsureGroups()
-        {
-            var connectionIds = null as SessionAuth;
-            var sessionId = this.Context.QueryString[SessionId];
-            var AuthId = this.Context.QueryString["AuthId"];
-            var connectionId = this.Context.ConnectionId;
-
-            if (sessionId == null || sessionId.Equals(""))
-            {
-                string key = Utils.generateUniqueKey();
-
-                sessionId = key;
-
-                Clients.Caller.cookie("SessionId", key);
-            }
-
-            if (sessions.TryGetValue(sessionId, out connectionIds) == false)
-            {
-                connectionIds = sessions[sessionId] = new SessionAuth(AuthId, new HashSet<string>());
-            }
-
-            connectionIds.SessionGroup.Add(connectionId);
-        }
-
-        private void DisconnectGroups()
-        {
             var connectionIds = null as SessionAuth;
             var sessionId = this.Context.QueryString[SessionId];
             var connectionId = this.Context.ConnectionId;
@@ -205,8 +185,42 @@ namespace ProductionLinesWEG.Hub
             {
                 sessions.TryRemove(sessionId, out connectionIds);
             }
+
+            return base.OnDisconnected(stopCalled);
         }
 
+        // função usada para agrupar os connectionsIds numa lista
+        // para poder distribuir chamadas de acordo com alguns parametros
+        // (como authId, sessionId ou connectionId)
+        private void EnsureGroups()
+        {
+            var connectionIds = null as SessionAuth;
+            var sessionId = this.Context.QueryString[SessionId];
+            var AuthId = this.Context.QueryString["AuthId"];
+            var connectionId = this.Context.ConnectionId;
+
+            if (sessionId == null || sessionId.Equals(""))
+            {
+                // gera uma key unica para o usuario
+                string key = Utils.generateUniqueKey();
+
+                sessionId = key;
+
+                // requisita o cookie do cliente atravez duma função do signalr implementada no cliente
+                Clients.Caller.cookie("SessionId", key);
+            }
+
+            if (sessions.TryGetValue(sessionId, out connectionIds) == false)
+            {
+                connectionIds = sessions[sessionId] = new SessionAuth(AuthId, new HashSet<string>());
+            }
+
+            connectionIds.SessionGroup.Add(connectionId);
+        }
+
+
+
+        // verifica se o usuario existe e aceita ou não usuario
         public void requestLogin(string user, string password)
         {
             Logins l = _listLogins.Find(x => x.User.Equals(user) && x.Password.Equals(password));
@@ -222,15 +236,18 @@ namespace ProductionLinesWEG.Hub
                     }
                 }
 
+                // invoca uma função do cliente para aceita-lo
                 Clients.Caller.acceptLoginUser(l.AuthId);
 
             }
             else
             {
+                // exibe um toast para um cliente (Caller) especifico
                 Clients.Caller.showToast("Login Refused");
             }
         }
 
+        // desloga o usuario do sistema, mas não o remove
         public void logOut()
         {
             foreach (var session in sessions)
@@ -242,6 +259,7 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
+        // função para o usuario chamar para exibir uma mensagem no console (Debug) do sistema
         public void ShowDebug(string msg)
         {
             Debug.WriteLine(msg);
@@ -270,20 +288,25 @@ namespace ProductionLinesWEG.Hub
 
 
 
-
+        // cria um processo e o adiciona a lista fazendo varias verificações
         public void CreateProcess(string name, string description, int runTime, double variationRuntime, string nameFather, int position)
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
             var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
 
+            // procura pelo programa que corresponde ao usuario (AuthId)
             Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
-
+            
             if (pgm != null)
             {
                 if (pgm.listProcessos.Find(x => x.Name.Equals(name)) == null)
                 {
-                    Processo p = pgm.CriaProcesso(name, description, runTime, variationRuntime);
+                    // cria o processo e insere suas primeiras informações
+                    Processo p = new Processo(new BaseProcesso(name, description, runTime));
+                    p.BaseProcesso.VariationRuntime = variationRuntime;
+
+                    pgm.CriaProcesso(p);
 
                     if (!nameFather.Equals(""))
                     {
@@ -305,8 +328,8 @@ namespace ProductionLinesWEG.Hub
                         }
                     }
 
-
                     Clients.Caller.showToast("Processo '" + name + "' Criado");
+                    CallListProcess();
                 }
                 else
                 {
@@ -320,12 +343,14 @@ namespace ProductionLinesWEG.Hub
 
         }
 
+        // edita um processo
         public void ChangingProcess(string oldName, string newName, string description, int runTime, double variationRuntime, string nameFather, int position)
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
             var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
 
+            // procura pelo programa que corresponde ao usuario (AuthId)
             Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
 
             if (pgm != null)
@@ -337,6 +362,7 @@ namespace ProductionLinesWEG.Hub
                     Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(oldName));
                     if (pcss != null)
                     {
+                        // faz suas alterações no processo
                         pcss.BaseProcesso.Name = newName;
                         pcss.BaseProcesso.Description = description;
                         pcss.BaseProcesso.Runtime = runTime;
@@ -362,6 +388,7 @@ namespace ProductionLinesWEG.Hub
                         }
 
                         Clients.Caller.showToast("Processo '" + newName + "' Alterado");
+                        CallListProcess();
                     }
                     else
                     {
@@ -380,24 +407,39 @@ namespace ProductionLinesWEG.Hub
 
         }
 
+        // deleta um processo
         public void DeleteProcess(string name)
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
             var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
 
+            // procura pelo programa que corresponde ao usuario (AuthId)
             Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
 
             if (pgm != null)
             {
-                if (pgm.listProcessos.Remove(pgm.listProcessos.Find(x => x.Name.Equals(name))))
+
+                Processo p = pgm.listProcessos.Find(x => x.Name.Equals(name));
+
+                if (p != null)
                 {
+                    // pega todos os filhos e os remove (com o proprio processo junto)
+                    p.GetInternalOrderProcess().ForEach(x =>
+                    {
+                        x.removerFather();
+                        pgm.listProcessos.Remove(x);
+                    });
+
                     Clients.Caller.showToast("Processo '" + name + "' Deletado");
+                    CallListProcess();
                 }
                 else
                 {
                     Clients.Caller.showToast("Error: Find Process: '" + name + "'");
                 }
+
+
 
             }
             else
@@ -407,15 +449,15 @@ namespace ProductionLinesWEG.Hub
 
         }
 
+        // lista os processos disponiveis para determinado processo (name)
         public List<string> ListFatherProcess(string name)
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
             var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
 
+            // procura pelo programa que corresponde ao usuario (AuthId)
             Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
-
-            Debug.WriteLine("entrou");
 
             if (pgm != null)
             {
@@ -430,37 +472,8 @@ namespace ProductionLinesWEG.Hub
 
         }
 
-        public void InsertProcess(string processo1, string processo2)
-        {
-            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
-
-            var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
-
-            Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
-
-            if (pgm != null)
-            {
-                Processo p1 = pgm.listProcessos.Find(x => x.Name.Equals(processo1));
-                Processo p2 = pgm.listProcessos.Find(x => x.Name.Equals(processo2));
-
-                if (p1 != null && p2 != null)
-                {
-                    pgm.InsertProcesso(processo1, processo2);
-                    Clients.Caller.showToast("Processo '" + processo1 + "' Adicionado dentro do Processo '" + processo2 + "'");
-                }
-                else
-                {
-                    Clients.Caller.showToast("Error: Find Process: '" + processo1 + "' or '" + processo2 + "'");
-                }
-            }
-            else
-            {
-                Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
-            }
-
-        }
-
-        public void callListProcess()
+        // retorna todos os processos em forma de "Cascade" para o usuario
+        public void CallListProcess()
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
@@ -468,6 +481,7 @@ namespace ProductionLinesWEG.Hub
             {
                 var connections = GetAllConnectionIdsByAuthId(AuthId).ToList();
 
+                // procura pelo programa que corresponde ao usuario (AuthId)
                 Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
 
                 if (pgm != null)
@@ -476,7 +490,7 @@ namespace ProductionLinesWEG.Hub
                 }
                 else
                 {
-                    Clients.Caller.showToast("Error: CallListProcess");
+                    Clients.Caller.showToast("Error: pgm CallListProcess");
                 }
             }
             else
@@ -488,5 +502,144 @@ namespace ProductionLinesWEG.Hub
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // cria uma esteira e a insere no programa
+        public void CreateEsteira(string name, string desc, int inlimit, int type, string additional)
+        {
+
+            Clients.Caller.showToast("Entrou");
+
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
+
+            // procura pelo programa que corresponde ao usuario (AuthId)
+            Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+            if (pgm != null)
+            {
+                // procura pela esteira e veficica se exite
+                if (pgm.listEsteiras.Find(x => x.Name.Equals(name)) == null)
+                {
+                    EsteiraAbstrata e = null;
+
+                    // verifica o tipo de esteira e trabalha de acordo com o tipo
+                    switch (type)
+                    {
+                        // esteira model
+                        case 1:
+
+                            Processo p = pgm.listProcessos.Find(x => x.Name.Equals(additional));
+
+                            if (p != null)
+                            {
+                                e = new EsteiraModel(name, desc, inlimit);
+                                EsteiraModel em = (EsteiraModel)e;
+
+                                em.insertMasterProcess(p);
+                            }
+                            else
+                            {
+                                Clients.Caller.showToast("Processo '" + additional + "' não encontrado");
+                            }
+
+                            break;
+
+                        // esteira de armazenamento
+                        case 2:
+                                e = new EsteiraArmazenamento(name, desc, inlimit);
+                            break;
+
+                        // esteira etiquetadora
+                        case 3:
+
+                            try
+                            {
+                                int initialValue = int.Parse(additional);
+
+                                e = new EsteiraEtiquetadora(name, desc, inlimit, initialValue);
+                            }
+                            catch (System.Exception)
+                            {
+                                Clients.Caller.showToast("Error: create EsteiraEtiquetadora, Try");
+                            }
+
+                            break;
+
+                        // esteira de desvio
+                        case 4:
+                            Clients.Caller.showToast("Não é possivel criar esteiras desviadoras ainda");
+                            break;
+
+                        // caso seja bulado o sistema de tipo, cai aqui
+                        default:
+                            Clients.Caller.showToast("Error: Default type");
+                            break;
+                    }
+
+                    // cria a esteira apenas se ela foi instanciada
+                    if (e != null)
+                    {
+                        pgm.CriarEsteira(e);
+                        Clients.Caller.showToast("Esteira '" + name + "' Criada");
+                        CallListEsteira();
+                    }
+                }
+                else
+                {
+                    Clients.Caller.showToast("Esteira '" + name + "' já existente");
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
+            }
+        }
+
+        // retorna todas as esteiras separadas em tipos para o usuario
+        public void CallListEsteira()
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            if (!AuthId.Equals(""))
+            {
+                var connections = GetAllConnectionIdsByAuthId(AuthId).ToList();
+
+                // procura pelo programa que corresponde ao usuario (AuthId)
+                Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+                if (pgm != null)
+                {
+                    Clients.Clients(connections).listEsteiras(pgm.getEsteirasToClient());
+                }
+                else
+                {
+                    Clients.Caller.showToast("Error: pgm CallListEsteira");
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: no Login");
+            }
+        }
     }
 }

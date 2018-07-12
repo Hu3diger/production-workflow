@@ -13,5 +13,6 @@ $(function () {
     $.connection.hub.start().done(function () {
         console.log("Conected");
         callListProcess();
+        callListEsteira();
     });
 });

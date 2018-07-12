@@ -107,7 +107,9 @@ namespace ProductionLinesWEG.Models
 
             ReorderAttributes();
         }
-
+        /// <summary>
+        /// remove o pai desse processo e também o filho (this) do pai
+        /// </summary>
         public void removerFather()
         {
             if (Father != null)
@@ -118,14 +120,18 @@ namespace ProductionLinesWEG.Models
                 Father = null;
             }
         }
-
+        /// <summary>
+        /// reordena os atributos do processo para ser utilizado como variavel normal pela WEB
+        /// </summary>
         public void ReorderAttributes()
         {
             ReorderCascade();
 
             OrderPosition();
         }
-
+        /// <summary>
+        /// reordena o cascade desse processo ate todos os filhos
+        /// </summary>
         private void ReorderCascade()
         {
             if (Father != null)
@@ -139,7 +145,9 @@ namespace ProductionLinesWEG.Models
 
             ListProcessos.ForEach(x => x.ReorderCascade());
         }
-
+        /// <summary>
+        /// reordena a posição para ser usado na WEB (para definir sua ordem na lista)
+        /// </summary>
         private void OrderPosition()
         {
             for (int i = 0; i < ListProcessos.Count; i++)
@@ -288,13 +296,17 @@ namespace ProductionLinesWEG.Models
 
             return p;
         }
-
+        /// <summary>
+        /// substitui a lista de processos filhos pela lista passada (p)
+        /// </summary>
+        /// <param name="p"></param>
         public void insertList(List<Processo> p)
         {
             ListProcessos = p;
         }
     }
 
+    // classe que controla o comportamento dos processos para a utilização nas esteiras e peças
     public class ProcessManager
     {
         private List<Processo> _listOrdem;
@@ -305,7 +317,9 @@ namespace ProductionLinesWEG.Models
             _listOrdem = process.GetInternalOrderProcess();
             Reset();
         }
-
+        /// <summary>
+        /// reseta a ordem de execução dos processos
+        /// </summary>
         public void Reset()
         {
             _ordem = 0;
@@ -315,12 +329,16 @@ namespace ProductionLinesWEG.Models
             }
             finalize();
         }
-
+        /// <summary>
+        /// verifica se existe um proximo processo para se execuado
+        /// </summary>
         public bool hasNext()
         {
             return _ordem < _listOrdem.Count;
         }
-
+        /// <summary>
+        /// finaliza o processo deixando todos os processos como fora de execução (InProcess = false)
+        /// </summary>
         public void finalize()
         {
             if (_ordem != 0)
@@ -335,7 +353,10 @@ namespace ProductionLinesWEG.Models
             }
             _ordem = 0;
         }
-
+        /// <summary>
+        /// retorna o proximo processo a ser executado pela esteira e adiciona aos Count
+        /// </summary>
+        /// <returns>null caso não tenha proximo</returns>
         public Processo Next()
         {
             if (_ordem == 0)

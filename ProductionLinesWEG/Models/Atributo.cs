@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProductionLinesWEG.Models
 {
+    // atributos que será inserido na peca quando estiver sendo executada
     public class Atributo
     {
         public string Name { get; private set; }

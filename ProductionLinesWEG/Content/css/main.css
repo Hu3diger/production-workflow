@@ -1,7 +1,9 @@
 .pacific{
 	font-family: 'Pacifico', cursive;
 }
-
+h5{
+	font-family: 'Verdana';
+}
 .mt{
 	margin-top: 10vh;
 }
@@ -21,6 +23,10 @@
 	padding: 0;
 	padding-left: 10%;
 	padding-top: 4%;
+}
+
+.www{
+	margin-right: 5vh !important;
 }
 
 .padl{
