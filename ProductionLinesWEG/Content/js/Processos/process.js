@@ -60,9 +60,11 @@
 
     //função para exibir/alterar as informações dos processos
     function exibeInfo(id) {
-        //atribui na variável data, 
+        //atribui na variável data, as informações vindas do item selecionado
         let data = $("#" + id).data();
         let name = "'" + data.Name + "'";
+
+        //verifica se data não é undefined
         if (void 0 !== data) {
             connector.server.listFatherProcess(data.Name).done(function (json) {
                 var html = '<div class="row">\
@@ -92,7 +94,7 @@
                 <select id="processSelectFather">\
                 <option value = "0" ' + (data.Father == null ? 'selected' : '') + '>Sem Processo Pai</option>\
             ';
-
+                //percorre o json, preenchendo o select com os possíveis processos pais.
                 for (var i = 1; i < json.length + 1; i++) {
                     html += '<option value="' + i + (data.Father != null ? (data.Father.Name == json[i - 1] ? '" selected>' : '">') : '">') + json[i - 1] + '</option>';
                 }
@@ -132,11 +134,14 @@
         }
     }
 
+    //função para limpar a id #info
     function limpaInfo() {
         $("#info").html("");
     }
 
+    //função para criação do processo
     function enviaProcess() {
+        //verifica se há campos vazios
         if (
             $("#nameP").val() === "" ||
             $("#descP").val() === "" ||
@@ -150,6 +155,7 @@
             if ($('#processSelectFather :selected').val() != '0') {
                 value = $('#processSelectFather :selected').text();
             }
+            //chama a função para criar o processo
             createProcess(
                 $("#nameP").val(),
                 $("#descP").val(),
@@ -161,7 +167,9 @@
         }
     }
 
+    //função para alteração de processos
     function alteraProcess(oldname) {
+        //verifica se há campos vazios
         if (
             $("#nameP").val() === "" ||
             $("#descP").val() === "" ||
@@ -175,6 +183,7 @@
             if ($('#processSelectFather :selected').val() != '0') {
                 value = $('#processSelectFather :selected').text();
             }
+            //chama a função para a alteração do processo
             changingProcess(
                 oldname,
                 $("#nameP").val(),
@@ -187,13 +196,18 @@
         }
     }
 
+    //função para geração da lista de processos
     function generateList(data, $e) {
-        // create an inner item
+        // cria um item interno 
         function createInner(obj, $target, id) {
+
+            //adiciona a tag li dentro do target
             var li = $("<li>").appendTo($target);
 
+            //cria uma variável boolean, e atribui o valor correspondente a condição
             var tf = obj.ListProcessos != undefined && obj.ListProcessos.length > 0;
 
+            //adiciona dentro do li, a uma div com o respectivo processo.
             li.append(
                 '<div id="' + id + '" class="collapsible-header' + (tf ? " padl" : "") + '" tabindex="0" onclick="exibeInfo(this.id)">\
             <div class="col s12 m12' + (tf ? " padl" : "") + '">\
@@ -203,6 +217,7 @@
         </div>"
             );
 
+            //atribui ao id, seus respectivos valores
             $("#" + id).data("Name", obj.Name);
             $("#" + id).data("Description", obj.Description);
             $("#" + id).data("Runtime", obj.Runtime);
@@ -210,18 +225,26 @@
             $("#" + id).data("VariationRuntime", obj.VariationRuntime);
             $("#" + id).data("Position", obj.Position);
 
+            //verifica se o processo tem filhos para iniciar o processo de criação da árvore de processos
             if (tf) {
+
+                //cria outra div dentro da tag li, criada anteriormente.
                 var div = $('<div class="collapsible-body padd">').appendTo(li);
 
+                //cria uma ul dentro da tag div criada acima,
                 var innerList = $('<ul class= "collapsible" >').appendTo(div);
 
+                //percorre a lista de processos, criando a árvore de sub-processos
                 for (var i = 0; i < obj.ListProcessos.length; i++) {
                     var child = obj.ListProcessos[i];
+                    //chama a função atual novamente, criando a mesma estrutura para os processos filhos
+                    //criando a árvore de processos, dentro do processo pai
                     createInner(child, innerList, id + "-" + i);
                 }
             }
         }
 
+        //percorre a lista de processos "pais" e os cria.
         for (var i = 0; i < data.length; i++) {
             createInner(data[i], $e, "process" + i);
         }

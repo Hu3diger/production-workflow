@@ -8,6 +8,8 @@ namespace ProductionLinesWEG.Models
     {
         public string AuthId { get; set; }
 
+        // lista apenas de leitura que armazena os objetos do programa
+        // como esteiras, processos e mensagens do dashboard
         public readonly List<Processo> listProcessos = new List<Processo>();
         public readonly List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
         public readonly List<Dashboard> listDashboard = new List<Dashboard>();
@@ -16,19 +18,20 @@ namespace ProductionLinesWEG.Models
         {
             AuthId = authId;
         }
-
+        // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
         public void toDashboard(string message, bool critico)
         {
             listDashboard.Insert(0, new Dashboard(new DateTime(), message, critico));
             verificarDashboard();
         }
 
+        // adiciona uma mensagem  a lista de dashboard sem ser critica a mensagem
         public void toDashboard(string message)
         {
             listDashboard.Insert(0, new Dashboard(new DateTime(), message, false));
             verificarDashboard();
         }
-
+        // verifica se a lista de mensagem e as deleta caso não seja criatica depois de uma determina posição
         private void verificarDashboard()
         {
             if (listDashboard.Count > 10)
@@ -39,7 +42,7 @@ namespace ProductionLinesWEG.Models
                 }
             }
         }
-
+        // adiciona um processo na lista e exibe uma mensagem ao dashboard
         public void CriaProcesso(Processo p)
         {
             listProcessos.Add(p);
@@ -47,7 +50,7 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
         }
-
+        // insere o processo 2 dentro do processo 1
         public void InsertProcesso(string processo1, string processo2)
         {
             listProcessos.Find(x => x.Name.Equals(processo1)).AddInternalProcess(-1, listProcessos.Find(x => x.Name.Equals(processo2)));
@@ -57,6 +60,10 @@ namespace ProductionLinesWEG.Models
             attAllListBox();
         }
 
+
+
+
+        // metodos para "acompanhamento" para retirada de duvidas
         public void listBox1_SelectedIndexChanged()
         {
             //string value = listBox1.GetItemText(listBox1.SelectedItem);
@@ -98,7 +105,12 @@ namespace ProductionLinesWEG.Models
         {
             //listBox5.DataSource = listEsteiras.Select(x => x.Name).ToList();
         }
+        // fim dos metodos para "acompanhamento" para retirada de duvidas
 
+
+
+
+        // insere a esteira na lista de esteira do programa
         public void CriarEsteira(EsteiraAbstrata e)
         {
             listEsteiras.Add(e);
@@ -108,6 +120,7 @@ namespace ProductionLinesWEG.Models
             attAllListBox();
         }
 
+        // insere o processo dentro da esteira model a ser procurada
         public void InserirPinE(string processo, string esteira)
         {
             EsteiraModel em = (EsteiraModel)listEsteiras.Find(x => x.Name.Equals(esteira));
@@ -119,6 +132,7 @@ namespace ProductionLinesWEG.Models
             attAllListBox();
         }
 
+        // pré carrega alguns processos no programa
         public void PreLoadProcess()
         {
             for (int i = listProcessos.Count - 1; i >= 0; i--)
@@ -156,6 +170,7 @@ namespace ProductionLinesWEG.Models
             toDashboard("Sistema pré-carregado com processos\n");
         }
 
+        // insere uma peca na esteira para ser processada
         public void InsertPiece(string esteira)
         {
             Peca pc = new Peca();
@@ -170,16 +185,19 @@ namespace ProductionLinesWEG.Models
             }
         }
 
+        // liga a esteira para iniciar os processos
         public void LigarEsteira(string esteira)
         {
             listEsteiras.Find(x => x.Name.Equals(esteira)).TurnOn(this);
         }
 
+        // desliga a esteira e para os processos
         public void DesligarEsteira(string esteira)
         {
             listEsteiras.Find(x => x.Name.Equals(esteira)).TurnOff();
         }
 
+        // pré carrega o programa com algumas esteiras
         public void PreLoadEsteiras()
         {
             for (int i = listEsteiras.Count - 1; i >= 0; i--)
@@ -201,6 +219,8 @@ namespace ProductionLinesWEG.Models
             toDashboard("Sistema pré-carregado com esteiras e limite de 5\n");
         }
 
+        // converte a lsita de processos para uma forma com que depois
+        // possa ser convertida em json sem entrar em loop recurssivo
         public List<Processo> getProcessoToClient()
         {
             Processo p = new Processo(new BaseProcesso("x", "x", 0));
@@ -216,11 +236,13 @@ namespace ProductionLinesWEG.Models
             return lp.Where(x => x.Father == null).ToList();
         }
 
+        // lista todos os pais possiveis de determinado processo
         public List<string> listFatherProcess(string processName)
         {
             return listProcessos.Where(x => x.GetFathersProcess().Find(y => y.Name.Equals(processName)) == null).Select(x => x.Name).ToList();
         }
 
+        // remove os pais da lista de processos para que não entre em recurssividade no processo de converção
         private void ListWithOutFather(List<Processo> p)
         {
             for (int i = 0; i < p.Count; i++)
@@ -239,7 +261,7 @@ namespace ProductionLinesWEG.Models
 
 
 
-
+        // adiciona as esteiras separadas por tipo para que o cliente possa implementar com facilidade
         public ListEsteiraClient getEsteirasToClient()
         {
             ListEsteiraClient list = new ListEsteiraClient();
@@ -253,6 +275,7 @@ namespace ProductionLinesWEG.Models
         }
     }
 
+    // classe usada para armazenar as esteiras separadas por tipo definido
     public class ListEsteiraClient
     {
         public List<EsteiraModel> listModel { get; private set; }
