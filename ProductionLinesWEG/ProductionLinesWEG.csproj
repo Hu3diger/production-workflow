@@ -114,6 +114,7 @@
     <Content Include="Content\css\main.css" />
     <Content Include="Content\css\materialize.css" />
     <Content Include="Content\css\materialize.min.css" />
+    <Content Include="Content\css\production.css" />
     <Content Include="Content\css\Site.css" />
     <Content Include="Content\images\weg.png" />
     <Content Include="Content\images\wega.png" />
@@ -122,6 +123,7 @@
     <Content Include="Content\js\Esteiras\esteiras.js" />
     <Content Include="Content\js\login\login.js" />
     <Content Include="Content\js\main.js" />
+    <Content Include="Content\js\Producao\initRedipsDrag.js" />
     <Content Include="Content\js\Producao\producao.js" />
     <Content Include="Content\js\serverRecive.js" />
     <Content Include="Content\js\serverSend.js" />
@@ -192,7 +194,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\Others\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,66 @@
+.esteira {
+    width: 100px;
+    border-radius: 5px 15px 15px 5px;
+    height: 50px;
+    background-color: #880e4f;
+    border: 0;
+}
+
+.esteiraP {
+    width: 100px;
+    border-radius: 5px 15px 15px 5px;
+    height: 50px;
+    border: 0;
+}
+
+.scroll {
+    overflow: auto;
+    white-space: nowrap;
+    margin-top: 5vh;
+}
+
+#tdropesteiras {
+    width: 0;
+}
+
+#ttrash {
+    width: 0;
+}
+
+.tCell {
+    width: 110px;
+    max-width: 110px;
+    min-width: 110px;
+    height: 80px;
+    max-height: 80px;
+    min-height: 80px;
+}
+
+.initialCell {
+    background-color: #d7d7d7;
+}
+
+.tTrash {
+    padding: 0 !important;
+}
+
+.dTrash {
+    border-radius: 10px;
+    width: 110px;
+    height: 80px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#tdropesteiras > tbody > tr > td {
+    border: 1px solid black;
+}
+
+.tableStyle {
+    border: #880e4f solid 1px;
+}
+
+.noPadding {
+    padding: 0 !important;
+}

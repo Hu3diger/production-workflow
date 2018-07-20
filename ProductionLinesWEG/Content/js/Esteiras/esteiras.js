@@ -69,10 +69,10 @@ function showCreate() {
             $("#limiteP").attr("disabled", false);
         } else if (value == '2') {
 
-            $("#more").html("");        
-        
+            $("#more").html("");
+
         } else if (value == '3') {
-        //acrescenta um input na tag #more, conforme a opção selecionada no select
+            //acrescenta um input na tag #more, conforme a opção selecionada no select
             $("#more").html('\
             <div class="input-field col s12 m8 offset-m2">\
                 <input value="" id="etiqueta" type="number" class="validate">\
@@ -81,7 +81,7 @@ function showCreate() {
         ');
             $("#limiteP").attr("disabled", false);
         } else if (value == '4') {
-        //acrescenta um input na tag #more, conforme a opção selecionada no select
+            //acrescenta um input na tag #more, conforme a opção selecionada no select
             $("#more").html('\
             <div class="input-field col s12 m8 offset-m2">\
                 <input value="" id="desvio" type="text" class="validate">\
@@ -146,11 +146,10 @@ function alteraEsteira(id) {
         if (value == '1') {
             connector.server.listFatherProcess('').done(function (json) {
                 var html = '<div class="input-field col s12 m8 offset-m2">\
-            <select id="esteiraSelectProcess">\
-            <option value="0" disabled selected>Sem Processo Pai</option>';
+            <select id="esteiraSelectProcess">';
 
                 for (var i = 1; i < json.length + 1; i++) {
-                    html += '<option value="' + i + '">' + json[i - 1] + '</option>';
+                    html += '<option value="' + i + (data.Addtional == json[i - 1] ? '" selected>' : '">') + json[i - 1] + '</option>';
                 }
 
                 html += '</select>\
@@ -169,8 +168,8 @@ function alteraEsteira(id) {
             //acrescenta um input na tag #more, conforme a opção selecionada no select, contendo o valor da esteira
             $("#more").html('\
             <div class="input-field col s12 m8 offset-m2">\
-                <input value="'+ data.Addtional + '" id="etiqueta" type="number" class="validate">\
-                <label for="etiqueta">Valor inicial para geração das etiquetas</label>\
+                <input value="'+ data.Addtional + '" id="etiqueta" type="number" class="validate active">\
+                <label class="active" for="etiqueta">Valor inicial para geração das etiquetas</label>\
             </div>\
         ');
             $("#limiteP").attr("disabled", false);
@@ -178,8 +177,8 @@ function alteraEsteira(id) {
             //acrescenta um input na tag #more, conforme a opção selecionada no select, contendo o valor da esteira
             $("#more").html('\
             <div class="input-field col s12 m8 offset-m2">\
-                <input value="'+ data.Addtional + '" id="desvio" type="text" class="validate">\
-                <label for="desvio">Mais coisa pro desvio</label>\
+                <input value="'+ data.Addtional + '" id="desvio" type="text" class="validate active">\
+                <label class="active" for="desvio">Mais coisa pro desvio</label>\
             </div>\
         ');
             $("#limiteP").attr("disabled", false);
@@ -203,9 +202,14 @@ function saveEsteira() {
 
     //faz a verificação do tipo, e atribui para a tag value, o valor do campo extra de cada tipo de esteira.
     if (type == '1') {
-        value = $('#esteiraSelectProcess :selected').text();
+        if ($('#esteiraSelectProcess :selected').val() == '0') {
+            M.toast({ html: 'Processo inválido' });
+            typeBool = false;
+        } else {
+            value = $('#esteiraSelectProcess :selected').text();
+        }
     } else if (type == '2') {
-        value = $('#armazenamento').val();
+        value = ' ';
     } else if (type == '3') {
         value = $('#etiqueta').val();
     } else if (type == '4') {
@@ -244,14 +248,14 @@ function limpaAbout() {
 }
 
 //função para gerar a lista das esteiras
-function generateListEsteira(data, $e, type) {
+function generateListEsteira(data, $e, type, initialId) {
 
     //função para gerar a lista interna das esteiras
     function InnerList(obj, $target, id) {
         var li = $("<li>").appendTo($target);
         //acrescenta dentro da ul->li as div's contendo as esteiras
         li.append(
-        '<div id="' + id + '" class="collapsible-header" tabindex="0" onclick="alteraEsteira(this.id)">\
+            '<div id="' + id + '" class="collapsible-header" tabindex="0" onclick="alteraEsteira(this.id)">\
             <div class="col s12 m12">\
                 <i class="fas fa-cogs colorIconPrincipal"></i>' + obj.Name + "\
             </div>\
@@ -271,7 +275,7 @@ function generateListEsteira(data, $e, type) {
         } else if (type == 2) {
             $("#" + id).data("Type", "Esteira de armazenamento");
         } else if (type == 3) {
-            $("#" + id).data("Addtional", obj.InLimit);
+            $("#" + id).data("Addtional", obj.InitialValue);
             $("#" + id).data("Type", "Esteira etiquetadora");
         } else if (type == 4) {
             $("#" + id).data("Addtional", "");
@@ -281,7 +285,7 @@ function generateListEsteira(data, $e, type) {
 
     //for para a criação de várias esteiras no collapsible
     for (var i = 0; i < data.length; i++) {
-        InnerList(data[i], $e, "esteira" + i);
+        InnerList(data[i], $e, "esteira" + type + "-" + i);
     }
 
     $(".collapsible").collapsible();

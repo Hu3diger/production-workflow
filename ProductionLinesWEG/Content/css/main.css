@@ -1,88 +1,42 @@
-.pacific{
-	font-family: 'Pacifico', cursive;
+.pacific {
+    font-family: 'Pacifico', cursive;
 }
-h5{
-	font-family: 'Verdana';
+
+h5 {
+    font-family: 'Verdana';
 }
-.mt{
-	margin-top: 10vh;
+
+.mt {
+    margin-top: 10vh;
 }
 
 .navbar-fixed {
-	z-index: 999;
+    z-index: 999;
 }
 
-.colorIconPrincipal{
-	color: #0d47a1 ;
+.colorIconPrincipal {
+    color: #0d47a1;
 }
 
-.colorIconEsteiras{
-	color: #b71c1c ;
-}
-.padd{
-	padding: 0;
-	padding-left: 10%;
-	padding-top: 4%;
+.colorIconEsteiras {
+    color: #b71c1c;
 }
 
-.www{
-	margin-right: 5vh !important;
+.padd {
+    padding: 0;
+    padding-left: 10%;
+    padding-top: 4%;
 }
 
-.padl{
-	padding-left:  0 !important;
+.www {
+    margin-right: 5vh !important;
 }
 
-.mw{
-	margin: 0 !important;
-	width: 20px !important;
+.padl {
+    padding-left: 0 !important;
 }
 
-.esteira{
-	width: 100px; 
-	border-radius: 5px 15px 15px 5px; 
-	height: 50px; 
-	background-color: #880e4f;
-    border: 0;
-}
-
-.scroll{
-	overflow: auto;
-	white-space: nowrap;
-	border: #880e4f solid 1px;
-	margin-top: 5vh;
-}
-
-.desabled{
-	color: rgba(0,0,0,0.3) !important;
-}
-
-#tdropesteiras{
-    width: 0;
-}
-
-.tCell {
-    width: 110px;
-    max-width: 110px;
-    min-width: 110px;
-    height: 80px;
-    max-height: 80px;
-    min-height: 80px;
-}
-
-.initialCell {
-    background-color: #d7d7d7;
-}
-
-.tTrash {
-    padding: 0 !important;
-}
-
-.dTrash {
-    border-radius: 10px;
-    width: 110px;
-    height: 80px;
-    text-align: center;
-    display: table-cell;
-    vertical-align: middle;
+.mw {
+    margin: 0 !important;
+    width: 20px !important;
 }
