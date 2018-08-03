@@ -1,0 +1,199 @@
+﻿@{
+    ViewBag.Title = "Teste";
+    ViewBag.Screen = "Teste";
+}
+
+
+<link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/production.css" />
+
+<!-- Page content -->
+<div class="row">
+        <div class="col s12 m2 offset-m1" id="listEProducao">
+            <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras Modelo</div>
+                    <div class="collapsible-body">
+
+                        <table id="tmodelo">
+                            <tbody>
+                                <tr>
+                                    <td><div id="em1" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">1</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="em2" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">2</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="em3" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">3</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="em4" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">4</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="em5" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">5</div></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de armazenamento</div>
+                    <div class="collapsible-body">
+
+                        <table id="tarmazenamento">
+                            <tbody>
+                                <tr>
+                                    <td><div id="ea1" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">1</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ea2" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">2</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ea3" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">3</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ea4" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">4</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ea5" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">5</div></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras etiquetadoras</div>
+                    <div class="collapsible-body">
+
+                        <table id="tetiquetadora">
+                            <tbody>
+                                <tr>
+                                    <td><div id="ee1" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">1</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ee2" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">2</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ee3" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">3</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ee4" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">4</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ee5" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">5</div></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de desvio</div>
+                    <div class="collapsible-body">
+
+                        <table id="tdesvio">
+                            <tbody>
+                                <tr>
+                                    <td><div id="ed1" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">1</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ed2" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">2</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ed3" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">3</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ed4" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">4</div></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="ed5" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">5</div></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="col s12 m9" id="producaoBox">
+
+            <div class="row">
+
+                <div class="col s12 m10 offset-m1 noPadding">
+                    <table id="tdropesteiras" class="tableStyle">
+                        <tbody>
+                            <tr>
+                                <td class="tCell initialCell" data-i=0 data-j=0></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col s12 m10 offset-m1 scroll tableStyle">
+                    <table id="ttrash">
+                        <tbody>
+                            <tr>
+                                <td class="tCell tTrash"><div class="dTrash red darken-4"><i class="material-icons center" style="font-size: 40px; color: white">delete_forever</i></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <div class="col s12 m8 offset-m2 ttt">
+                    <form action="#">
+                        <p>
+                            <label>
+                                <input type="radio" class="with-gap" name="group1" onclick="setMode(this)" value="single" checked />
+                                <span>Disable dropping to already taken table cells</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="radio" class="with-gap" name="group1" onclick="setMode(this)" value="switch" />
+                                <span>Switch content</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="radio" class="with-gap" name="group1" onclick="setMode(this)" value="overwrite" />
+                                <span>Overwrite content</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox" onclick="toggleConfirm(this)" />
+                                <span>Confirm delete</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox" onclick="toggleDragging(this)" checked="checked" />
+                                <span>Enable dragging</span>
+                            </label>
+                        </p>
+                        <a class="waves-effect waves-light btn" onclick="testeF()"><i class="material-icons left">save</i>button</a>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+</div>
+
+<script src="~/Content/js/Producao/producao.js"></script>

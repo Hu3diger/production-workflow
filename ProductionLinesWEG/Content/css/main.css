@@ -40,3 +40,8 @@ h5 {
     margin: 0 !important;
     width: 20px !important;
 }
+
+.myFrame {
+    width: 100%;
+    height: 100%;
+}

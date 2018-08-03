@@ -22,6 +22,7 @@
     <script src="~/Scripts/modernizr-2.8.3.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/jquery-cookie.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
 </head>
 
 <body>
@@ -54,6 +55,10 @@
                             }>
                             <a href="@Url.Action("Index", "Producao")">Produção</a>
                         </li>
+                        <li @if (ViewBag.Screen == "Teste") { @: class="active"
+                            }>
+                            <a href="@Url.Action("Index", "Teste")">Teste</a>
+                        </li>
                     </ul>
 
                     <a href="#" onclick="logOut()" class="right" style="padding-right: 20px">Log out</a>
@@ -80,6 +85,10 @@
                     <li @if (ViewBag.Screen == "Producao") { @: class="active"
                         }>
                         <a href="@Url.Action("Index", "Producao")">Produção</a>
+                    </li>
+                    <li @if (ViewBag.Screen == "Teste") { @: class="active"
+                        }>
+                        <a href="@Url.Action("Index", "Teste")">Teste</a>
                     </li>
                 </ul>
 
