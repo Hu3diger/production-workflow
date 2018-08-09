@@ -116,6 +116,28 @@
     <Content Include="Content\css\materialize.min.css" />
     <Content Include="Content\css\production.css" />
     <Content Include="Content\css\Site.css" />
+    <Content Include="Content\images\cn1.png" />
+    <Content Include="Content\images\cn10.png" />
+    <Content Include="Content\images\cn10x.png" />
+    <Content Include="Content\images\cn11.png" />
+    <Content Include="Content\images\cn11x.png" />
+    <Content Include="Content\images\cn1x.png" />
+    <Content Include="Content\images\cn2.png" />
+    <Content Include="Content\images\cn2x.png" />
+    <Content Include="Content\images\cn3.png" />
+    <Content Include="Content\images\cn3x.png" />
+    <Content Include="Content\images\cn4.png" />
+    <Content Include="Content\images\cn4x.png" />
+    <Content Include="Content\images\cn5.png" />
+    <Content Include="Content\images\cn5x.png" />
+    <Content Include="Content\images\cn6.png" />
+    <Content Include="Content\images\cn6x.png" />
+    <Content Include="Content\images\cn7.png" />
+    <Content Include="Content\images\cn7x.png" />
+    <Content Include="Content\images\cn8.png" />
+    <Content Include="Content\images\cn8x.png" />
+    <Content Include="Content\images\cn9.png" />
+    <Content Include="Content\images\cn9x.png" />
     <Content Include="Content\images\weg.png" />
     <Content Include="Content\images\wega.png" />
     <Content Include="Content\images\wumpus.png" />
@@ -287,6 +309,7 @@
     <Content Include="Content\css\fonts\pacific3.woff2" />
     <Content Include="Content\css\fonts\pacific4.woff2" />
     <Content Include="Content\pages\REDIPS_drag\readme.md" />
+    <None Include="Properties\PublishProfiles\ProductionLinesWEG20180808095540 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -310,7 +333,6 @@
     <Compile Include="Controllers\EsteirasController.cs" />
     <Compile Include="Controllers\ProcessosController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
-    <Compile Include="Controllers\TesteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -336,7 +358,6 @@
     <Content Include="Views\Esteiras\Index.cshtml" />
     <Content Include="Views\Processos\Index.cshtml" />
     <Content Include="Views\Producao\Index.cshtml" />
-    <Content Include="Views\Teste\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

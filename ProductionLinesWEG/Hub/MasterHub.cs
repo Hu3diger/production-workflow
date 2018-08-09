@@ -38,8 +38,7 @@ namespace ProductionLinesWEG.Hub
             SessionGroup = sessionGroup;
         }
     }
-
-    // npx iisexpress-proxy 53139 to 3000
+    
     // iisexpress-proxy 53139 to 3000
     // classe principal para a communicação com o servidor
     public class MasterHub : Microsoft.AspNet.SignalR.Hub

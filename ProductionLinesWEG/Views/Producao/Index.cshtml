@@ -3,227 +3,206 @@
     ViewBag.Screen = "Producao";
 }
 
+
 <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/production.css" />
 
-<script type="text/javascript">
-    $(function () {
-        var selecionado = $([]),
-            offset = { top: 0, left: 0 };
-
-        $(".redips-drag").draggable({helper:'clone'});
-
-        $(".tCell").droppable({
-            accept: '.redips-drag',
-            drop: function (ev, ui) {
-                var droppedItem = $(ui.draggable).clone();
-                $(this).append(droppedItem);
-                console.log("1");
-            }
-        });
-
-
-    });
-</script>
-
 <!-- Page content -->
-<div class="row">
-    <div id="redips-drag">
-        <div class="col s12 m2 offset-m1" id="listEProducao">
-            <ul class="collapsible">
-                <li onclick="redipsInit()">
-                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras Modelo</div>
-                    <div class="collapsible-body">
+<div class="row mt" id="redips-drag">
+    <div class="col s12 m2 offset-m1" id="listEProducao">
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Conectores</div>
+                <div class="collapsible-body">
 
-                        <table id="tmodelo">
-                            <tbody>
-                                <tr>
-                                    <td class="redips-mark"><div id="em1" class="z-depth-3 esteiraP redips-drag redips-clone blue darken-4"><div class="center">1</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="em2" class="z-depth-3 esteiraP redips-drag redips-clone blue darken-4"><div class="center">2</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="em3" class="z-depth-3 esteiraP redips-drag redips-clone blue darken-4"><div class="center">3</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="em4" class="z-depth-3 esteiraP redips-drag redips-clone blue darken-4"><div class="center">4</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="em5" class="z-depth-3 esteiraP redips-drag redips-clone blue darken-4"><div class="center">5</div></div></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de armazenamento</div>
-                    <div class="collapsible-body">
-
-                        <table id="tarmazenamento">
-                            <tbody>
-                                <tr>
-                                    <td class="redips-mark"><div id="ea1" class="z-depth-3 esteiraP redips-drag redips-clone orange darken-4"><div class="center">1</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ea2" class="z-depth-3 esteiraP redips-drag redips-clone orange darken-4"><div class="center">2</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ea3" class="z-depth-3 esteiraP redips-drag redips-clone orange darken-4"><div class="center">3</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ea4" class="z-depth-3 esteiraP redips-drag redips-clone orange darken-4"><div class="center">4</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ea5" class="z-depth-3 esteiraP redips-drag redips-clone orange darken-4"><div class="center">5</div></div></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras etiquetadoras</div>
-                    <div class="collapsible-body">
-
-                        <table id="tetiquetadora">
-                            <tbody>
-                                <tr>
-                                    <td class="redips-mark"><div id="ee1" class="z-depth-3 esteiraP redips-drag redips-clone lime darken-2"><div class="center">1</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ee2" class="z-depth-3 esteiraP redips-drag redips-clone lime darken-2"><div class="center">2</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ee3" class="z-depth-3 esteiraP redips-drag redips-clone lime darken-2"><div class="center">3</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ee4" class="z-depth-3 esteiraP redips-drag redips-clone lime darken-2"><div class="center">4</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ee5" class="z-depth-3 esteiraP redips-drag redips-clone lime darken-2"><div class="center">5</div></div></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de desvio</div>
-                    <div class="collapsible-body">
-
-                        <table id="tdesvio">
-                            <tbody>
-                                <tr>
-                                    <td class="redips-mark"><div id="ed1" class="z-depth-3 esteiraP redips-drag redips-clone teal darken-2"><div class="center">1</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ed2" class="z-depth-3 esteiraP redips-drag redips-clone teal darken-2"><div class="center">2</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ed3" class="z-depth-3 esteiraP redips-drag redips-clone teal darken-2"><div class="center">3</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ed4" class="z-depth-3 esteiraP redips-drag redips-clone teal darken-2"><div class="center">4</div></div></td>
-                                </tr>
-                                <tr>
-                                    <td class="redips-mark"><div id="ed5" class="z-depth-3 esteiraP redips-drag redips-clone teal darken-2"><div class="center">5</div></div></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="col s12 m9" id="producaoBox">
-
-            <div class="row">
-
-                <div class="col s12 m10 offset-m1 noPadding scroll">
-                    <table id="tdropesteiras" class="tableStyle">
+                    <table id="tconectores">
                         <tbody>
                             <tr>
-                                <td class="tCell initialCell" data-i=0 data-j=0></td>
+                                <td><div id="cn1" class="dragBase conectorP Cfront reciveCfront"><img src="~/Content/images/cn1.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn2" class="dragBase conectorP Cfront reciveCfront reciveCup"><img src="~/Content/images/cn2.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn3" class="dragBase conectorP Cfront reciveCfront reciveCup reciveCdown"><img src="~/Content/images/cn3.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn4" class="dragBase conectorP Cfront reciveCfront reciveCdown"><img src="~/Content/images/cn4.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn5" class="dragBase conectorP Cfront reciveCup"><img src="~/Content/images/cn5.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn6" class="dragBase conectorP Cfront reciveCup reciveCdown"><img src="~/Content/images/cn6.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn7" class="dragBase conectorP Cfront reciveCdown"><img src="~/Content/images/cn7.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn8" class="dragBase conectorP Cdown reciveCfront"><img src="~/Content/images/cn8.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn9" class="dragBase conectorP Cdown reciveCdown Cup reciveCup"><img src="~/Content/images/cn9.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn10" class="dragBase conectorP Cup reciveCfront"><img src="~/Content/images/cn10.png" /></div></td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
 
-                <div class="col s12 m10 offset-m1 scroll" class="tableStyle">
-                    <table id="ttrash">
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras Modelo</div>
+                <div class="collapsible-body">
+
+                    <table id="tmodelo">
                         <tbody>
                             <tr>
-                                <td class="redips-trash tCell tTrash"><div class="dTrash red darken-4"><i class="material-icons center" style="font-size: 40px; color: white">delete_forever</i></div></td>
+                                <td><div id="em1" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">1</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="em2" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">2</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="em3" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">3</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="em4" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">4</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="em5" class="dragBase z-depth-3 esteiraP blue darken-4"><div class="center">5</div></div></td>
                             </tr>
                         </tbody>
                     </table>
+
                 </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de armazenamento</div>
+                <div class="collapsible-body">
 
+                    <table id="tarmazenamento">
+                        <tbody>
+                            <tr>
+                                <td><div id="ea1" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">1</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ea2" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">2</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ea3" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">3</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ea4" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">4</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ea5" class="dragBase z-depth-3 esteiraP orange darken-4"><div class="center">5</div></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-
-                <div class="col s12 m8 offset-m2 ttt">
-                    <form action="#">
-                        <p>
-                            <label>
-                                <input type="radio" class="with-gap" name="group1" onclick="setMode(this)" value="single" checked />
-                                <span>Disable dropping to already taken table cells</span>
-                            </label>
-                        </p>
-                        <p>
-                            <label>
-                                <input type="radio" class="with-gap" name="group1" onclick="setMode(this)" value="switch" />
-                                <span>Switch content</span>
-                            </label>
-                        </p>
-                        <p>
-                            <label>
-                                <input type="radio" class="with-gap" name="group1" onclick="setMode(this)" value="overwrite" />
-                                <span>Overwrite content</span>
-                            </label>
-                        </p>
-                        <p>
-                            <label>
-                                <input type="checkbox" onclick="toggleConfirm(this)" />
-                                <span>Confirm delete</span>
-                            </label>
-                        </p>
-                        <p>
-                            <label>
-                                <input type="checkbox" onclick="toggleDragging(this)" checked="checked" />
-                                <span>Enable dragging</span>
-                            </label>
-                        </p>
-                        <a class="waves-effect waves-light btn" onclick="testeF()"><i class="material-icons left">save</i>button</a>
-                    </form>
                 </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras etiquetadoras</div>
+                <div class="collapsible-body">
 
+                    <table id="tetiquetadora">
+                        <tbody>
+                            <tr>
+                                <td><div id="ee1" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">1</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ee2" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">2</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ee3" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">3</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ee4" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">4</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ee5" class="dragBase z-depth-3 esteiraP lime darken-2"><div class="center">5</div></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de desvio</div>
+                <div class="collapsible-body">
+
+                    <table id="tdesvio">
+                        <tbody>
+                            <tr>
+                                <td><div id="ed1" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">1</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ed2" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">2</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ed3" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">3</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ed4" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">4</div></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="ed5" class="dragBase z-depth-3 esteiraP teal darken-2"><div class="center">5</div></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="col s12 m9" style="margin: .5rem 0 1rem 0;" id="producaoBox">
+
+        <div class="row">
+
+            <div class="col s12 m10 offset-m1 noPadding">
+                <table id="tdropesteiras" class="tableStyle">
+                    <tbody>
+                        <tr>
+                            <td class="tCell initialCell" data-i=0 data-j=0></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="row">
-                <div class="col s12" style="border-style: dotted;">
-                    <iframe name="iframe1" id="iframe1" class="myFrame" src="~/Content/pages/REDIPS_drag/example01/index.html"></iframe>
-                </div>
+            <div class="col s12 m10 offset-m1 scroll tableStyle">
+                <table id="ttrash">
+                    <tbody>
+                        <tr>
+                            <td class="tCell tTrash"><div class="dTrash red darken-4"><i class="material-icons center" style="font-size: 40px; color: white">delete_forever</i></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col s12 m10 offset-m1" style="margin-top: 20px;">
+
+                <a class="waves-effect waves-light btn" onclick="testeF()"><i class="material-icons left">save</i>button</a>
+
             </div>
 
         </div>
 
     </div>
+
 </div>
 
-
 <script src="~/Content/js/Producao/producao.js"></script>
-
-<script src="~/Content/js/Producao/initRedipsDrag.js"></script>
