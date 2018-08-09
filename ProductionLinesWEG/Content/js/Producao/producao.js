@@ -438,3 +438,58 @@ function analyzeCell(cell, reControl) {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+function saveContent() {
+
+    var tbl = $("#tdropesteiras");
+
+    if (tbl.length) {
+
+        let tBody = tbl.find($("tbody"));
+
+        let tr = tBody.children();
+
+        var array = [];
+
+        var json = {
+            id: "",
+            row: 0,
+            column: 0,
+            class: [],
+            children: ""
+        };
+
+        for (var i = 0; i < tr.length; i++) {
+
+            let td = $(tr.get(i)).children();
+
+            // ate aqui tudo tranquilo
+            console.log(td);
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+    } else {
+        console.log("Object not found");
+    }
+}
