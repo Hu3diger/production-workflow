@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ProductionLinesWEG.Models
@@ -14,9 +15,19 @@ namespace ProductionLinesWEG.Models
         public readonly List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
         public readonly List<Dashboard> listDashboard = new List<Dashboard>();
 
+        public int IdCloneEm { get; set; }
+        public int IdCloneEa { get; set; }
+        public int IdCloneEe { get; set; }
+        public int IdCloneEd { get; set; }
+
         public Program(string authId)
         {
             AuthId = authId;
+
+            IdCloneEm = 0;
+            IdCloneEa = 0;
+            IdCloneEe = 0;
+            IdCloneEd = 0;
         }
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
         public void toDashboard(string message, bool critico)
@@ -132,13 +143,11 @@ namespace ProductionLinesWEG.Models
             attAllListBox();
         }
 
-        // pré carrega alguns processos no programa
-        public void PreLoadProcess()
+        // pré carrega alguns processos e esteiras no programa
+        public void PreLoadProgram()
         {
-            for (int i = listProcessos.Count - 1; i >= 0; i--)
-            {
-                listProcessos.RemoveAt(i);
-            }
+
+            listProcessos.Clear();
 
             listProcessos.Add(new Processo(new BaseProcesso("a", "Processo qualquer", 1000)));
             listProcessos.Add(new Processo(new BaseProcesso("b", "Processo qualquer", 1000)));
@@ -168,6 +177,38 @@ namespace ProductionLinesWEG.Models
             attAllListBox();
 
             toDashboard("Sistema pré-carregado com processos\n");
+
+
+
+
+
+            // pré-load das esteiras
+
+            listEsteiras.Clear();
+
+            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo a", "Executa o processo a", 5));
+            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo b", "Executa o processo b", 2));
+            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo c", "Executa o processo c", 3));
+            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo d", "Executa o processo d", 1));
+
+            ((EsteiraModel)listEsteiras[0]).insertMasterProcess(listProcessos[0]);
+
+            ((EsteiraModel)listEsteiras[1]).insertMasterProcess(listProcessos[1]);
+
+            ((EsteiraModel)listEsteiras[2]).insertMasterProcess(listProcessos[2]);
+
+            ((EsteiraModel)listEsteiras[3]).insertMasterProcess(listProcessos[3]);
+
+            listEsteiras.Add(new EsteiraEtiquetadora("", "Esteira Etiquetadora", "Atribui uam tag com inicio 10000...", 1, 10000));
+
+            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 1 100pc", "Armazena X itens na esteira", 100));
+            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 2 10pc", "Armazena X itens na esteira", 10));
+            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 3 50pc", "Armazena X itens na esteira", 50));
+            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 4 Xpc", "Armazena infinitos itens na esteira", -1));
+
+            attAllListBox();
+
+            toDashboard("Sistema pré-carregado com esteiras\n");
         }
 
         // insere uma peca na esteira para ser processada
@@ -195,28 +236,6 @@ namespace ProductionLinesWEG.Models
         public void DesligarEsteira(string esteira)
         {
             listEsteiras.Find(x => x.Name.Equals(esteira)).TurnOff();
-        }
-
-        // pré carrega o programa com algumas esteiras
-        public void PreLoadEsteiras()
-        {
-            for (int i = listEsteiras.Count - 1; i >= 0; i--)
-            {
-                listEsteiras.RemoveAt(i);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                listEsteiras.Add(new EsteiraModel("Teste " + i, "", 5));
-            }
-
-            SetableOutput sa = (SetableOutput)listEsteiras[0];
-
-            sa.insertAfter(listEsteiras[1]);
-
-            attAllListBox();
-
-            toDashboard("Sistema pré-carregado com esteiras e limite de 5\n");
         }
 
         // converte a lsita de processos para uma forma com que depois
@@ -266,13 +285,195 @@ namespace ProductionLinesWEG.Models
         {
             ListEsteiraClient list = new ListEsteiraClient();
 
-            listEsteiras.FindAll(x => x is EsteiraModel).ForEach(x => list.listModel.Add((EsteiraModel)x));
-            listEsteiras.FindAll(x => x is EsteiraArmazenamento).ForEach(x => list.listArmazenamento.Add((EsteiraArmazenamento)x));
-            listEsteiras.FindAll(x => x is EsteiraEtiquetadora).ForEach(x => list.listEtiquetadora.Add((EsteiraEtiquetadora)x));
-            listEsteiras.FindAll(x => x is EsteiraDesvio).ForEach(x => list.listDesvio.Add((EsteiraDesvio)x));
+            listEsteiras.FindAll(x => x is EsteiraModel && !x.IsClone).ForEach(x => list.listModel.Add((EsteiraModel)x));
+            listEsteiras.FindAll(x => x is EsteiraArmazenamento && !x.IsClone).ForEach(x => list.listArmazenamento.Add((EsteiraArmazenamento)x));
+            listEsteiras.FindAll(x => x is EsteiraEtiquetadora && !x.IsClone).ForEach(x => list.listEtiquetadora.Add((EsteiraEtiquetadora)x));
+            listEsteiras.FindAll(x => x is EsteiraDesvio && !x.IsClone).ForEach(x => list.listDesvio.Add((EsteiraDesvio)x));
 
             return list;
         }
+
+
+
+
+
+
+
+        // metodo que o servidor chama para mapear e atribuir esteiras de Output e Input
+        public void mapeamentoTeste(MapCell[,] mapCells)
+        {
+            listEsteiras.ForEach(x =>
+            {
+                x.removeAllInput();
+                x.RemoveAllOutput();
+            });
+
+            for (int i = 0; i < mapCells.GetLength(0); i++)
+            {
+
+                for (int j = 0; j < mapCells.GetLength(1); j++)
+                {
+                    // como retorna um "Object", é obrigado a dar um Cast para trabalhar com o objeto
+                    MapCell mapCell = ((MapCell)mapCells.GetValue(i, j));
+                    if (mapCell != null && mapCell.hasClass("esteiraP"))
+                    {
+                        if (mapCell.Esteira == null)
+                        {
+                            throw new Exception("Erro no servidor (mapeamentoTeste) mapCell não possui uma Esteira");
+                        }
+                        mapEsteira(mapCell, null, true);
+                    }
+                }
+
+            }
+
+        }
+
+        // metodo usado com recursividade para encontrar o caminho atravez dos conectores ate o destino (Esteiras de Output)
+        private List<MapCell> mapEsteira(MapCell mapCell, MapCell previousMapCell, bool first)
+        {
+            List<MapCell> listMapCell = new List<MapCell>();
+
+            if (mapCell.hasClass("esteiraP"))
+            {
+                // verifica se a esteira contem algum conector inadequaldo ao seu redor
+                if (mapCell.Up != null && !mapCell.Up.hasClass("esteiraP") && mapCell.Up.hasClass("reciveCup"))
+                {
+                    throw new Exception("Erro de compilação, esteiras não possuem saída superior (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                }
+
+                if (mapCell.Down != null && !mapCell.Down.hasClass("esteiraP") && mapCell.Down.hasClass("reciveCdown"))
+                {
+                    throw new Exception("Erro de compilação, esteiras não possuem saída inferior (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                }
+
+                // verifica se é a primeira esteira da recursividade
+                if (first)
+                {
+                    // como é a primeira esteira, verifica se há algo na frente
+                    // e inicia o processo recursivo
+                    if (mapCell.Front != null)
+                    {
+                        mapEsteira(mapCell.Front, mapCell, false).ForEach(x => listMapCell.Add(x));
+                    }
+
+                    List<MapCell> listAux = new List<MapCell>();
+
+                    // usa uma lista auxiliar para remover as repetições de objetos gerados pelo mapeamento
+                    listMapCell.ForEach(x =>
+                    {
+                        if (!listAux.Contains(x)) listAux.Add(x);
+                    });
+
+                    listMapCell = listAux;
+
+                    // adiciona o output na esteira atual
+                    // e o input na esteira da lista
+                    listMapCell.ForEach(x =>
+                    {
+                        x.Esteira.InsertInput(mapCell.Esteira);
+                        mapCell.Esteira.InsertOutput(x.Esteira);
+                    });
+                }
+                else
+                {
+                    // adiciona a celula a lista para que no termino da recursividade possa ser ligada a outra esteira
+                    listMapCell.Add(mapCell);
+                }
+            }
+            else if (mapCell.hasClass("conectorP"))
+            {
+                // verifica se o conector tem saida superior
+                if (mapCell.hasClass("Cup") || mapCell.hasClass("reciveCdown"))
+                {
+                    if (mapCell.Up != null)
+                    {
+                        // verifica se a celula atual é igual a anterior para que não haja loop na recursividade
+                        if (mapCell.Up != previousMapCell)
+                        {
+                            // verifica se a celula superior pode receber ou "dar" para a celula atual e abre a recursividade
+                            // senão dispara um throw para exibir um erro ao usuario
+                            if (mapCell.Up.hasClass("Cdown") || mapCell.Up.hasClass("reciveCup") || (mapCell.hasClass("Cup") && mapCell.Up.hasClass("esteiraP")))
+                            {
+                                mapEsteira(mapCell.Up, mapCell, false).ForEach(x => listMapCell.Add(x));
+                            }
+                            else
+                            {
+                                throw new Exception("Erro de compilação, saída superior inadequada (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Erro de compilação, saída superior não definida (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                    }
+                }
+
+                // verifica se o conector tem saida frontal
+                if (mapCell.hasClass("Cfront"))
+                {
+                    if (mapCell.Front != null)
+                    {
+                        // verifica se a celula atual é igual a anterior para que não haja loop na recursividade
+                        if (mapCell.Front != previousMapCell)
+                        {
+                            // verifica se a celula frontal pode receber ou "dar" para a celula atual e abre a recursividade
+                            // senão dispara um throw para exibir um erro ao usuario
+                            if (mapCell.Front.hasClass("reciveCfront") || mapCell.Front.hasClass("esteiraP"))
+                            {
+                                mapEsteira(mapCell.Front, mapCell, false).ForEach(x => listMapCell.Add(x));
+                            }
+                            else
+                            {
+                                throw new Exception("Erro de compilação, saída frontal inadequada (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Erro de compilação, saída frontal não definida (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                    }
+                }
+
+                // verifica se o conector tem saida inferior
+                if (mapCell.hasClass("Cdown") || mapCell.hasClass("reciveCup"))
+                {
+                    if (mapCell.Down != null)
+                    {
+                        // verifica se a celula atual é igual a anterior para que não haja loop na recursividade
+                        if (mapCell.Down != previousMapCell)
+                        {
+                            // verifica se a celula inferior pode receber ou "dar" para a celula atual e abre a recursividade
+                            // senão dispara um throw para exibir um erro ao usuario
+                            if (mapCell.Down.hasClass("Cup") || mapCell.Down.hasClass("reciveCdown") || (mapCell.hasClass("Cdown") && mapCell.Down.hasClass("esteiraP")))
+                            {
+                                mapEsteira(mapCell.Down, mapCell, false).ForEach(x => listMapCell.Add(x));
+                            }
+                            else
+                            {
+                                throw new Exception("Erro de compilação, saída inferior inadequada (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Erro de compilação, saída inferior não definida (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("Erro de compilação, Objeto não identificado (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+            }
+
+
+            return listMapCell;
+        }
+
+
+
+
+
     }
 
     // classe usada para armazenar as esteiras separadas por tipo definido

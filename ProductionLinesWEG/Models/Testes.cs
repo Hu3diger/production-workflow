@@ -12,7 +12,7 @@ namespace ProductionLinesWEG.Models
         {
             Program pgm = new Program("n1ePewjNIpySkXfpU+Ylf4nsQfhZgNKxDQ8vOptDVsg=");
 
-            pgm.PreLoadProcess();
+            pgm.PreLoadProgram();
 
             return pgm;
         }

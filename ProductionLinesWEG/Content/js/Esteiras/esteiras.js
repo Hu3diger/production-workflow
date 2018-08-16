@@ -248,44 +248,50 @@ function limpaAbout() {
 }
 
 //função para gerar a lista das esteiras
-function generateListEsteira(data, $e, type, initialId) {
+function generateListEsteira(data, $e, type) {
 
     //função para gerar a lista interna das esteiras
-    function InnerList(obj, $target, id) {
+    function InnerList(obj, $target) {
         var li = $("<li>").appendTo($target);
         //acrescenta dentro da ul->li as div's contendo as esteiras
         li.append(
-            '<div id="' + id + '" class="collapsible-header" tabindex="0" onclick="alteraEsteira(this.id)">\
-            <div class="col s12 m12">\
-                <i class="fas fa-cogs colorIconPrincipal"></i>' + obj.Name + "\
-            </div>\
-        </div>"
+            '<div id="' + obj.Id + '" class="collapsible-header" tabindex="0" onclick="alteraEsteira(this.id)">\
+                <div class="col s12 m12">\
+                    <i class="fas fa-cogs colorIconPrincipal"></i>' + obj.Name + "\
+                </div>\
+            </div>"
         );
 
+        var jObj = $("#" + obj.Id);
+
         //salva informações dentro da id do item
-        $("#" + id).data("Name", obj.Name);
-        $("#" + id).data("Description", obj.Description);
-        $("#" + id).data("InLimit", obj.InLimit);
-        $("#" + id).data("TypeN", type);
+        jObj.data("Name", obj.Name);
+        jObj.data("Description", obj.Description);
+        jObj.data("InLimit", obj.InLimit);
+        jObj.data("TypeN", type);
 
         //verifica o tipo do item, e acrescenta valores específicos para cada tipo
         if (type == 1) {
-            $("#" + id).data("Addtional", obj.NameProcessMaster);
-            $("#" + id).data("Type", "Esteira Modelo");
+            jObj.data("Addtional", obj.NameProcessMaster);
+            jObj.data("Type", "Esteira Modelo");
         } else if (type == 2) {
-            $("#" + id).data("Type", "Esteira de armazenamento");
+            jObj.data("Type", "Esteira de armazenamento");
         } else if (type == 3) {
-            $("#" + id).data("Addtional", obj.InitialValue);
-            $("#" + id).data("Type", "Esteira etiquetadora");
+            jObj.data("Addtional", obj.InitialValue);
+            jObj.data("Type", "Esteira etiquetadora");
         } else if (type == 4) {
-            $("#" + id).data("Addtional", "");
-            $("#" + id).data("Type", "Esteira de desvio");
+            jObj.data("Addtional", "");
+            jObj.data("Type", "Esteira de desvio");
         }
+    }
+
+    if (data.length > 0) {
+        var ul = $("<ul class='collapsible'>").appendTo($e);
     }
 
     //for para a criação de várias esteiras no collapsible
     for (var i = 0; i < data.length; i++) {
-        InnerList(data[i], $e, "esteira" + type + "-" + i);
+        InnerList(data[i], ul);
     }
 
     $(".collapsible").collapsible();

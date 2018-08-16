@@ -64,3 +64,9 @@ function showDebug(msg) {
     connector.server.showDebug(msg);
 
 }
+
+function saveTableProduction(array) {
+
+    connector.server.saveTableProduction(array);
+
+}

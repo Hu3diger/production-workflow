@@ -3,6 +3,11 @@
     border-radius: 5px 15px 15px 5px;
     height: 48px;
     border: 0;
+    color: white;
+    font-size: 12px;
+    padding: 5px;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .conectorP {
@@ -36,8 +41,37 @@
     min-height: 80px;
 }
 
-.initialCell {
-    background-color: #d7d7d7;
+.tCellLines {
+    width: 25px;
+    max-width: 25px;
+    min-width: 25px;
+    height: 80px;
+    max-height: 80px;
+    min-height: 80px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.tCellColumn {
+    width: 110px;
+    max-width: 110px;
+    min-width: 110px;
+    height: 25px;
+    max-height: 25px;
+    min-height: 25px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.tCellFirst {
+    width: 25px;
+    max-width: 25px;
+    min-width: 25px;
+    height: 25px;
+    max-height: 25px;
+    min-height: 25px;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .tTrash {

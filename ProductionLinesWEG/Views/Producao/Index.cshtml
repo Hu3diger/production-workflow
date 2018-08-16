@@ -41,10 +41,13 @@
                                 <td><div id="cn8" class="dragBase conectorP Cdown reciveCfront"><img src="~/Content/images/cn8.png" /></div></td>
                             </tr>
                             <tr>
-                                <td><div id="cn9" class="dragBase conectorP Cdown reciveCdown Cup reciveCup"><img src="~/Content/images/cn9.png" /></div></td>
+                                <td><div id="cn9" class="dragBase conectorP Cdown reciveCdown"><img src="~/Content/images/cn9.png" /></div></td>
                             </tr>
                             <tr>
-                                <td><div id="cn10" class="dragBase conectorP Cup reciveCfront"><img src="~/Content/images/cn10.png" /></div></td>
+                                <td><div id="cn10" class="dragBase conectorP Cup reciveCup"><img src="~/Content/images/cn10.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn11" class="dragBase conectorP Cup reciveCfront"><img src="~/Content/images/cn11.png" /></div></td>
                             </tr>
                         </tbody>
                     </table>
@@ -177,7 +180,12 @@
                 <table id="tdropesteiras" class="tableStyle">
                     <tbody>
                         <tr>
-                            <td class="tCell initialCell" data-i=0 data-j=0></td>
+                            <td class="tCellFirst no-padding" data-i=0 data-j=0>0</td>
+                            <td class="tCellColumn no-padding" data-i=0 data-j=i>1</td>
+                        </tr>
+                        <tr>
+                            <td class="tCellLines no-padding" data-i=1 data-j=0>1</td>
+                            <td class="tCell" data-i=1 data-j=1></td>
                         </tr>
                     </tbody>
                 </table>
@@ -195,7 +203,7 @@
 
             <div class="col s12 m10 offset-m1" style="margin-top: 20px;">
 
-                <a class="waves-effect waves-light btn" onclick="testeF()"><i class="material-icons left">save</i>button</a>
+                <a class="waves-effect waves-light btn" onclick="saveContent()"><i class="material-icons left">save</i>button</a>
 
             </div>
 
@@ -204,5 +212,3 @@
     </div>
 
 </div>
-
-<script src="~/Content/js/Producao/producao.js"></script>

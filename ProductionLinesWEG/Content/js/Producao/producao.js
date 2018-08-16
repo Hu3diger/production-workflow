@@ -1,4 +1,17 @@
-var Xconectors = 10;
+var Xconectors = 11;
+var countIdEm = 0;
+var countIdEa = 0;
+var countIdEe = 0;
+var countIdEd = 0;
+
+function getIds() {
+    connector.server.getIdsClone().done(function (array) {
+        countIdEm = array[0];
+        countIdEa = array[1];
+        countIdEe = array[2];
+        countIdEd = array[3];
+    });
+}
 
 $(function () {
     setDropDragItens();
@@ -11,6 +24,13 @@ var CellAfterDrop;
 function setDropDragItens() {
 
     $(".dragBase").draggable({ helper: 'clone' });
+
+    // TESTES APENAS
+    $(".dragClone").dblclick(function () {
+        connector.server.getInformationEsteira($(this).attr("id")).done(function (obj) {
+            console.log(obj);
+        });
+    });
 
     $(".dragClone").draggable({
         revert: 'invalid',
@@ -69,8 +89,33 @@ function setDropDragItens() {
             if ($(this).children().length == 0 || !droppedItem == $(this).children().get(0)) {
 
                 if (droppedItem.hasClass("dragBase")) {
+
+                    let tempData = droppedItem.data();
+
                     droppedItem = droppedItem.clone();
                     droppedItem.removeClass("dragBase").addClass("dragClone");
+
+                    var idM = droppedItem.attr("id");
+
+                    if (tempData.TypeN == 1) {
+                        droppedItem.attr("id", idM + "c" + countIdEm++);
+                    } else if (tempData.TypeN == 2) {
+                        droppedItem.attr("id", idM + "c" + countIdEa++);
+                    } else if (tempData.TypeN == 3) {
+                        droppedItem.attr("id", idM + "c" + countIdEe++);
+                    } else if (tempData.TypeN == 4) {
+                        droppedItem.attr("id", idM + "c" + countIdEd++);
+                    }
+
+                    // for each com com os valores de tempData
+                    $.each(tempData, function (i, item) {
+                        if (i != "uiDraggable") {
+                            droppedItem.data(i, item);
+                        }
+                    });
+
+                    droppedItem.data("idM", idM);
+
                 }
 
                 $(this).html(droppedItem);
@@ -109,7 +154,7 @@ function setDropDragItens() {
 }
 
 // reajusta a tabela para que tenham uma linha e coluna a vazia no fim
-function reajustTable($currentCell) {
+function reajustTable() {
 
     let tBody = $("#tdropesteiras tbody");
 
@@ -125,10 +170,15 @@ function reajustTable($currentCell) {
     if (controlRight) {
 
         for (var i = 0; i < tBody.children().length; i++) {
-            $('<td class="tCell">').appendTo(tBody.children()[i]);
+            if (i != 0) {
+                $('<td class="tCell">').appendTo(tBody.children()[i]);
+            } else {
+                $('<td class="tCellColumn no-padding">').appendTo(tBody.children().get(0));
+                $($(tBody.children().get(0)).children().get($(bottom).children().length)).html("" + ($(bottom).children().length));
+            }
         }
     } else {
-        if ($(bottom).children().length > 1) {
+        if ($(bottom).children().length > 2) {
 
             // verifica se contem algo na penultima linha para poder excluir a ultima
             if (!reajustTableVerifyColumn(tBody, $(bottom).children().length - 2)) {
@@ -151,10 +201,15 @@ function reajustTable($currentCell) {
         let tr = $("<tr>").appendTo(tBody);
 
         for (var i = 0; i < $(bottom).children().length; i++) {
-            $('<td class="tCell">').appendTo(tr);
+            if (i != 0) {
+                $('<td class="tCell">').appendTo(tr);
+            } else {
+                $('<td class="tCellLines no-padding">').appendTo(tr);
+                $(tr.children().get(0)).html("" + (tBody.children().length - 1));
+            }
         }
     } else {
-        if (tBody.children().length > 1) {
+        if (tBody.children().length > 2) {
 
             // verifica se contem algo na penultima linha para poder excluir a ultima
             if (!reajustTableVerifyLine($(tBody.children().get(tBody.children().length - 2)))) {
@@ -381,62 +436,64 @@ function analyzeCell(cell, reControl) {
         }
     }
 
-
     if (nextCell) {
 
         // verifica para qual direção o objeto da celula atual aponta e se tem algum conector ou esteira
-        if (obj.hasClass("Cfront") && !$(nextCell.children().get(0)).hasClass("esteiraP") && !$(nextCell.children().get(0)).hasClass("conectorP")) {
+        if (obj.hasClass("Cfront") && !$(nextCell.children().get(0)).hasClass("esteiraP") && (!$(nextCell.children().get(0)).hasClass("conectorP") || !$(nextCell.children().get(0)).hasClass("reciveCfront"))) {
             // marca a celula para representar um Erro
             cell.addClass("red darken-1");
-        } else if (obj.hasClass("Cup") && !$(upCell.children().get(0)).hasClass("esteiraP") && !$(upCell.children().get(0)).hasClass("conectorP")) {
+        } else if (obj.hasClass("Cup") && !$(upCell.children().get(0)).hasClass("esteiraP") && (!$(upCell.children().get(0)).hasClass("conectorP") || !$(upCell.children().get(0)).hasClass("reciveCup"))) {
             cell.addClass("red darken-1");
-        } else if (obj.hasClass("Cdown") && !$(downCell.children().get(0)).hasClass("esteiraP") && !$(downCell.children().get(0)).hasClass("conectorP")) {
+        } else if (obj.hasClass("Cdown") && !$(downCell.children().get(0)).hasClass("esteiraP") && (!$(downCell.children().get(0)).hasClass("conectorP") || !$(downCell.children().get(0)).hasClass("reciveCdown"))) {
             cell.addClass("red darken-1");
         }
     }
-
-    if (obj.hasClass("Cup") && obj.hasClass("Cdown") && !obj.hasClass("Cfront")) {
-
-        var objImg = $(obj).children().get(0);
-
-        // verifica se é do tipo imgem
-        if ($(objImg).is("img")) {
-
-            let str = $(objImg).attr("src");
-
-            // o caminho da imagem sem o numero da imagem atual
-            let str2 = str.substring(0, str.lastIndexOf("/cn") + 3);
-
-            // variavel para o nome da imagem final
-            var nameImg;
-
-            // controle para saber quantos "receptores" existem para o objeto atual
-            var c = 0;
-
-            if ($(upCell.children().get(0)).hasClass("reciveCup")) {
-                nameImg = "Down";
-                c++;
-            }
-
-            if ($(downCell.children().get(0)).hasClass("reciveCdown")) {
-                nameImg = "Up";
-                c++;
-            }
-
-            if (c == 2) {
-                nameImg = "9x";
-            } else if (c == 0) {
-                nameImg = "9";
-            }
+}
 
 
-            // adicion o novo nome ao caminho da imagem
-            str2 += nameImg + ".png";
+//função para gerar a lista das esteiras
+function generateListProducao(data, $e, type, colorClass) {
 
-            // seta o caminho a imagem
-            $(objImg).attr("src", str2);
+    //função para gerar a lista interna das esteiras
+    function InnerList(obj, $target, id) {
+        var tr = $("<tr>").appendTo($target);
+        var td = $("<td>").appendTo($target);
+
+        //acrescenta dentro da ul->li as div's contendo as esteiras
+        td.append(
+            ' <div id="' + obj.Id + '" class="dragBase z-depth-3 esteiraP ' + colorClass + '"><div class="center">' + obj.Name + '</div></div>'
+        );
+
+        var jObj = $("#" + obj.Id);
+
+        //verifica o tipo do item, e acrescenta valores específicos para cada tipo
+        if (type == 1) {
+            jObj.data("Addtional", obj.NameProcessMaster);
+            jObj.data("Type", "Esteira Modelo");
+        } else if (type == 2) {
+            jObj.data("Type", "Esteira de armazenamento");
+        } else if (type == 3) {
+            jObj.data("Addtional", obj.InitialValue);
+            jObj.data("Type", "Esteira etiquetadora");
+        } else if (type == 4) {
+            jObj.data("Addtional", "");
+            jObj.data("Type", "Esteira de desvio");
         }
+
+        //salva informações dentro da id do item
+        jObj.data("Name", obj.Name);
+        jObj.data("Description", obj.Description);
+        jObj.data("InLimit", obj.InLimit);
+        jObj.data("TypeN", type);
+
     }
+
+    //for para a criação de várias esteiras no collapsible
+    for (var i = 0; i < data.length; i++) {
+        InnerList(data[i], $e);
+    }
+
+    $(".collapsible").collapsible();
 }
 
 
@@ -447,48 +504,67 @@ function analyzeCell(cell, reControl) {
 
 
 
-
-
 function saveContent() {
-
+    // tabela "master"
     var tbl = $("#tdropesteiras");
 
+    // verifica se encontrou
     if (tbl.length) {
 
+        // inicia e declara as variaveis
         let tBody = tbl.find($("tbody"));
-
         let tr = tBody.children();
-
-        var array = [];
-
-        var json = {
-            id: "",
-            row: 0,
-            column: 0,
-            class: [],
-            children: ""
-        };
+        var sendServ = {};
+        var array = new Array(tr.length);
+        var json = {};
 
         for (var i = 0; i < tr.length; i++) {
 
             let td = $(tr.get(i)).children();
 
-            // ate aqui tudo tranquilo
-            console.log(td);
+            array[i] = new Array(td.length);
 
+            for (var j = 0; j < td.length; j++) {
 
+                let cell = $(td.get(j));
 
+                let children = cell.children().get(0);
 
+                // inicializa a variavel json com os valores pré-definidos
+                json = {
+                    id: null,
+                    idM: null,
+                    type: null,
+                    classes: [],
+                    children: $($(children).children().get(0)).prop('outerHTML')
+                };
 
+                // verifica se a div existe
+                // se contem algo dentro da celula
+                if (children) {
+                    json.classes = $(children).attr("class").split(" ");
+
+                    json.id = $(children).attr("id");
+
+                    json.idM = $(children).data().idM;
+
+                    json.type = $(children).data().TypeN;
+                }
+
+                array[i][j] = json;
+            }
         }
 
+        // atribui os valoes a variavel para enviar para o servidor
+        sendServ.array = array;
 
+        sendServ.countIdEm = countIdEm;
+        sendServ.countIdEa = countIdEa;
+        sendServ.countIdEe = countIdEe;
+        sendServ.countIdEd = countIdEd;
 
-
-
-
-
-
+        // metodo do servidor que faz o mapeamento
+        saveTableProduction(sendServ);
     } else {
         console.log("Object not found");
     }

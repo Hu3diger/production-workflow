@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace ProductionLinesWEG.Hub
             SessionGroup = sessionGroup;
         }
     }
-    
+
     // iisexpress-proxy 53139 to 3000
     // classe principal para a communicação com o servidor
     public class MasterHub : Microsoft.AspNet.SignalR.Hub
@@ -297,7 +298,7 @@ namespace ProductionLinesWEG.Hub
 
             // procura pelo programa que corresponde ao usuario (AuthId)
             Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
-            
+
             if (pgm != null)
             {
                 if (pgm.listProcessos.Find(x => x.Name.Equals(name)) == null)
@@ -526,8 +527,6 @@ namespace ProductionLinesWEG.Hub
         public void CreateEsteira(string name, string desc, int inlimit, int type, string additional)
         {
 
-            Clients.Caller.showToast("Entrou");
-
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
             var connections = GetAllConnectionIdsByConnectionId(Context.ConnectionId);
@@ -552,7 +551,7 @@ namespace ProductionLinesWEG.Hub
 
                             if (p != null)
                             {
-                                e = new EsteiraModel(name, desc, inlimit);
+                                e = new EsteiraModel("", name, desc, inlimit);
                                 EsteiraModel em = (EsteiraModel)e;
 
                                 em.insertMasterProcess(p);
@@ -566,7 +565,7 @@ namespace ProductionLinesWEG.Hub
 
                         // esteira de armazenamento
                         case 2:
-                                e = new EsteiraArmazenamento(name, desc, inlimit);
+                            e = new EsteiraArmazenamento("", name, desc, inlimit);
                             break;
 
                         // esteira etiquetadora
@@ -576,7 +575,7 @@ namespace ProductionLinesWEG.Hub
                             {
                                 int initialValue = int.Parse(additional);
 
-                                e = new EsteiraEtiquetadora(name, desc, inlimit, initialValue);
+                                e = new EsteiraEtiquetadora("", name, desc, inlimit, initialValue);
                             }
                             catch (System.Exception)
                             {
@@ -640,6 +639,243 @@ namespace ProductionLinesWEG.Hub
             {
                 Clients.Caller.showToast("Error: no Login");
             }
+        }
+
+
+
+
+
+
+
+
+
+        // retorna os ids iniciais dos clones
+        public int[] getIdsClone()
+        {
+
+            int[] array = new int[4];
+
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            if (!AuthId.Equals(""))
+            {
+
+                // procura pelo programa que corresponde ao usuario (AuthId)
+                Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+                if (pgm != null)
+                {
+
+                    array[0] = pgm.IdCloneEm;
+                    array[1] = pgm.IdCloneEa;
+                    array[2] = pgm.IdCloneEe;
+                    array[3] = pgm.IdCloneEd;
+
+                }
+                else
+                {
+                    Clients.Caller.showToast("Error: pgm getIdsClone");
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: no Login");
+            }
+
+            return array;
+
+        }
+
+
+
+
+
+
+
+
+
+        // mapeamento das esteiras
+        public void saveTableProduction(dynamic recivedServ)
+        {
+
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            if (!AuthId.Equals(""))
+            {
+
+                // procura pelo programa que corresponde ao usuario (AuthId)
+                Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+                if (pgm != null)
+                {
+
+                    try
+                    {
+                        var array = recivedServ.array;
+
+                        // cria uma matriz 2d
+                        MapCell[,] matrizMapCell;
+
+                        // inicializa a matriz com o tamanho da tabela recebida
+                        matrizMapCell = new MapCell[array.Count, array[0].Count];
+
+                        for (int i = 0; i < array.Count; i++)
+                        {
+
+                            for (int j = 0; j < array[i].Count; j++)
+                            {
+                                // objeto separado
+                                var obj = array[i][j];
+
+                                // classes do objeto (div)
+                                string[] classes = new string[obj.classes.Count];
+
+                                // conteudo dentro da div
+                                string children = obj.children;
+
+                                // o objeto deve conter classes,
+                                // conteudo (no caso o nome do objeto que esta dentro da div),
+                                // id (o id do clone)
+                                // e idM (id da Esteira Base)
+                                if (classes.Count() != 0 && children != null && obj.id != null && obj.idM != null)
+                                {
+                                    // copia todas as classes para um array de string para realizar a conversão de dynamic > string
+                                    for (int k = 0; k < obj.classes.Count; k++)
+                                    {
+                                        classes[k] = obj.classes[k];
+                                    }
+
+                                    // cria um objeto MapCell (array de classes, conteudo, linha, coluna)
+                                    matrizMapCell[i, j] = new MapCell(classes, children, i, j);
+
+                                    // converte paar string
+                                    string id = obj.id;
+
+                                    // procura a esteira com o id do clone na lista geral de esteiras
+                                    matrizMapCell[i, j].Esteira = pgm.listEsteiras.Find(x => x.Id.Equals(id));
+
+                                    // caso nao ache, cria um novo com o clone da Base
+                                    if (matrizMapCell[i, j].Esteira == null)
+                                    {
+                                        bool t = false;
+
+                                        for (int k = 0; k < classes.Count(); k++)
+                                        {
+                                            if (classes[k].Equals("esteiraP"))
+                                            {
+                                                t = true;
+                                                break;
+                                            };
+                                        }
+
+                                        if (t)
+                                        {
+                                            string idM = obj.idM;
+
+                                            EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(idM));
+
+                                            if (e != null)
+                                            {
+                                                matrizMapCell[i, j].Esteira = (EsteiraAbstrata)e.Clone();
+                                                matrizMapCell[i, j].Esteira.Id = id;
+
+                                                pgm.listEsteiras.Add(matrizMapCell[i, j].Esteira);
+                                            }
+                                            else
+                                            {
+                                                throw new Exception("Esteira Base = null, idM = " + idM);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < matrizMapCell.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < matrizMapCell.GetLength(1); j++)
+                            {
+                                // verifica se contem o objeto na matriz
+                                if (matrizMapCell.GetValue(i, j) != null)
+                                {
+
+                                    // verifica e faz as atribuições para organizar as "celulas" de forma dinamica
+                                    // assim facilitando na recursividade
+                                    if (i > 0)
+                                    {
+                                        ((MapCell)matrizMapCell.GetValue(i, j)).Up = (MapCell)matrizMapCell.GetValue(i - 1, j);
+                                    }
+                                    if (j < matrizMapCell.GetLength(1) - 1)
+                                    {
+                                        ((MapCell)matrizMapCell.GetValue(i, j)).Front = (MapCell)matrizMapCell.GetValue(i, j + 1);
+                                    }
+                                    if (i < matrizMapCell.GetLength(0) - 1)
+                                    {
+                                        ((MapCell)matrizMapCell.GetValue(i, j)).Down = (MapCell)matrizMapCell.GetValue(i + 1, j);
+                                    }
+                                }
+
+                            }
+
+                        }
+
+                        // metodo que inicia faz "ajustes" e atribuições e inicia o mapeamento
+                        pgm.mapeamentoTeste(matrizMapCell);
+
+                        // atribui os ultimos ids registrados
+                        pgm.IdCloneEm = recivedServ.countIdEm;
+                        pgm.IdCloneEa = recivedServ.countIdEa;
+                        pgm.IdCloneEe = recivedServ.countIdEe;
+                        pgm.IdCloneEd = recivedServ.countIdEd;
+
+                        Clients.Caller.showToast("Project Salved");
+
+                    }
+                    catch (Exception e)
+                    {
+                        Clients.Caller.showToast(e.Message);
+                    }
+                }
+                else
+                {
+                    Clients.Caller.showToast("Error: pgm mapEsteiras");
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: no Login");
+            }
+        }
+
+        public List<string> getInformationEsteira(string id)
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            if (!AuthId.Equals(""))
+            {
+
+                // procura pelo programa que corresponde ao usuario (AuthId)
+                Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+                if (pgm != null)
+                {
+                    List<string> list = new List<string>();
+
+                    pgm.listEsteiras.Find(x => x.Id.Equals(id)).EsteiraInput.ForEach(x => list.Add(x.Name));
+
+                    return list;
+                }
+                else
+                {
+                    Clients.Caller.showToast("Error: pgm getInformationEsteira");
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: no Login");
+            }
+
+            return null;
         }
     }
 }

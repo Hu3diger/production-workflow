@@ -17,5 +17,6 @@ $(function () {
         console.log("Conected");
         callListProcess();
         callListEsteira();
+        getIds();
     });
 });

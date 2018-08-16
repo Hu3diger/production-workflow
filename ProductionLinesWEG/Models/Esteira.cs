@@ -8,9 +8,8 @@ using System.Threading;
 namespace ProductionLinesWEG.Models
 {
     // classe usada para todos os tipos de esteiras
-    public abstract class EsteiraAbstrata
+    public abstract class EsteiraAbstrata : ICloneable
     {
-        private static int _countId = 1;
 
         private int _inputUse;
 
@@ -19,11 +18,10 @@ namespace ProductionLinesWEG.Models
 
         private Thread thread;
 
-        public EsteiraAbstrata EsteiraOutput { get; private set; }
         public List<EsteiraAbstrata> EsteiraInput { get; private set; }
 
 
-        public int Id { get; private set; }
+        public string Id { get; set; }
         public bool Ligado { get; private set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -31,6 +29,8 @@ namespace ProductionLinesWEG.Models
         public int Fail { get; private set; }
         public int Success { get; private set; }
         public int Produced { get; private set; }
+
+        public bool IsClone { get; set; }
 
         protected bool BlockedEsteira { get => _inputUse >= InLimit && InLimit != -1; }
 
@@ -41,12 +41,11 @@ namespace ProductionLinesWEG.Models
         /// <param name="limite"></param>
         public EsteiraAbstrata(string name, string description, int limite)
         {
-            Id = _countId++;
-
             Name = name;
             Description = description;
 
             Ligado = false;
+            IsClone = false;
 
             InLimit = limite;
             _inputUse = 0;
@@ -80,36 +79,24 @@ namespace ProductionLinesWEG.Models
             return false;
         }
         /// <summary>
-        /// Insere a esteira passada (e) antes da esteira atual (Insere no input)
-        /// </summary>
-        public void insertBefore(EsteiraAbstrata e)
-        {
-            e.releaseAndConnect();
-
-            EsteiraInput.ForEach(x => x.setOutput(e));
-            e.EsteiraInput = EsteiraInput;
-
-            this.EsteiraInput = new List<EsteiraAbstrata>();
-            this.setInput(e);
-
-            e.setOutput(this);
-        }
-        /// <summary>
-        /// seta a esteira (e) como saida
-        /// </summary>
-        public void setOutput(EsteiraAbstrata e)
-        {
-            EsteiraOutput = e;
-        }
-        /// <summary>
         /// seta a esteira (e) como entrada (adicionando ela na lista)
         /// </summary>
-        public void setInput(EsteiraAbstrata e)
+        public void InsertInput(EsteiraAbstrata e)
         {
             int i;
             for (i = 0; i < EsteiraInput.Count; i++)
             {
-                if (EsteiraInput[i].Id == e.Id) break;
+                if (EsteiraInput[i].Id == e.Id)
+                {
+                    if (EsteiraInput[i] == e)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        throw new Exception("Id equals but Object is not equal");
+                    }
+                }
             }
 
             if (i == EsteiraInput.Count)
@@ -125,27 +112,21 @@ namespace ProductionLinesWEG.Models
         ///  remove a esteira (e) da lsita de inputs, caso exista
         /// </summary>
         /// <param name="e"></param>
-        public void removeInput(EsteiraAbstrata e)
+        public void removeAllInput()
         {
-            int i = EsteiraInput.FindIndex(x => x.Id == e.Id);
-
-            if (i != -1)
-            {
-                EsteiraInput.RemoveAt(i);
-            }
+            EsteiraInput.Clear();
         }
         /// <summary>
-        /// desprende a esteira atual das suas vizinhas e as conectas
+        /// metodo abstrato implementado pelas filhas
+        /// Insere a esteira na lista de Outputs
         /// </summary>
-        public void releaseAndConnect()
-        {
-            if (EsteiraOutput != null)
-            {
-                EsteiraOutput.EsteiraInput = EsteiraInput;
-            }
-
-            EsteiraInput.ForEach(x => x.setOutput(EsteiraOutput));
-        }
+        /// <param name="e"></param>
+        public abstract void InsertOutput(EsteiraAbstrata e);
+        /// <summary>
+        /// metodo abstrato implementado pelas filhas
+        /// Remove todas as esteiras de saida
+        /// </summary>
+        public abstract void RemoveAllOutput();
         /// <summary>
         /// remove a primeira peça da fila e a retorna
         /// </summary>
@@ -233,43 +214,71 @@ namespace ProductionLinesWEG.Models
                 });
             }
         }
+
+        public object Clone()
+        {
+            TurnOff();
+            EsteiraAbstrata e = (EsteiraAbstrata)this.MemberwiseClone();
+
+            e.EsteiraInput = new List<EsteiraAbstrata>();
+
+            e._queueInputPecas = new Queue<Peca>();
+            e._queueOutputPecas = new Queue<Peca>();
+
+            e.IsClone = true;
+
+            return ImplementedClone(e);
+        }
+
+        protected abstract object ImplementedClone(EsteiraAbstrata e);
     }
-    
+
     // classe usada para as esteiras que implementa apenas uma esteira de saida
     public abstract class SetableOutput : EsteiraAbstrata
     {
+        public EsteiraAbstrata EsteiraOutput { get; private set; }
+
         public SetableOutput(string name, string description, int limite) : base(name, description, limite)
         {
         }
-        /// <summary>
-        /// insere a esteira (e) depois da esteira atua
-        /// </summary>
-        /// <param name="e"></param>
-        public void insertAfter(EsteiraAbstrata e)
+
+        public override void InsertOutput(EsteiraAbstrata e)
         {
-            e.releaseAndConnect();
-            if (this.EsteiraOutput != null)
+            if (EsteiraOutput == null)
             {
-                this.EsteiraOutput.removeInput(this);
-                this.EsteiraOutput.setInput(e);
+                EsteiraOutput = e;
             }
-            e.setOutput(EsteiraOutput);
-            e.setInput(this);
-            this.setOutput(e);
+            else
+            {
+                throw new Exception("Output already defined");
+            }
+        }
+
+        public override void RemoveAllOutput()
+        {
+            EsteiraOutput = null;
         }
     }
-
     // classe usada para as esteiras que possuem processos internos
     public class EsteiraModel : SetableOutput
     {
+        private static int _countId = 0;
 
         private Processo _processMaster;
         private ProcessManager _processManager;
 
         public string NameProcessMaster { get => _processMaster.Name; }
 
-        public EsteiraModel(string name, string description, int limite) : base(name, description, limite)
+        public EsteiraModel(string id, string name, string description, int limite) : base(name, description, limite)
         {
+            if (id.Equals(""))
+            {
+                Id = "em" + (_countId++);
+            }
+            else
+            {
+                Id = id;
+            }
         }
         /// <summary>
         /// insere um processo como processo master da esteira (o processo que a esteira controlará)
@@ -317,13 +326,33 @@ namespace ProductionLinesWEG.Models
             _processManager.finalize();
             _processManager.Reset();
         }
+        /// <summary>
+        /// Emplementação do Clone para cada Classe
+        /// </summary>
+        /// <returns></returns>
+        protected override object ImplementedClone(EsteiraAbstrata e)
+        {
+            ((EsteiraModel)e).insertMasterProcess(this._processMaster);
+
+            return e;
+        }
     }
 
     // classe usada para criar uma esteira que armazena as peças ate um determinado limite
     public class EsteiraArmazenamento : SetableOutput
     {
-        public EsteiraArmazenamento(string name, string description, int limite) : base(name, description, limite)
+        private static int _countId = 0;
+
+        public EsteiraArmazenamento(string id, string name, string description, int limite) : base(name, description, limite)
         {
+            if (id.Equals(""))
+            {
+                Id = "ea" + (_countId++);
+            }
+            else
+            {
+                Id = id;
+            }
         }
         /// <summary>
         /// remove todas as peças da lista
@@ -339,17 +368,36 @@ namespace ProductionLinesWEG.Models
         {
             return _queueInputPecas.ToList();
         }
+        /// <summary>
+        /// Emplementação do Clone para cada Classe
+        /// </summary>
+        /// <returns></returns>
+        protected override object ImplementedClone(EsteiraAbstrata e)
+        {
+            return e;
+        }
     }
 
     // classe usada para etiquetar as peças (atribuir um id a elas)
     public class EsteiraEtiquetadora : SetableOutput
     {
+        private static int _countId = 0;
+
         private static List<EsteiraEtiquetadora> listE = new List<EsteiraEtiquetadora>();
         public int InitialValue { get; set; }
         private int currentTag;
 
-        public EsteiraEtiquetadora(string name, string description, int limite, int initialValue) : base(name, description, limite)
+        public EsteiraEtiquetadora(string id, string name, string description, int limite, int initialValue) : base(name, description, limite)
         {
+            if (id.Equals(""))
+            {
+                Id = "ee" + (_countId++);
+            }
+            else
+            {
+                Id = id;
+            }
+
             InitialValue = initialValue;
             currentTag = initialValue;
             listE.Add(this);
@@ -388,15 +436,54 @@ namespace ProductionLinesWEG.Models
         {
             listE.Remove(this);
         }
+        /// <summary>
+        /// Emplementação do Clone para cada Classe
+        /// </summary>
+        /// <returns></returns>
+        protected override object ImplementedClone(EsteiraAbstrata e)
+        {
+            return e;
+        }
     }
 
     // classe usada para desviar os processos conforme as condições passadas
     public class EsteiraDesvio : EsteiraAbstrata
     {
+        private static int _countId = 0;
+        public static List<EsteiraAbstrata> EsteiraOutput { get; private set; }
+
         // esteira ainda não implementada
-        public EsteiraDesvio(string name, string description, int limite) : base(name, description, limite)
+        public EsteiraDesvio(string id, string name, string description, int limite) : base(name, description, limite)
         {
+            if (id.Equals(""))
+            {
+                Id = "ed" + (_countId++);
+            }
+            else
+            {
+                Id = id;
+            }
+
+            EsteiraOutput = new List<EsteiraAbstrata>();
         }
+
+        public override void InsertOutput(EsteiraAbstrata e)
+        {
+            if (EsteiraOutput == null)
+            {
+                EsteiraOutput.Add(e);
+            }
+            else
+            {
+                throw new Exception("EsteiraOutput null (Esteira Desvio)");
+            }
+        }
+
+        public override void RemoveAllOutput()
+        {
+            EsteiraOutput.Clear();
+        }
+
 
         void PiecePass(EsteiraAbstrata esteira)
         {
@@ -407,5 +494,72 @@ namespace ProductionLinesWEG.Models
         {
             //    OutputPieceFail(esteira);
         }
+        /// <summary>
+        /// Emplementação do Clone para cada Classe
+        /// </summary>
+        /// <returns></returns>
+        protected override object ImplementedClone(EsteiraAbstrata e)
+        {
+            return e;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public class MapCell
+    {
+        public string[] Classes { get; set; }
+        public string Html_Children { get; set; }
+
+        public MapCell Up { get; set; }
+        public MapCell Front { get; set; }
+        public MapCell Down { get; set; }
+
+        public EsteiraAbstrata Esteira { get; set; }
+
+        public int Row { get; private set; }
+        public int Column { get; private set; }
+
+        public MapCell(string[] classes, string html_Children, int row, int column)
+        {
+            Classes = classes;
+            Html_Children = html_Children;
+            Row = row;
+            Column = column;
+        }
+
+        public bool hasClass(string className)
+        {
+            for (int i = 0; i < Classes.Count(); i++)
+            {
+                if (Classes[i].Equals(className))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
+
