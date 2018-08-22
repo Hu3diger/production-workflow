@@ -29,8 +29,6 @@ function ServerReciveMethods() {
     //lista as esteiras na tela de esteiras
     connector.client.listEsteiras = function (jsonRecived) {
         limpaAbout();
-        
-        console.log(jsonRecived);
 
         $("#esteirasModel").html("");
         $("#esteirasArma").html("");
@@ -41,6 +39,16 @@ function ServerReciveMethods() {
         generateListEsteira(jsonRecived.listArmazenamento, $("#esteirasArma"), 2);
         generateListEsteira(jsonRecived.listEtiquetadora, $("#esteirasEtiq"), 3);
         generateListEsteira(jsonRecived.listDesvio, $("#esteirasDesvio"), 4);
+
+        $("#esteirasModelProd").html("");
+        $("#esteirasArmaProd").html("");
+        $("#esteirasEtiqProd").html("");
+        $("#esteirasDesvioProd").html("");
+
+        generateListEsteiraProd(jsonRecived.listModel, $("#esteirasModelProd"), 1);
+        generateListEsteiraProd(jsonRecived.listArmazenamento, $("#esteirasArmaProd"), 2);
+        generateListEsteiraProd(jsonRecived.listEtiquetadora, $("#esteirasEtiqProd"), 3);
+        generateListEsteiraProd(jsonRecived.listDesvio, $("#esteirasDesvioProd"), 4);
 
         $("#tmodelo tbody").html("");
         $("#tarmazenamento tbody").html("");

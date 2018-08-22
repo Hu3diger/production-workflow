@@ -145,6 +145,7 @@
     <Content Include="Content\js\Esteiras\esteiras.js" />
     <Content Include="Content\js\login\login.js" />
     <Content Include="Content\js\main.js" />
+    <Content Include="Content\js\Planta\planta.js" />
     <Content Include="Content\js\Producao\initRedipsDrag.js" />
     <Content Include="Content\js\Producao\producao.js" />
     <Content Include="Content\js\serverRecive.js" />
@@ -328,6 +329,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\PlantaController.cs" />
     <Compile Include="Controllers\ProducaoController.cs" />
     <Compile Include="Controllers\LoginController .cs" />
     <Compile Include="Controllers\EsteirasController.cs" />
@@ -357,6 +359,7 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Views\Esteiras\Index.cshtml" />
     <Content Include="Views\Processos\Index.cshtml" />
+    <Content Include="Views\Planta\Index.cshtml" />
     <Content Include="Views\Producao\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

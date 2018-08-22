@@ -47,7 +47,7 @@
             </div>\
             <div class="row">\
             <div class="col s12 m8 offset-m2">\
-            <a class="waves-effect waves-light btn left red darken-4" onclick="limpaInfo()"><i class="material-icons left">cancel</i>cancelar</a>\
+            <a class="waves-effect waves-light btn right blue darken-4" onclick="limpaInfo()"><i class="material-icons left">cancel</i>cancelar</a>\
             <a class="waves-effect waves-light btn right green darken-4" onclick="enviaProcess()"><i class="material-icons left">sd_card</i>criar</a>\
             </div>\
         </div>\
@@ -109,8 +109,9 @@
             </div>\
             <div class="row">\
                 <div class="col s12 m8 offset-m2">\
-                <a class="waves-effect waves-light btn left red darken-4 modal-trigger" href="#modal1"><i class="material-icons left">delete_forever</i>deletar</a>\
+                <a href="" onclick="limpaInfo()">Cancelar</a>\
                 <a class="waves-effect waves-light btn right green darken-4" id="saveProcess" onclick="alteraProcess('+ name + ')"><i class="material-icons left">sd_card</i>salvar</a>\
+                <a class="waves-effect waves-light btn right red darken-4 modal-trigger" href="#modal1"><i class="material-icons left">delete_forever</i>deletar</a>\
             </div>\
         </div>\
         </form>\

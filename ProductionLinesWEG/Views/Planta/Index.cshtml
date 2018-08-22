@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "Planta";
+    ViewBag.Screen = "Planta";
+}
+
+
+<link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/planta.css" />
+
+<!-- Page content -->
+<div class="row mt">
+    <div id="modalId"></div>
+    <div class="col s12 m6 l2 offset-l1" id="listEProducao">
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Conectores</div>
+                <div class="collapsible-body">
+
+                    <table id="tconectores">
+                        <tbody>
+                            <tr>
+                                <td><div id="cn1" class="dragBase conectorP Cfront reciveCfront"><img src="~/Content/images/cn1.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn2" class="dragBase conectorP Cfront reciveCfront reciveCup"><img src="~/Content/images/cn2.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn3" class="dragBase conectorP Cfront reciveCfront reciveCup reciveCdown"><img src="~/Content/images/cn3.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn4" class="dragBase conectorP Cfront reciveCfront reciveCdown"><img src="~/Content/images/cn4.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn5" class="dragBase conectorP Cfront reciveCup"><img src="~/Content/images/cn5.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn6" class="dragBase conectorP Cfront reciveCup reciveCdown"><img src="~/Content/images/cn6.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn7" class="dragBase conectorP Cfront reciveCdown"><img src="~/Content/images/cn7.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn8" class="dragBase conectorP Cdown reciveCfront"><img src="~/Content/images/cn8.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn9" class="dragBase conectorP Cdown reciveCdown"><img src="~/Content/images/cn9.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn10" class="dragBase conectorP Cup reciveCup"><img src="~/Content/images/cn10.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn11" class="dragBase conectorP Cup reciveCfront"><img src="~/Content/images/cn11.png" /></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras Modelo</div>
+                <div class="collapsible-body">
+
+                    <table id="tmodelo">
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de armazenamento</div>
+                <div class="collapsible-body">
+
+                    <table id="tarmazenamento">
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras etiquetadoras</div>
+                <div class="collapsible-body">
+
+                    <table id="tetiquetadora">
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="fas fa-pallet colorIconPrincipal"></i>Esteiras de desvio</div>
+                <div class="collapsible-body">
+
+                    <table id="tdesvio">
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+    <!-- Tabela -->
+    <div class="col s12 m9" style="margin: .5rem 0 1rem 0;" id="producaoBox">
+
+        <div class="row">
+            <div class="col s8 m6 l8 offset-l1 offset-s1 noPadding">
+                <p>Tamanho mínimo</p>
+                <div class="col s4 m1 l1">
+                    <div class="input-field">
+                        <input id="tamanho_x" value="1" type="number" min="1" class="validate">
+                        <label for="tamanho_x">X</label>
+                    </div>
+                </div>
+                <div class="col s4 m1 l1">
+                    <div class="input-field">
+                        <input id="tamanho_y" value="1" type="number" min="1" class="validate">
+                        <label for="tamanho_y">Y</label>
+                    </div>
+                </div>
+                <div class="col s4 m1 l2 offset-l1">
+                    <a onclick="applyReajust()" class="waves-effect green darken-4 waves-light btn">Aplicar</a>
+                </div>
+            </div>
+            <div class="col s4 m1 l2 trashMargin">
+                <div class="dTrash red darken-4"><i class="material-icons branco">delete_forever</i></div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col s12 m10 offset-m1 noPadding">
+                <table id="tdropesteiras" class="tableStyle">
+                    <tbody>
+                        <tr>
+                            <td class="tCellFirst no-padding" data-i=0 data-j=0>y\x</td>
+                            <td class="tCellColumn no-padding" data-i=0 data-j=i>1</td>
+                        </tr>
+                        <tr>
+                            <td class="tCellLines no-padding" data-i=1 data-j=0>1</td>
+                            <td class="tCell" data-i=1 data-j=1></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col s12 m10 offset-m1 trashMargin">
+                <a class="waves-effect waves-light green darken-4 btn" onclick="saveContent()">Salvar planta</a>
+                <a class="waves-effect mleft red darken-4 waves-light btn" onclick="clearContent()">limpar planta</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

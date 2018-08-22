@@ -250,7 +250,7 @@ namespace ProductionLinesWEG.Models
             }
             else
             {
-                throw new Exception("Output already defined");
+                throw new Exception("Essa esteira ja contem uma saída");
             }
         }
 
@@ -501,64 +501,6 @@ namespace ProductionLinesWEG.Models
         protected override object ImplementedClone(EsteiraAbstrata e)
         {
             return e;
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public class MapCell
-    {
-        public string[] Classes { get; set; }
-        public string Html_Children { get; set; }
-
-        public MapCell Up { get; set; }
-        public MapCell Front { get; set; }
-        public MapCell Down { get; set; }
-
-        public EsteiraAbstrata Esteira { get; set; }
-
-        public int Row { get; private set; }
-        public int Column { get; private set; }
-
-        public MapCell(string[] classes, string html_Children, int row, int column)
-        {
-            Classes = classes;
-            Html_Children = html_Children;
-            Row = row;
-            Column = column;
-        }
-
-        public bool hasClass(string className)
-        {
-            for (int i = 0; i < Classes.Count(); i++)
-            {
-                if (Classes[i].Equals(className))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

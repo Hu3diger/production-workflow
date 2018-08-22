@@ -180,11 +180,14 @@ namespace ProductionLinesWEG.Hub
                 }
             }
 
-            connectionIds.SessionGroup.Remove(connectionId);
-
-            if (connectionIds.SessionGroup.Count == 0)
+            if (connectionIds != null)
             {
-                sessions.TryRemove(sessionId, out connectionIds);
+                connectionIds.SessionGroup.Remove(connectionId);
+
+                if (connectionIds.SessionGroup.Count == 0)
+                {
+                    sessions.TryRemove(sessionId, out connectionIds);
+                }
             }
 
             return base.OnDisconnected(stopCalled);
@@ -649,11 +652,12 @@ namespace ProductionLinesWEG.Hub
 
 
 
-        // retorna os ids iniciais dos clones
-        public int[] getIdsClone()
+        // retorna os ids iniciais dos cloness
+        public SendClassTable getValuesPgm()
         {
+            SendClassTable sendClassTable = new SendClassTable();
 
-            int[] array = new int[4];
+            sendClassTable.Array = new int[6];
 
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
@@ -666,10 +670,49 @@ namespace ProductionLinesWEG.Hub
                 if (pgm != null)
                 {
 
-                    array[0] = pgm.IdCloneEm;
-                    array[1] = pgm.IdCloneEa;
-                    array[2] = pgm.IdCloneEe;
-                    array[3] = pgm.IdCloneEd;
+                    sendClassTable.Array[0] = pgm.IdCloneEm;
+                    sendClassTable.Array[1] = pgm.IdCloneEa;
+                    sendClassTable.Array[2] = pgm.IdCloneEe;
+                    sendClassTable.Array[3] = pgm.IdCloneEd;
+
+                    sendClassTable.Array[4] = pgm.MinX;
+                    sendClassTable.Array[5] = pgm.MinY;
+
+
+
+
+
+                    MapCell[,] AuxMapCells = pgm.ArrayMapCells;
+
+
+
+
+
+                    if (AuxMapCells != null)
+                    {
+                        for (int i = 0; i < AuxMapCells.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < AuxMapCells.GetLength(1); j++)
+                            {
+                                MapCell aux = (MapCell)AuxMapCells.GetValue(i, j);
+
+                                if (aux != null)
+                                {
+                                    aux.Esteira = null;
+
+                                    aux.Up = null;
+                                    aux.Front = null;
+                                    aux.Down = null;
+                                    aux.Back = null;
+                                }
+                            }
+
+                        }
+                    }
+
+
+
+                    sendClassTable.ArrayMapCells = AuxMapCells;
 
                 }
                 else
@@ -682,7 +725,7 @@ namespace ProductionLinesWEG.Hub
                 Clients.Caller.showToast("Error: no Login");
             }
 
-            return array;
+            return sendClassTable;
 
         }
 
@@ -737,7 +780,7 @@ namespace ProductionLinesWEG.Hub
                                 // conteudo (no caso o nome do objeto que esta dentro da div),
                                 // id (o id do clone)
                                 // e idM (id da Esteira Base)
-                                if (classes.Count() != 0 && children != null && obj.id != null && obj.idM != null)
+                                if (classes.Count() != 0 && children != null && obj.id != null)
                                 {
                                     // copia todas as classes para um array de string para realizar a conversão de dynamic > string
                                     for (int k = 0; k < obj.classes.Count; k++)
@@ -745,47 +788,34 @@ namespace ProductionLinesWEG.Hub
                                         classes[k] = obj.classes[k];
                                     }
 
-                                    // cria um objeto MapCell (array de classes, conteudo, linha, coluna)
-                                    matrizMapCell[i, j] = new MapCell(classes, children, i, j);
-
                                     // converte paar string
                                     string id = obj.id;
+
+                                    // cria um objeto MapCell (array de classes, conteudo, linha, coluna)
+                                    matrizMapCell[i, j] = new MapCell(id, classes, children, obj.dataObj, i, j);
 
                                     // procura a esteira com o id do clone na lista geral de esteiras
                                     matrizMapCell[i, j].Esteira = pgm.listEsteiras.Find(x => x.Id.Equals(id));
 
                                     // caso nao ache, cria um novo com o clone da Base
-                                    if (matrizMapCell[i, j].Esteira == null)
+                                    if (matrizMapCell[i, j].Esteira == null && matrizMapCell[i, j].hasClass("esteiraP") && matrizMapCell[i, j].DataObj != null)
                                     {
-                                        bool t = false;
+                                        string idM = matrizMapCell[i, j].DataObj.idM;
 
-                                        for (int k = 0; k < classes.Count(); k++)
+                                        EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(idM));
+
+                                        if (e != null)
                                         {
-                                            if (classes[k].Equals("esteiraP"))
-                                            {
-                                                t = true;
-                                                break;
-                                            };
+                                            matrizMapCell[i, j].Esteira = (EsteiraAbstrata)e.Clone();
+                                            matrizMapCell[i, j].Esteira.Id = id;
+
+                                            pgm.listEsteiras.Add(matrizMapCell[i, j].Esteira);
+                                        }
+                                        else
+                                        {
+                                            throw new Exception("Esteira Base = null, idM = " + idM);
                                         }
 
-                                        if (t)
-                                        {
-                                            string idM = obj.idM;
-
-                                            EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(idM));
-
-                                            if (e != null)
-                                            {
-                                                matrizMapCell[i, j].Esteira = (EsteiraAbstrata)e.Clone();
-                                                matrizMapCell[i, j].Esteira.Id = id;
-
-                                                pgm.listEsteiras.Add(matrizMapCell[i, j].Esteira);
-                                            }
-                                            else
-                                            {
-                                                throw new Exception("Esteira Base = null, idM = " + idM);
-                                            }
-                                        }
                                     }
                                 }
                             }
@@ -805,6 +835,10 @@ namespace ProductionLinesWEG.Hub
                                     {
                                         ((MapCell)matrizMapCell.GetValue(i, j)).Up = (MapCell)matrizMapCell.GetValue(i - 1, j);
                                     }
+                                    if (j > 0)
+                                    {
+                                        ((MapCell)matrizMapCell.GetValue(i, j)).Back = (MapCell)matrizMapCell.GetValue(i, j - 1);
+                                    }
                                     if (j < matrizMapCell.GetLength(1) - 1)
                                     {
                                         ((MapCell)matrizMapCell.GetValue(i, j)).Front = (MapCell)matrizMapCell.GetValue(i, j + 1);
@@ -820,7 +854,7 @@ namespace ProductionLinesWEG.Hub
                         }
 
                         // metodo que inicia faz "ajustes" e atribuições e inicia o mapeamento
-                        pgm.mapeamentoTeste(matrizMapCell);
+                        pgm.mapeamentoEsteiras(matrizMapCell);
 
                         // atribui os ultimos ids registrados
                         pgm.IdCloneEm = recivedServ.countIdEm;
@@ -828,7 +862,10 @@ namespace ProductionLinesWEG.Hub
                         pgm.IdCloneEe = recivedServ.countIdEe;
                         pgm.IdCloneEd = recivedServ.countIdEd;
 
-                        Clients.Caller.showToast("Project Salved");
+                        pgm.MinX = recivedServ.minX;
+                        pgm.MinY = recivedServ.minY;
+
+                        Clients.Caller.showToast("Project Saved");
 
                     }
                     catch (Exception e)
@@ -861,7 +898,16 @@ namespace ProductionLinesWEG.Hub
                 {
                     List<string> list = new List<string>();
 
-                    pgm.listEsteiras.Find(x => x.Id.Equals(id)).EsteiraInput.ForEach(x => list.Add(x.Name));
+                    EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(id));
+
+                    if (e != null)
+                    {
+                        e.EsteiraInput.ForEach(x => list.Add(x.Name));
+                    }
+                    else
+                    {
+                        Clients.Caller.showToast("Salve o programa para que as alterações tenham efeito");
+                    }
 
                     return list;
                 }
@@ -877,5 +923,11 @@ namespace ProductionLinesWEG.Hub
 
             return null;
         }
+    }
+
+    public class SendClassTable
+    {
+        public int[] Array { get; set; }
+        public MapCell[,] ArrayMapCells { get; set; }
     }
 }

@@ -20,6 +20,11 @@ namespace ProductionLinesWEG.Models
         public int IdCloneEe { get; set; }
         public int IdCloneEd { get; set; }
 
+        public int MinX { get; set; }
+        public int MinY { get; set; }
+
+        public MapCell[,] ArrayMapCells { get; set; }
+
         public Program(string authId)
         {
             AuthId = authId;
@@ -28,6 +33,9 @@ namespace ProductionLinesWEG.Models
             IdCloneEa = 0;
             IdCloneEe = 0;
             IdCloneEd = 0;
+
+            MinX = 1;
+            MinY = 1;
         }
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
         public void toDashboard(string message, bool critico)
@@ -300,12 +308,16 @@ namespace ProductionLinesWEG.Models
 
 
         // metodo que o servidor chama para mapear e atribuir esteiras de Output e Input
-        public void mapeamentoTeste(MapCell[,] mapCells)
+        public void mapeamentoEsteiras(MapCell[,] mapCells)
         {
+            List<EsteiraAbstrata> listEsteiraAux = new List<EsteiraAbstrata>();
+
             listEsteiras.ForEach(x =>
             {
                 x.removeAllInput();
                 x.RemoveAllOutput();
+
+                if (x.IsClone) listEsteiraAux.Add(x);
             });
 
             for (int i = 0; i < mapCells.GetLength(0); i++)
@@ -315,18 +327,25 @@ namespace ProductionLinesWEG.Models
                 {
                     // como retorna um "Object", é obrigado a dar um Cast para trabalhar com o objeto
                     MapCell mapCell = ((MapCell)mapCells.GetValue(i, j));
-                    if (mapCell != null && mapCell.hasClass("esteiraP"))
+                    if (mapCell != null && (mapCell.hasClass("esteiraP") || mapCell.hasClass("conectorP")))
                     {
-                        if (mapCell.Esteira == null)
+                        if (mapCell.Esteira == null && mapCell.hasClass("esteiraP"))
                         {
-                            throw new Exception("Erro no servidor (mapeamentoTeste) mapCell não possui uma Esteira");
+                            throw new Exception("Erro no servidor (mapeamentoTeste) mapCell não possui uma Esteira mas contem a class 'esteiraP'.");
                         }
                         mapEsteira(mapCell, null, true);
+
+                        // remove o objeto da lista para que apenas os objetos que nao estao sendo usados sejam apagados do sistema
+                        listEsteiraAux.Remove(mapCell.Esteira);
                     }
                 }
 
             }
 
+            // remove o objeto de sobra da lista principal
+            listEsteiraAux.ForEach(x => listEsteiras.Remove(x));
+
+            this.ArrayMapCells = mapCells;
         }
 
         // metodo usado com recursividade para encontrar o caminho atravez dos conectores ate o destino (Esteiras de Output)
@@ -369,11 +388,18 @@ namespace ProductionLinesWEG.Models
 
                     // adiciona o output na esteira atual
                     // e o input na esteira da lista
-                    listMapCell.ForEach(x =>
+                    try
                     {
-                        x.Esteira.InsertInput(mapCell.Esteira);
-                        mapCell.Esteira.InsertOutput(x.Esteira);
-                    });
+                        listMapCell.ForEach(x =>
+                        {
+                            x.Esteira.InsertInput(mapCell.Esteira);
+                            mapCell.Esteira.InsertOutput(x.Esteira);
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.Message + " (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                    }
                 }
                 else
                 {
@@ -460,6 +486,28 @@ namespace ProductionLinesWEG.Models
                         throw new Exception("Erro de compilação, saída inferior não definida (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
                     }
                 }
+
+                // verifica se o conector tem entrada traseira
+                if (mapCell.hasClass("reciveCfront"))
+                {
+                    if (mapCell.Back != null)
+                    {
+                        // verifica se a celula atual é igual a anterior para que não haja loop na recursividade
+                        if (mapCell.Back != previousMapCell)
+                        {
+                            // verifica se a celula inferior pode receber ou "dar" para a celula atual e abre a recursividade
+                            // senão dispara um throw para exibir um erro ao usuario
+                            if (!mapCell.Back.hasClass("Cfront") && !mapCell.Back.hasClass("esteiraP"))
+                            {
+                                throw new Exception("Erro de compilação, entrada inadequada (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Erro de compilação, entrada não definida (linha: " + mapCell.Row + ", Coluna: " + mapCell.Column + ")");
+                    }
+                }
             }
             else
             {
@@ -490,6 +538,61 @@ namespace ProductionLinesWEG.Models
             listArmazenamento = new List<EsteiraArmazenamento>();
             listEtiquetadora = new List<EsteiraEtiquetadora>();
             listDesvio = new List<EsteiraDesvio>();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    public class MapCell : ICloneable
+    {
+        public string Id { get; set; }
+        public string[] Classes { get; set; }
+        public string Html_Children { get; set; }
+        public dynamic DataObj { get; set; }
+
+        public MapCell Up { get; set; }
+        public MapCell Front { get; set; }
+        public MapCell Back { get; set; }
+        public MapCell Down { get; set; }
+
+        public EsteiraAbstrata Esteira { get; set; }
+
+        public int Row { get; private set; }
+        public int Column { get; private set; }
+
+        public MapCell(string id, string[] classes, string html_Children, dynamic dataObj, int row, int column)
+        {
+            Id = id;
+            Classes = classes;
+            Html_Children = html_Children;
+            Row = row;
+            Column = column;
+            DataObj = dataObj;
+        }
+
+        public bool hasClass(string className)
+        {
+            for (int i = 0; i < Classes.Count(); i++)
+            {
+                if (Classes[i].Equals(className))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

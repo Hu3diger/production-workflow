@@ -37,7 +37,7 @@
                         <i class="material-icons">menu</i>
                     </a>
                     <a href="@Url.Action("Index", "Dashboard")" class="brand-logo center">
-                        <img src="~/Content/images/wega.png" width="50" style="margin-top: 15px">
+                        <img src="~/Content/images/weg.png" width="80" style="margin-top: 5px">
                     </a>
                     <ul class="left hide-on-med-and-down">
                         <li @if (ViewBag.Screen == "Dashboard") { @: class="active"
@@ -51,6 +51,10 @@
                         <li @if (ViewBag.Screen == "Processos") { @: class="active"
                             }>
                             <a href="@Url.Action("Index", "Processos")">Processos</a>
+                        </li>
+                        <li @if (ViewBag.Screen == "Planta") { @: class="active"
+                            }>
+                            <a href="@Url.Action("Index", "Planta")">Planta</a>
                         </li>
                         <li @if (ViewBag.Screen == "Producao") { @: class="active"
                             }>
@@ -78,6 +82,10 @@
                     <li @if (ViewBag.Screen == "Processos") { @: class="active"
                         }>
                         <a href="@Url.Action("Index", "Processos")">Processos</a>
+                    </li>
+                    <li @if (ViewBag.Screen == "Planta") { @: class="active"
+                        }>
+                        <a href="@Url.Action("Index", "Planta")">Planta</a>
                     </li>
                     <li @if (ViewBag.Screen == "Producao") { @: class="active"
                         }>
@@ -107,6 +115,7 @@
 
     <script src="~/Content/js/Processos/process.js"></script>
     <script src="~/Content/js/Esteiras/esteiras.js"></script>
+    <script src="~/Content/js/Planta/planta.js"></script>
     <script src="~/Content/js/Producao/producao.js"></script>
 
     <script src="/signalr/hubs" type="text/javascript"></script>
