@@ -50,6 +50,10 @@
     min-height: 80px;
     vertical-align: middle;
     text-align: center;
+    color: white;
+    background-color: #0288d1;
+    border: 1px solid #0288d1 !important;
+    border-radius: 0px;
 }
 
 .tCellColumn {
@@ -61,6 +65,10 @@
     min-height: 25px;
     vertical-align: middle;
     text-align: center;
+    color: white;
+    background-color: #0288d1;
+    border: 1px solid #0288d1 !important;
+    border-radius: 0px;
 }
 
 .tCellFirst {
@@ -72,6 +80,10 @@
     min-height: 25px;
     vertical-align: middle;
     text-align: center;
+    color: white;
+    background-color: #0288d1;
+    border: 1px solid #0288d1 !important;
+    border-radius: 0px;
 }
 
 .tTrash {
@@ -91,10 +103,6 @@
     border: 1px solid black;
 }
 
-.tableStyle {
-    border: #880e4f solid 1px;
-}
-
 .noPadding {
     padding: 0 !important;
 }
@@ -110,5 +118,5 @@
 
 
 .mleft{
-    margin-left: 2vh;
+    margin-left: -1vh !important;
 }

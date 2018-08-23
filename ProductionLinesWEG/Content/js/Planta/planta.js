@@ -106,11 +106,11 @@ function setDropDragItens() {
                     </table>\
                 </div>\
             </div>\
-            <div class="modal-footer">\
-                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>\
-            </div>\
-        </div>'
-        );
+        </div>\
+        <div class="modal-footer">\
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>\
+        </div>\
+        ');
 
         $('.modal').modal();
     });
