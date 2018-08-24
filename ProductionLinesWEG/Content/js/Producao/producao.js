@@ -1,5 +1,9 @@
 //função para exibir os campos para edição
 //recebe a id da esteira selecionada no collapsible
+$(document).ready(function(){
+    $('.modal').modal();
+});
+
 function showProd(id) {
     let data = $("#" + id).data();
     let name = "'" + data.Name + "'";
@@ -15,11 +19,11 @@ function showProd(id) {
                     </tr>\
                     <tr>\
                         <td>Banana de aço</td>\
-                        <td><a href="#!">Detalhes</a></td>\
+                        <td><a class="modal-trigger" href="#modalDetalhes">Detalhes</a></td>\
                     </tr>\
                     <tr>\
                         <td>'+ data.InLimit +'</td>\
-                        <td><a href="#!">Detalhes</a></td>\
+                        <td><a class="modal-trigger" href="#modalDetalhes">Detalhes</a></td>\
                     </tr>\
                 </table>\
             </div>\
@@ -31,6 +35,21 @@ function showProd(id) {
     </div>\
     </form>\
     </div>\
+    <div id="modalDetalhes" class="modal">\
+    <div class="modal-content">\
+            <div class="row">\
+                <div class="col s8">\
+                    <h5><b> Detalhes da peça {piece}</h5></b><br>\
+                    <p><b>Sucesso/Falha</b>: {status} </p>\
+                    <p><b>Data fabricação</b>: {date} </p>\
+                    <p><b>Hora fabricação</b>: {hour} </p>\
+                    <p><b>Tempo de fabricação</b>: {timeTo} </p>\
+                </div>\
+            </div>\
+        </div>\
+        <div class="modal-footer">\
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>\
+        </div>\
     ');
         //variável pega o tipo da esteira selecionada para edição
         let value = data.TypeN;
@@ -82,6 +101,7 @@ function showProd(id) {
         $('select').formSelect();
 
     }
+    $('.modal').modal();
 }
 
 //função para gerar a lista das esteiras
