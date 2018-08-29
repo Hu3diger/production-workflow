@@ -104,7 +104,7 @@ function showProd(id) {
     $('.modal').modal();
 }
 
-//função para gerar a lista das esteiras
+//função para gerar os colapsiables das esteiras
 function generateListEsteiraProd(data, $e, type) {
 
     //função para gerar a lista interna das esteiras

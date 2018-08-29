@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using ProductionLinesWEG.Hub;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,7 +9,17 @@ namespace ProductionLinesWEG.Models
 {
     public class Program
     {
-        public string AuthId { get; set; }
+        private static IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<MasterHub>();
+
+        public Logins Login { get; private set; }
+        public string AuthId
+        {
+            get
+            {
+                return Login.AuthId;
+            }
+        }
+        public bool InSimulation { get; set; }
 
         // lista apenas de leitura que armazena os objetos do programa
         // como esteiras, processos e mensagens do dashboard
@@ -25,10 +37,8 @@ namespace ProductionLinesWEG.Models
 
         public MapCell[,] ArrayMapCells { get; set; }
 
-        public Program(string authId)
+        public Program(Logins login)
         {
-            AuthId = authId;
-
             IdCloneEm = 0;
             IdCloneEa = 0;
             IdCloneEe = 0;
@@ -36,17 +46,35 @@ namespace ProductionLinesWEG.Models
 
             MinX = 1;
             MinY = 1;
+
+            InSimulation = false;
         }
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
-        public void toDashboard(string message, bool critico)
+        public void toDashboard(string message, string connectionId, bool critico)
         {
+            if (connectionId == null)
+            {
+                hubContext.Clients.Clients(MasterHub.GetAllConnectionIdsByAuthId(AuthId).ToList()).showToast(message);
+            }
+            else
+            {
+                hubContext.Clients.Client(connectionId).showToast(message);
+            }
             listDashboard.Insert(0, new Dashboard(new DateTime(), message, critico));
             verificarDashboard();
         }
 
         // adiciona uma mensagem  a lista de dashboard sem ser critica a mensagem
-        public void toDashboard(string message)
+        public void toDashboard(string message, string connectionId)
         {
+            if (connectionId == null)
+            {
+                hubContext.Clients.Clients(MasterHub.GetAllConnectionIdsByAuthId(AuthId).ToList()).showToast(message);
+            }
+            else
+            {
+                hubContext.Clients.Client(connectionId).showToast(message);
+            }
             listDashboard.Insert(0, new Dashboard(new DateTime(), message, false));
             verificarDashboard();
         }
@@ -65,7 +93,6 @@ namespace ProductionLinesWEG.Models
         public void CriaProcesso(Processo p)
         {
             listProcessos.Add(p);
-            toDashboard("Processo add\n");
 
             attAllListBox();
         }
@@ -73,8 +100,6 @@ namespace ProductionLinesWEG.Models
         public void InsertProcesso(string processo1, string processo2)
         {
             listProcessos.Find(x => x.Name.Equals(processo1)).AddInternalProcess(-1, listProcessos.Find(x => x.Name.Equals(processo2)));
-
-            toDashboard("Processo adicionado\n");
 
             attAllListBox();
         }
@@ -134,8 +159,6 @@ namespace ProductionLinesWEG.Models
         {
             listEsteiras.Add(e);
 
-            toDashboard("Esteira add\n");
-
             attAllListBox();
         }
 
@@ -145,8 +168,6 @@ namespace ProductionLinesWEG.Models
             EsteiraModel em = (EsteiraModel)listEsteiras.Find(x => x.Name.Equals(esteira));
 
             em.insertMasterProcess(listProcessos.Find(x => x.Name.Equals(processo)));
-
-            toDashboard("Processo inserido na esteira\n");
 
             attAllListBox();
         }
@@ -184,7 +205,7 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
 
-            toDashboard("Sistema pré-carregado com processos\n");
+            toDashboard("Sistema pré-carregado com processos\n", null);
 
 
 
@@ -216,22 +237,7 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
 
-            toDashboard("Sistema pré-carregado com esteiras\n");
-        }
-
-        // insere uma peca na esteira para ser processada
-        public void InsertPiece(string esteira)
-        {
-            Peca pc = new Peca();
-
-            if (listEsteiras.Find(x => x.Name.Equals(esteira)).InsertPiece(pc))
-            {
-                toDashboard("Peça inserida na esteira selecionada\n");
-            }
-            else
-            {
-                toDashboard("Esteira lotada, não é possivel inserir mais peças\n");
-            }
+            toDashboard("Sistema pré-carregado com esteiras\n", null);
         }
 
         // liga a esteira para iniciar os processos

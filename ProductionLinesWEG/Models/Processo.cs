@@ -15,7 +15,27 @@ namespace ProductionLinesWEG.Models
         public string Description { get; set; }
         public int Runtime { get; set; }
         public double VariationRuntime { get; set; }
-        public double ErrorProbability { get; set; }
+
+        private double _errorProbability;
+        public double ErrorProbability
+        {
+            get => _errorProbability;
+            set
+            {
+                if (value > 100)
+                {
+                    _errorProbability = 100;
+                }
+                else if (value < 0)
+                {
+                    _errorProbability = 0;
+                }
+                else
+                {
+                    _errorProbability = value;
+                }
+            }
+        }
 
         public BaseProcesso(string name, string description, int runtime)
         {

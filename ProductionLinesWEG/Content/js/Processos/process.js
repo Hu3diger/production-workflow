@@ -18,9 +18,13 @@
             </div>\
         </div>\
         <div class="row">\
-            <div class="input-field col s12 m6 offset-m2">\
-            <input value="0" id="runtimeP" type="number" class="validate active">\
-            <label class="active" for="runtimeP">Tempo de execução (ms)</label>\
+            <div class="input-field col s12 m3 offset-m2">\
+                <input value="0" id="runtimeP" type="number" class="validate active">\
+                <label class="active" for="runtimeP">Tempo de execução (ms)</label>\
+            </div>\
+            <div class="input-field col s12 m3">\
+                <input value="0" id="probabilityP" type="number" class="validate active">\
+                <label class="active" for="probabilityP">Probabilidade de erro (%)</label>\
             </div>\
             <div class="input-field col s12 m2">\
                 <input value="0" id="variationP" type="number" class="validate active">\
@@ -47,7 +51,7 @@
             </div>\
             <div class="row">\
             <div class="col s12 m8 offset-m2">\
-            <a class="waves-effect waves-light btn right blue darken-4" onclick="limpaInfo()"><i class="material-icons left">cancel</i>cancelar</a>\
+            <a class="waves-effect waves-light btn left red darken-4" onclick="limpaInfo()"><i class="material-icons left">cancel</i>cancelar</a>\
             <a class="waves-effect waves-light btn right green darken-4" onclick="enviaProcess()"><i class="material-icons left">sd_card</i>criar</a>\
             </div>\
         </div>\
@@ -148,23 +152,29 @@
             $("#descP").val() === "" ||
             $("#runtimeP").val() === "" ||
             $("#variationP").val() === "" ||
-            $("#positionP").val() === ""
+            $("#positionP").val() === "" ||
+            $("#probabilityP").val() === ""
         ) {
             M.toast({ html: 'Existem campos em branco' })
-        } else {
-            let value = '';
-            if ($('#processSelectFather :selected').val() != '0') {
-                value = $('#processSelectFather :selected').text();
+        }else{
+            if($("#probabilityP").val() < 0 || $("#probabilityP").val() > 100){
+                M.toast({html: 'Porcentagem inválida'})
+            }else {
+                let value = '';
+                if ($('#processSelectFather :selected').val() != '0') {
+                    value = $('#processSelectFather :selected').text();
+                }
+                //chama a função para criar o processo
+                createProcess(
+                    $("#nameP").val(),
+                    $("#descP").val(),
+                    $("#runtimeP").val(),
+                    $("#variationP").val(),
+                    $("#probabilityP").val(),
+                    value,
+                    $("#positionP").val(),
+                );
             }
-            //chama a função para criar o processo
-            createProcess(
-                $("#nameP").val(),
-                $("#descP").val(),
-                $("#runtimeP").val(),
-                $("#variationP").val(),
-                value,
-                $("#positionP").val(),
-            );
         }
     }
 
@@ -225,6 +235,7 @@
             $("#" + id).data("Father", obj.Father);
             $("#" + id).data("VariationRuntime", obj.VariationRuntime);
             $("#" + id).data("Position", obj.Position);
+            $("#" + id).data("ErrorProbability", obj.ErrorProbability);
 
             //verifica se o processo tem filhos para iniciar o processo de criação da árvore de processos
             if (tf) {

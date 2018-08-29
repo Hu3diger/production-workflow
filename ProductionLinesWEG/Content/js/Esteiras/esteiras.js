@@ -124,7 +124,7 @@ function alteraEsteira(id) {
     <div class="row">\
     <div class="input-field col s12 m8 offset-m2">\
       <select id="selectTE" disabled>\
-          <option value="0" selected>'+ data.Type + '</option>\
+          <option value="'+ data.TypeN +'" selected>'+ data.Type + '</option>\
       </select>\
       <label>Tipo de esteira</label>\
     </div>\
@@ -134,7 +134,7 @@ function alteraEsteira(id) {
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
         <a class="waves-effect waves-light btn left red darken-4" onclick="limpaAbout()"><i class="material-icons left">cancel</i>cancelar</a>\
-        <a class="waves-effect waves-light btn right green darken-4" onclick=""><i class="material-icons left">sd_card</i>salvar</a>\
+        <a class="waves-effect waves-light btn right green darken-4" onclick="saveEsteira()"><i class="material-icons left">sd_card</i>salvar</a>\
       </div>\
     </div>\
     </form>\
@@ -199,6 +199,7 @@ function saveEsteira() {
     let type = $('#selectTE :selected').val();
     let value = '';
     var typeBool = true;
+    console.log($('#selectTE :selected').val());
 
     //faz a verificação do tipo, e atribui para a tag value, o valor do campo extra de cada tipo de esteira.
     if (type == '1') {

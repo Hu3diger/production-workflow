@@ -17,16 +17,16 @@ function logOut() {
 }
 
 //função para a criação de processos, recebendo os dados do processo e enviando para o servidor
-function createProcess(name, desc, runtime, variationRuntime, nameFather, position) {
+function createProcess(name, desc, runtime, variationRuntime, probability, nameFather, position) {
 
-    connector.server.createProcess(name, desc, runtime, variationRuntime, nameFather, position);
+    connector.server.createProcess(name, desc, runtime, variationRuntime, probability, nameFather, position);
 
 }
 
 //função para alterar o processo, recebendo os dados novos e velhos, e os enviando para o servidor
-function changingProcess(oldname, newname, desc, runtime, variationRuntime, nameFather, position) {
+function changingProcess(oldname, newname, desc, runtime, variationRuntime, probability, nameFather, position) {
 
-    connector.server.changingProcess(oldname, newname, desc, runtime, variationRuntime, nameFather, position);
+    connector.server.changingProcess(oldname, newname, desc, runtime, variationRuntime, probability, nameFather, position);
 
 }
 

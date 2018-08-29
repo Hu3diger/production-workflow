@@ -48,7 +48,7 @@ namespace ProductionLinesWEG.Models
                             {
                                 Processo ps = em.nextProcess();
 
-                                program.toDashboard(ps.Name + " Executando");
+                                program.toDashboard(ps.Name + " Executando", null);
 
                                 // seta atributo
                                 pc.setAtributo(ps.Name, "Kappa value", Atributo.FAZENDO);
@@ -59,7 +59,7 @@ namespace ProductionLinesWEG.Models
                                 // seta atributo
                                 pc.setAtributo(ps.Name, "Kappa value", Atributo.FEITO);
 
-                                program.toDashboard(ps.Name + " Finalizado");
+                                program.toDashboard(ps.Name + " Finalizado", null);
                             }
 
                             // finalia o processo para ter um novo ciclo
@@ -68,23 +68,23 @@ namespace ProductionLinesWEG.Models
                             // remove a peça da esteira para que a proxima peça possa ser executada
                             Peca p = em.RemovePiece();
 
-                            program.toDashboard("Exibindo atributos da peca recém 'feita':");
+                            program.toDashboard("Exibindo atributos da peca recém 'feita':", null);
 
                             // exibe todos os estados do processo (atributos)
-                            p.ListAtributos.ForEach(x => program.toDashboard("Processo: " + x.Name + " / Estado: " + x.Estado));
+                            p.ListAtributos.ForEach(x => program.toDashboard("Processo: " + x.Name + " / Estado: " + x.Estado, null));
 
-                            program.toDashboard("Droped First / End\n");
+                            program.toDashboard("Droped First / End\n", null);
                         }
                         else
                         {
-                            program.toDashboard(em.Name + "Esperando Peça");
+                            program.toDashboard(em.Name + "Esperando Peça", null);
                             // fica esperando a peca (250ms para não sobrecarregar o servidor)
                             Thread.Sleep(250);
                         }
                     }
                     else
                     {
-                        program.toDashboard("Insert a master process in Esteira");
+                        program.toDashboard("Insert a master process in Esteira", null);
                         break;
                     }
                 }

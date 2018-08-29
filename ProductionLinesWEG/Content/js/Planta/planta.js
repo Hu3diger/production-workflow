@@ -10,7 +10,7 @@ var sobre = "";
 var minX = 1;
 var minY = 1;
 
-$(document).ready(function(){
+$(document).ready(function () {
     $('.modal').modal();
 });
 
@@ -48,7 +48,7 @@ function setDropDragItens() {
             //console.log(obj);
         });
 
-        switch($(this).data().TypeN){
+        switch ($(this).data().TypeN) {
             case 1:
                 sobre = "Processo Master</b>: " + $(this).data().Addtional;
                 break;
@@ -79,11 +79,17 @@ function setDropDragItens() {
                     <div class="switch">\
                         <label>\
                             Desligado\
-                            <input type="checkbox">\
+                            <input id="onOffEsteira" type="checkbox" '+ ($(this).data().Ligado ? "checked='checked'" : "") + ' onclick="changeOnOff(' + this.id + ')">\
                             <span class="lever"></span>\
                             Ligado\
                         </label>\
                     </div>\
+                    <br>\
+                    <div class="input-field col s8">\
+                        <input id="numberC" type="number" value="1" min="1" class="active validate">\
+                        <label class="active" for="numberC">Peças p/ chumbar</label>\
+                    </div>\
+                    <a class="waves-effect waves-light btn green darken-4">Chumbar peça</a>\
                 </div>\
             </div>\
             <div class="row">\
@@ -233,6 +239,17 @@ function setDropDragItens() {
             }
         }
     });
+}
+
+function changeOnOff(id) {
+
+    $(id).data().Ligado = $("#onOffEsteira").prop('checked');
+
+    if ($("#onOffEsteira").prop('checked')) {
+        // turn on Esteiras
+    } else {
+        // turn on Esteiras
+    }
 }
 
 function applyReajust() {
@@ -551,7 +568,7 @@ function analyzeCell(cell, reControl) {
 }
 
 
-//fun��o para gerar a lista das esteiras
+//fun��o para gerar a lista da Planta com os drags
 function generateListProducao(data, $e, type, colorClass) {
 
     //fun��o para gerar a lista interna das esteiras
@@ -584,6 +601,7 @@ function generateListProducao(data, $e, type, colorClass) {
         jObj.data("Name", obj.Name);
         jObj.data("Description", obj.Description);
         jObj.data("InLimit", obj.InLimit);
+        jObj.data("Ligado", obj.Ligado);
         jObj.data("TypeN", type);
 
     }
@@ -689,21 +707,6 @@ function assignItemsTable(mapCells) {
         minX = auxX;
         minY = auxY;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // tabela "master"
         var tbl = $("#tdropesteiras");
 
@@ -750,4 +753,37 @@ function assignItemsTable(mapCells) {
         reajustTable();
     }
 
+}
+
+function clearContent() {
+    // tabela "master"
+    var tbl = $("#tdropesteiras");
+
+    // verifica se encontrou
+    if (tbl.length) {
+
+        // inicia e declara as variaveis
+        let tBody = tbl.find($("tbody"));
+        let tr = tBody.children();
+
+        for (var i = 1; i < tr.length; i++) {
+
+            let td = $(tr.get(i)).children();
+
+            for (var j = 1; j < td.length; j++) {
+
+                let cell = $(td.get(j));
+
+                $.each($(cell.children().get(0)).data(), function (i, item) {
+                    delete $(cell.children().get(0)).data(i);
+                });
+
+                cell.html("");
+            }
+        }
+
+        reajustTable();
+    } else {
+        console.log("Object not found");
+    }
 }

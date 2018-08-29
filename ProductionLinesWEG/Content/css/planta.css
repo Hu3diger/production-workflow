@@ -39,6 +39,7 @@
     height: 80px;
     max-height: 80px;
     min-height: 80px;
+    border: 1px solid #0288d1 !important;
 }
 
 .tCellLines {
@@ -116,7 +117,26 @@
     margin-top: 5vh;
 }
 
-
 .mleft{
     margin-left: -1vh !important;
+}
+
+.colorEModel {
+    color: #0d47a1;
+}
+
+.colorEConector{
+    color: black;
+}
+
+.colorEArmazem{
+    color: #e65100;
+}
+
+.colorEEtiqueta{
+    color: #afb42b;
+}
+
+.colorEDesvio{
+    color: #ab47bc   ;
 }
