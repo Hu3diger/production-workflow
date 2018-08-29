@@ -163,25 +163,6 @@ namespace ProductionLinesWEG.Hub
             return kappa;
         }
 
-        // retorna todas as conexões vinculadas ao user
-        //public static IEnumerable<string> GetAllConnectionIdsByUser(string user)
-        //{
-        //    HashSet<string> kappa = new HashSet<string>();
-
-        //    foreach (var session in sessions)
-        //    {
-        //        if (session.Value.Login.User.Equals(user) == true)
-        //        {
-        //            foreach (var item in session.Value.SessionGroup)
-        //            {
-        //                kappa.Add(item);
-        //            }
-        //        }
-        //    }
-
-        //    return kappa;
-        //}
-
         // sobrescreve o metodo onde é chamado quando um usuario se conecta com o servidor
         public override Task OnConnected()
         {
@@ -280,10 +261,8 @@ namespace ProductionLinesWEG.Hub
                     }
                 }
 
-                string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
-
-                // procura pelo programa que corresponde ao usuario (AuthId)
-                Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+                // procura pelo programa que corresponde ao usuario (l.AuthId)
+                Program pgm = listProgram.Find(x => x.AuthId.Equals(l.AuthId));
 
                 if (pgm != null)
                 {
@@ -326,7 +305,7 @@ namespace ProductionLinesWEG.Hub
 
                 if (pgm != null)
                 {
-                    if (!pgm.InSimulation)
+                    if (pgm.InSimulation)
                     {
                         Clients.Caller.showToast("Program is in simulation, please stop the simulation");
                         return null;
@@ -343,6 +322,25 @@ namespace ProductionLinesWEG.Hub
             {
                 Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
                 return null;
+            }
+        }
+
+        public void RegisterMessageDashboard(string message, bool critical, bool thisClient)
+        {
+            Program pgm = CheckReturnPgm();
+
+            if (pgm != null)
+            {
+                pgm.toDashboard(message, critical);
+
+                if (thisClient)
+                {
+                    Clients.Caller.showToast(message);
+                }
+                else
+                {
+                    Clients.Clients(GetAllConnectionIdsByAuthId(pgm.AuthId).ToList()).showToast(message);
+                }
             }
         }
 
@@ -394,21 +392,21 @@ namespace ProductionLinesWEG.Hub
                             }
                             else
                             {
-                                pgm.toDashboard("Error: In Create: '" + name + "' Internal Process Found", Context.ConnectionId);
+                                RegisterMessageDashboard("Error: In Create: '" + name + "' Internal Process Found", false, true);
                             }
                         }
                         else
                         {
-                            pgm.toDashboard("Pai '" + nameFather + "' não encontrado", Context.ConnectionId);
+                            RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", false, true);
                         }
                     }
 
-                    pgm.toDashboard("Processo '" + name + "' Criado", Context.ConnectionId);
+                    RegisterMessageDashboard("Processo '" + name + "' Criado", false, true);
                     CallListProcess();
                 }
                 else
                 {
-                    pgm.toDashboard("Processo '" + name + "' já existente", Context.ConnectionId);
+                    RegisterMessageDashboard("Processo '" + name + "' já existente", false, true);
                 }
             }
         }
@@ -445,7 +443,7 @@ namespace ProductionLinesWEG.Hub
                             }
                             else
                             {
-                                pgm.toDashboard("Pai '" + nameFather + "' não encontrado", Context.ConnectionId);
+                                RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", false, true);
                             }
                         }
                         else
@@ -453,17 +451,17 @@ namespace ProductionLinesWEG.Hub
                             pcss.removerFather();
                         }
 
-                        pgm.toDashboard("Processo '" + newName + "' Alterado", Context.ConnectionId);
+                        RegisterMessageDashboard("Processo '" + newName + "' Alterado", false, true);
                         CallListProcess();
                     }
                     else
                     {
-                        pgm.toDashboard("Error: Find Process: '" + oldName + "'", Context.ConnectionId);
+                        RegisterMessageDashboard("Error: Find Process: '" + oldName + "'", false, true);
                     }
                 }
                 else
                 {
-                    pgm.toDashboard("Processo '" + newName + "' já existente", Context.ConnectionId);
+                    RegisterMessageDashboard("Processo '" + newName + "' já existente", false, true);
                 }
             }
         }
@@ -487,12 +485,12 @@ namespace ProductionLinesWEG.Hub
                         pgm.listProcessos.Remove(x);
                     });
 
-                    pgm.toDashboard("Processo '" + name + "' Deletado", Context.ConnectionId);
+                    RegisterMessageDashboard("Processo '" + name + "' Deletado", false, true);
                     CallListProcess();
                 }
                 else
                 {
-                    pgm.toDashboard("Error: Find Process: '" + name + "'", Context.ConnectionId);
+                    RegisterMessageDashboard("Error: Find Process: '" + name + "'", false, true);
                 }
 
 
@@ -581,7 +579,7 @@ namespace ProductionLinesWEG.Hub
                             }
                             else
                             {
-                                pgm.toDashboard("Processo '" + additional + "' não encontrado", Context.ConnectionId);
+                                RegisterMessageDashboard("Processo '" + additional + "' não encontrado", false, true);
                             }
 
                             break;
@@ -602,19 +600,19 @@ namespace ProductionLinesWEG.Hub
                             }
                             catch (System.Exception)
                             {
-                                pgm.toDashboard("Error: create EsteiraEtiquetadora, Try", Context.ConnectionId);
+                                RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", true, true);
                             }
 
                             break;
 
                         // esteira de desvio
                         case 4:
-                            pgm.toDashboard("Não é possivel criar esteiras desviadoras ainda", Context.ConnectionId);
+                            RegisterMessageDashboard("Não é possivel criar esteiras desviadoras ainda", false, true);
                             break;
 
                         // caso seja bulado o sistema de tipo, cai aqui
                         default:
-                            pgm.toDashboard("Error: Default type", Context.ConnectionId);
+                            RegisterMessageDashboard("Error: Default type in CreateEsteira", true, true);
                             break;
                     }
 
@@ -622,13 +620,13 @@ namespace ProductionLinesWEG.Hub
                     if (e != null)
                     {
                         pgm.CriarEsteira(e);
-                        pgm.toDashboard("Esteira '" + name + "' Criada", Context.ConnectionId);
+                        RegisterMessageDashboard("Esteira '" + name + "' Criada", false, true);
                         CallListEsteira();
                     }
                 }
                 else
                 {
-                    pgm.toDashboard("Esteira '" + name + "' já existente", Context.ConnectionId);
+                    RegisterMessageDashboard("Esteira '" + name + "' já existente", false, true);
                 }
             }
         }
@@ -847,12 +845,12 @@ namespace ProductionLinesWEG.Hub
                     pgm.MinX = recivedServ.minX;
                     pgm.MinY = recivedServ.minY;
 
-                    pgm.toDashboard("Project Saved", Context.ConnectionId);
+                    RegisterMessageDashboard("Project Saved", false, true);
 
                 }
                 catch (Exception e)
                 {
-                    pgm.toDashboard(e.Message, Context.ConnectionId);
+                    RegisterMessageDashboard(e.Message, false, true);
                 }
             }
         }
@@ -873,7 +871,7 @@ namespace ProductionLinesWEG.Hub
                 }
                 else
                 {
-                    pgm.toDashboard("Salve o programa para que as alterações tenham efeito", Context.ConnectionId);
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", false, true);
                 }
 
                 return list;
@@ -895,11 +893,11 @@ namespace ProductionLinesWEG.Hub
                 if (e != null)
                 {
                     e.TurnOn(pgm);
-                    pgm.toDashboard("Simulação iniciada, Alterações travadas", null);
+                    RegisterMessageDashboard("Simulação iniciada, Alterações travadas", true, false);
                 }
                 else
                 {
-                    pgm.toDashboard("Salve o programa para que as alterações tenham efeito", Context.ConnectionId);
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", false, true);
                 }
 
             }
@@ -918,11 +916,11 @@ namespace ProductionLinesWEG.Hub
                 if (e != null)
                 {
                     e.TurnOff();
-                    pgm.toDashboard("Simulação parada, Alterações destravadas", null);
+                    RegisterMessageDashboard("Simulação parada, Alterações destravadas", true, false);
                 }
                 else
                 {
-                    pgm.toDashboard("Salve o programa para que as alterações tenham efeito", Context.ConnectionId);
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", false, true);
                 }
 
             }

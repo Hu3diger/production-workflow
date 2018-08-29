@@ -14,7 +14,14 @@ namespace ProductionLinesWEG.Models
         {
             get
             {
-                return Login.AuthId;
+                if (Login != null)
+                {
+                    return Login.AuthId;
+                }
+                else
+                {
+                    return "";
+                }
             }
         }
         public bool InSimulation { get; set; }
@@ -37,6 +44,8 @@ namespace ProductionLinesWEG.Models
 
         public Program(Logins login)
         {
+            Login = login;
+
             IdCloneEm = 0;
             IdCloneEa = 0;
             IdCloneEe = 0;
@@ -48,34 +57,12 @@ namespace ProductionLinesWEG.Models
             InSimulation = false;
         }
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
-        public void toDashboard(string message, string connectionId, bool critico)
+        public void toDashboard(string message, bool critico)
         {
-            if (connectionId == null)
-            {
-            //    hubContext.Clients.Clients(MasterHub.GetAllConnectionIdsByAuthId(AuthId).ToList()).showToast(message);
-            }
-            else
-            {
-            //    hubContext.Clients.Client(connectionId).showToast(message);
-            }
             listDashboard.Insert(0, new Dashboard(new DateTime(), message, critico));
             verificarDashboard();
         }
 
-        // adiciona uma mensagem  a lista de dashboard sem ser critica a mensagem
-        public void toDashboard(string message, string connectionId)
-        {
-            if (connectionId == null)
-            {
-            //    hubContext.Clients.Clients(MasterHub.GetAllConnectionIdsByAuthId(AuthId).ToList()).showToast(message);
-            }
-            else
-            {
-            //    hubContext.Clients.Client(connectionId).showToast(message);
-            }
-            listDashboard.Insert(0, new Dashboard(new DateTime(), message, false));
-            verificarDashboard();
-        }
         // verifica se a lista de mensagem e as deleta caso não seja criatica depois de uma determina posição
         private void verificarDashboard()
         {
@@ -203,7 +190,7 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
 
-            toDashboard("Sistema pré-carregado com processos\n", null);
+            toDashboard("Sistema pré-carregado com processos\n", false);
 
 
 
@@ -235,7 +222,7 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
 
-            toDashboard("Sistema pré-carregado com esteiras\n", null);
+            toDashboard("Sistema pré-carregado com esteiras\n", false);
         }
 
         // liga a esteira para iniciar os processos
