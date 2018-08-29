@@ -9,8 +9,6 @@ namespace ProductionLinesWEG.Models
 {
     public class Program
     {
-        private static IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<MasterHub>();
-
         public Logins Login { get; private set; }
         public string AuthId
         {
@@ -54,11 +52,11 @@ namespace ProductionLinesWEG.Models
         {
             if (connectionId == null)
             {
-                hubContext.Clients.Clients(MasterHub.GetAllConnectionIdsByAuthId(AuthId).ToList()).showToast(message);
+            //    hubContext.Clients.Clients(MasterHub.GetAllConnectionIdsByAuthId(AuthId).ToList()).showToast(message);
             }
             else
             {
-                hubContext.Clients.Client(connectionId).showToast(message);
+            //    hubContext.Clients.Client(connectionId).showToast(message);
             }
             listDashboard.Insert(0, new Dashboard(new DateTime(), message, critico));
             verificarDashboard();
@@ -69,11 +67,11 @@ namespace ProductionLinesWEG.Models
         {
             if (connectionId == null)
             {
-                hubContext.Clients.Clients(MasterHub.GetAllConnectionIdsByAuthId(AuthId).ToList()).showToast(message);
+            //    hubContext.Clients.Clients(MasterHub.GetAllConnectionIdsByAuthId(AuthId).ToList()).showToast(message);
             }
             else
             {
-                hubContext.Clients.Client(connectionId).showToast(message);
+            //    hubContext.Clients.Client(connectionId).showToast(message);
             }
             listDashboard.Insert(0, new Dashboard(new DateTime(), message, false));
             verificarDashboard();

@@ -1,4 +1,7 @@
-﻿using Owin;
+﻿using Microsoft.AspNet.SignalR;
+using Owin;
+using System;
+using System.Web.Services.Description;
 
 namespace ProductionLinesWEG
 {
