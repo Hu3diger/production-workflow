@@ -65,6 +65,8 @@ namespace ProductionLinesWEG.Hub
     // classe principal para a communicação com o servidor
     public class MasterHub : Microsoft.AspNet.SignalR.Hub
     {
+        private bool inDashboard = false;
+
         // lista de logins para controle de acesso
         public static readonly List<Logins> listLogins = new List<Logins> {
             new Logins("teste1",  "senha123", "OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
@@ -182,7 +184,7 @@ namespace ProductionLinesWEG.Hub
         // sobrescreve o metodo onde é chamado quando um usuario se desconecta do servidor
         public override Task OnDisconnected(bool stopCalled)
         {
-
+            inDashboard = false;
             // remove o usuario (apenas uma conexão por vez) da lista de usuarios (sessions)
 
             var connectionIds = null as SessionAuth;
@@ -245,6 +247,45 @@ namespace ProductionLinesWEG.Hub
 
 
 
+
+
+
+
+
+        public void testConnection()
+        {
+
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            if (!AuthId.Equals(""))
+            {
+                // procura pelo programa que corresponde ao usuario (AuthId)
+                Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+                if (pgm != null)
+                {
+                    Clients.Caller.showToast("Conectado com o servidor, Logado");
+                }
+                else
+                {
+                    Clients.Caller.showToast("Program does not match authentication, try again");
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Conectado com o servidor, necessário Login");
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         // verifica se o usuario existe e aceita ou não usuario
         public void requestLogin(string user, string password)
         {
@@ -267,6 +308,7 @@ namespace ProductionLinesWEG.Hub
                 if (pgm != null)
                 {
                     // invoca uma função do cliente para aceita-lo
+                    RegisterMessageDashboard("Logado com sucesso", false, true);
                     Clients.Caller.acceptLoginUser(l.AuthId);
                 }
                 else
@@ -314,7 +356,7 @@ namespace ProductionLinesWEG.Hub
                 }
                 else
                 {
-                    Clients.Caller.showToast("Program does not match authentication");
+                    Clients.Caller.showToast("Program does not match authentication, try again");
                     return null;
                 }
             }
@@ -924,6 +966,38 @@ namespace ProductionLinesWEG.Hub
                 }
 
             }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public async Task<string> getAttDashboard()
+        {
+            Program pgm = CheckReturnPgm();
+
+            if (pgm != null)
+            {
+                inDashboard = true;
+
+                Clients.Caller.showToast("Initialized Dashboard");
+                while (inDashboard)
+                {
+                    Clients.Caller.reciveDashboard(pgm.listDashboard);
+                    await Task.Delay(200);
+                }
+            }
+
+            return "Finished Dashboard";
         }
     }
 

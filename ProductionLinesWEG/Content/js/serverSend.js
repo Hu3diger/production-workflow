@@ -1,7 +1,21 @@
-﻿//requisita o login ao servidor, passando senha e user para validação
+﻿//requisita a atualização do dashboard continuamente
+function testConnection() {
+
+    connector.server.testConnection();
+
+}
+
+//requisita o login ao servidor, passando senha e user para validação
 function requestLogin(user, pass) {
 
     connector.server.requestLogin(user, pass);
+
+}
+
+//requisita a atualização do dashboard continuamente
+function getAttDashboard() {
+
+    connector.server.getAttDashboard();
 
 }
 

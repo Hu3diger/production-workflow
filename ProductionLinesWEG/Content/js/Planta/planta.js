@@ -685,6 +685,7 @@ function saveContent() {
         sendServ.minY = minY;
 
         // metodo do servidor que faz o mapeamento
+        console.log(sendServ);
         saveTableProduction(sendServ);
     } else {
         console.log("Object not found");

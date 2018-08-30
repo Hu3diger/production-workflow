@@ -17,6 +17,30 @@ function ServerReciveMethods() {
     connector.client.showToast = function (message) {
         M.toast({ html: message })
     };
+    var t = true;
+    //função para atualizar o dashboard
+    connector.client.reciveDashboard = function (jMessage) {
+        try {
+            var jsonDashboard = [];
+
+            for (var i = 0; i < jMessage.length; i++) {
+                var v = jMessage[i];
+
+
+                let line = {
+                    horario: v.Date,
+                    mensagem: v.Message,
+                    critico: v.Critico
+                };
+
+                jsonDashboard.push(line);
+            }
+
+            inserirT(jsonDashboard);
+        } catch (e) {
+
+        }
+    };
 
     //lista os processos na tela de processos
     connector.client.listProcessos = function (jsonRecived) {
@@ -28,41 +52,57 @@ function ServerReciveMethods() {
 
     //lista as esteiras na tela de esteiras
     connector.client.listEsteiras = function (jsonRecived) {
-        limpaAbout();
+        try {
+            limpaAbout();
+        } catch (e) {
+            // null
+        }
 
-        $("#esteirasModel").html("");
-        $("#esteirasArma").html("");
-        $("#esteirasEtiq").html("");
-        $("#esteirasDesvio").html("");
+        try {
+            $("#esteirasModel").html("");
+            $("#esteirasArma").html("");
+            $("#esteirasEtiq").html("");
+            $("#esteirasDesvio").html("");
 
-        generateListEsteira(jsonRecived.listModel, $("#esteirasModel"), 1);
-        generateListEsteira(jsonRecived.listArmazenamento, $("#esteirasArma"), 2);
-        generateListEsteira(jsonRecived.listEtiquetadora, $("#esteirasEtiq"), 3);
-        generateListEsteira(jsonRecived.listDesvio, $("#esteirasDesvio"), 4);
+            generateListEsteira(jsonRecived.listModel, $("#esteirasModel"), 1);
+            generateListEsteira(jsonRecived.listArmazenamento, $("#esteirasArma"), 2);
+            generateListEsteira(jsonRecived.listEtiquetadora, $("#esteirasEtiq"), 3);
+            generateListEsteira(jsonRecived.listDesvio, $("#esteirasDesvio"), 4);
+        } catch (e) {
+            // null
+        }
 
-        $("#esteirasModelProd").html("");
-        $("#esteirasArmaProd").html("");
-        $("#esteirasEtiqProd").html("");
-        $("#esteirasDesvioProd").html("");
+        try {
+            $("#esteirasModelProd").html("");
+            $("#esteirasArmaProd").html("");
+            $("#esteirasEtiqProd").html("");
+            $("#esteirasDesvioProd").html("");
 
-        // Pagina Produção
-        generateListEsteiraProd(jsonRecived.listModel, $("#esteirasModelProd"), 1);
-        generateListEsteiraProd(jsonRecived.listArmazenamento, $("#esteirasArmaProd"), 2);
-        generateListEsteiraProd(jsonRecived.listEtiquetadora, $("#esteirasEtiqProd"), 3);
-        generateListEsteiraProd(jsonRecived.listDesvio, $("#esteirasDesvioProd"), 4);
+            // Pagina Produção
+            generateListEsteiraProd(jsonRecived.listModel, $("#esteirasModelProd"), 1);
+            generateListEsteiraProd(jsonRecived.listArmazenamento, $("#esteirasArmaProd"), 2);
+            generateListEsteiraProd(jsonRecived.listEtiquetadora, $("#esteirasEtiqProd"), 3);
+            generateListEsteiraProd(jsonRecived.listDesvio, $("#esteirasDesvioProd"), 4);
+        } catch (e) {
+            // null
+        }
 
-        $("#tmodelo tbody").html("");
-        $("#tarmazenamento tbody").html("");
-        $("#tetiquetadora tbody").html("");
-        $("#tdesvio tbody").html("");
+        try {
+            $("#tmodelo tbody").html("");
+            $("#tarmazenamento tbody").html("");
+            $("#tetiquetadora tbody").html("");
+            $("#tdesvio tbody").html("");
 
-        // Pagina Planta
-        generateListProducao(jsonRecived.listModel, $("#tmodelo tbody"), 1, "blue darken-4");
-        generateListProducao(jsonRecived.listArmazenamento, $("#tarmazenamento tbody"), 2, "orange darken-4");
-        generateListProducao(jsonRecived.listEtiquetadora, $("#tetiquetadora tbody"), 3, "lime darken-2");
-        generateListProducao(jsonRecived.listDesvio, $("#tdesvio tbody"), 4, "teal darken-2");
+            // Pagina Planta
+            generateListProducao(jsonRecived.listModel, $("#tmodelo tbody"), 1, "blue darken-4");
+            generateListProducao(jsonRecived.listArmazenamento, $("#tarmazenamento tbody"), 2, "orange darken-4");
+            generateListProducao(jsonRecived.listEtiquetadora, $("#tetiquetadora tbody"), 3, "lime darken-2");
+            generateListProducao(jsonRecived.listDesvio, $("#tdesvio tbody"), 4, "teal darken-2");
 
-        setDropDragItens();
+            setDropDragItens();
+        } catch (e) {
+            // null
+        }
     }
 
 };

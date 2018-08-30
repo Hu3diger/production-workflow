@@ -59,7 +59,7 @@ namespace ProductionLinesWEG.Models
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
         public void toDashboard(string message, bool critico)
         {
-            listDashboard.Insert(0, new Dashboard(new DateTime(), message, critico));
+            listDashboard.Insert(0, new Dashboard(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), message, critico));
             verificarDashboard();
         }
 
@@ -68,9 +68,9 @@ namespace ProductionLinesWEG.Models
         {
             if (listDashboard.Count > 10)
             {
-                if (!listDashboard[5].Critico)
+                if (!listDashboard[10].Critico)
                 {
-                    listDashboard.RemoveAt(5);
+                    listDashboard.RemoveAt(10);
                 }
             }
         }

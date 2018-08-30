@@ -13,17 +13,17 @@
     {
         <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/login.css" />
     }
+    else if (ViewBag.Screen == "Planta")
+    {
+        <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/planta.css" />
+    }
     else
     {
         <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/main.css" />
     }
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-    <!-- <script src="~/Scripts/modernizr-2.8.3.js"></script> -->
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/jquery-cookie.js"></script>
-    <script src="~/Scripts/jquery-ui.js"></script>
-
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
 </head>
 
 <body>
@@ -100,23 +100,87 @@
     <!-- Page content -->
     @RenderBody()
     <!-- JS in the end of file to optimize loading -->
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery-cookie.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
     <script src="~/Scripts/materialize.min.js"></script>
+
+    <!-- JS signalR -->
     <script src="~/Scripts/jquery.signalR-2.3.0.js"></script>
-    <script src="~/Scripts/redips-drag-min.js"></script>
 
     <!-- todos os methodos do servidor > cliente, dentro dessa função -->
     <script src="~/Content/js/serverRecive.js"></script>
     <!-- ------------------------------------------------------------ -->
     <script src="~/Content/js/serverSend.js"></script>
 
-    <script src="~/Content/js/app-connect.js"></script>
+    <script>
+        //criação de um novo objeto connector
+        var connector = connector || {};
+
+        //função para estabelecer da conexão (utilizando SignalR)
+        $(function () {
+            connector = $.connection.masterHub;
+
+            $.connection.hub.qs = {
+                SessionId: $.cookie('SessionId'),
+                AuthId: $.cookie('AuthId'),
+            };
+            //registra os métodos que o servidor pode chamar neste cliente.
+            ServerReciveMethods();
+
+            //starta a conexão
+            $.connection.hub.start().done(function () {
+                console.log("Conexão Habilitada");
+                @if (ViewBag.Screen == "Login")
+                {
+                @:testConnection();
+                }
+                else if (ViewBag.Screen == "Processos")
+                {
+                @:callListProcess();
+                }
+                else if (ViewBag.Screen == "Esteiras" || ViewBag.Screen == "Planta")
+                {
+                @:callListEsteira();
+                }else if (ViewBag.Screen == "Dashboard")
+                {
+                @:getAttDashboard();
+                }
+
+                @if (ViewBag.Screen == "Planta")
+                {
+                @:getIds();
+                }
+            });
+        });
+    </script>
 
     <script src="~/Content/js/main.js"></script>
 
-    <script src="~/Content/js/Processos/process.js"></script>
-    <script src="~/Content/js/Esteiras/esteiras.js"></script>
-    <script src="~/Content/js/Planta/planta.js"></script>
-    <script src="~/Content/js/Producao/producao.js"></script>
+    @if (ViewBag.Screen == "Login")
+    {
+        <script src="~/Content/js/login/login.js"></script>
+    }
+    else if (ViewBag.Screen == "Dashboard")
+    {
+        <script src="~/Content/js/Dashboard/dashboard.js"></script>
+    }
+    else if (ViewBag.Screen == "Esteiras")
+    {
+        <script src="~/Content/js/Esteiras/esteiras.js"></script>
+    }
+    else if (ViewBag.Screen == "Processos")
+    {
+        <script src="~/Content/js/Processos/process.js"></script>
+    }
+    else if (ViewBag.Screen == "Planta")
+    {
+        <script src="~/Content/js/Planta/planta.js"></script>
+    }
+    else if (ViewBag.Screen == "Producao")
+    {
+        <script src="~/Content/js/Producao/producao.js"></script>
+    }
 
     <script src="/signalr/hubs" type="text/javascript"></script>
 </body>
