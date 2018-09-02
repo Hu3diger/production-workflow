@@ -367,9 +367,35 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
+        public Program CheckPgmInSimulation()
+        {
+            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
+
+            if (!AuthId.Equals(""))
+            {
+                // procura pelo programa que corresponde ao usuario (AuthId)
+                Program pgm = listProgram.Find(x => x.AuthId.Equals(AuthId));
+
+                if (pgm != null)
+                {
+                    return pgm;
+                }
+                else
+                {
+                    Clients.Caller.showToast("Program does not match authentication, try again");
+                    return null;
+                }
+            }
+            else
+            {
+                Clients.Caller.showToast("Error: AuthId: '" + AuthId + "'");
+                return null;
+            }
+        }
+
         public void RegisterMessageDashboard(string message, bool critical, bool thisClient)
         {
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -543,7 +569,7 @@ namespace ProductionLinesWEG.Hub
         // lista os processos disponiveis para determinado processo (name)
         public List<string> ListFatherProcess(string name)
         {
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -561,7 +587,7 @@ namespace ProductionLinesWEG.Hub
         {
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
             var connections = GetAllConnectionIdsByAuthId(AuthId).ToList();
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -679,7 +705,7 @@ namespace ProductionLinesWEG.Hub
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
             var connections = GetAllConnectionIdsByAuthId(AuthId).ToList();
 
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -703,7 +729,7 @@ namespace ProductionLinesWEG.Hub
 
             string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
 
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -736,7 +762,7 @@ namespace ProductionLinesWEG.Hub
 
                             if (aux != null)
                             {
-                                aux.Esteira = null;
+                                aux.Esteira = pgm.listEsteiras.Find(x => x.Id.Equals(aux.Esteira.Id));
 
                                 aux.Up = null;
                                 aux.Front = null;
@@ -816,7 +842,7 @@ namespace ProductionLinesWEG.Hub
                                 // cria um objeto MapCell (array de classes, conteudo, linha, coluna)
                                 matrizMapCell[i, j] = new MapCell(id, classes, children, obj.dataObj, i, j);
 
-                                // procura a esteira com o id do clone na lista geral de esteiras
+                                // procura a esteira com o id do clone na lis6ta geral de esteiras
                                 matrizMapCell[i, j].Esteira = pgm.listEsteiras.Find(x => x.Id.Equals(id));
 
                                 // caso nao ache, cria um novo com o clone da Base
@@ -899,7 +925,7 @@ namespace ProductionLinesWEG.Hub
 
         public List<string> getInformationEsteira(string id)
         {
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -914,17 +940,18 @@ namespace ProductionLinesWEG.Hub
                 else
                 {
                     RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", false, true);
+                    return new List<string>();
                 }
 
                 return list;
             }
 
-            return null;
+            return new List<string>();
         }
 
         public void turnOnEsteira(string id)
         {
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -934,6 +961,7 @@ namespace ProductionLinesWEG.Hub
 
                 if (e != null)
                 {
+                    pgm.InSimulation = true;
                     e.TurnOn(pgm);
                     RegisterMessageDashboard("Simulação iniciada, Alterações travadas", true, false);
                 }
@@ -947,7 +975,7 @@ namespace ProductionLinesWEG.Hub
 
         public void turnOffEsteira(string id)
         {
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -963,6 +991,61 @@ namespace ProductionLinesWEG.Hub
                 else
                 {
                     RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", false, true);
+                }
+
+                bool controlePgm = false;
+
+                foreach (var x in pgm.listEsteiras)
+                {
+                    if (x.Ligado)
+                    {
+                        controlePgm = true;
+                        break;
+                    }
+                }
+
+                pgm.InSimulation = controlePgm;
+            }
+        }
+
+        public void chumbarPeca(string id, int qtd)
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                List<string> list = new List<string>();
+
+                EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(id));
+
+                if (e != null)
+                {
+                    int i = 0;
+                    bool control = true;
+                    while (control && i < qtd)
+                    {
+                        if (e.InsertPiece(new Peca()))
+                        {
+                            i++;
+                        }
+                        else
+                        {
+                            control = false;
+                        }
+                    }
+
+                    if (i < qtd)
+                    {
+                        RegisterMessageDashboard("Inseridas " + i + " peças na esteira '" + e.Name + "' (limite atingido)", false, true);
+                    }
+                    else
+                    {
+                        RegisterMessageDashboard("Inseridas " + i + " peças na esteira '" + e.Name + "'", false, true);
+                    }
+                }
+                else
+                {
+                    RegisterMessageDashboard("Pare a simulação e salve o programa para que as alterações tenham efeito", false, true);
                 }
 
             }
@@ -983,7 +1066,7 @@ namespace ProductionLinesWEG.Hub
 
         public async Task<string> getAttDashboard()
         {
-            Program pgm = CheckReturnPgm();
+            Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
@@ -995,9 +1078,21 @@ namespace ProductionLinesWEG.Hub
                     Clients.Caller.reciveDashboard(pgm.listDashboard);
                     await Task.Delay(200);
                 }
+                Clients.Caller.showToast("Finished Dashboard");
             }
 
             return "Finished Dashboard";
+        }
+
+        public void clearDashboard()
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                pgm.listDashboard.Clear();
+                Clients.Caller.showToast("Dashboard cleaned");
+            }
         }
     }
 

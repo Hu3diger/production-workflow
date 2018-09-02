@@ -89,7 +89,7 @@ function setDropDragItens() {
                         <input id="numberC" type="number" value="1" min="1" class="active validate">\
                         <label class="active" for="numberC">Peças p/ chumbar</label>\
                     </div>\
-                    <a class="waves-effect waves-light btn green darken-4">Chumbar peça</a>\
+                    <a class="waves-effect waves-light btn green darken-4" onclick="chumbarPecaEsteira(' + this.id + ')">Chumbar peça</a>\
                 </div>\
             </div>\
             <div class="row">\
@@ -241,14 +241,14 @@ function setDropDragItens() {
     });
 }
 
-function changeOnOff(id) {
+function changeOnOff(obj) {
 
-    $(id).data().Ligado = $("#onOffEsteira").prop('checked');
+    $(obj).data().Ligado = $("#onOffEsteira").prop('checked');
 
     if ($("#onOffEsteira").prop('checked')) {
-        // turn on Esteiras
+        turnOnEsteira($(obj).attr("id"));
     } else {
-        // turn on Esteiras
+        turnOffEsteira($(obj).attr("id"));
     }
 }
 
@@ -257,6 +257,12 @@ function applyReajust() {
     minY = parseInt($("#tamanho_y").val());
 
     reajustTable();
+}
+
+function chumbarPecaEsteira(obj) {
+
+    chumbarPeca($(obj).attr("id"), $("#numberC").val());
+
 }
 
 // reajusta a tabela para que tenham uma linha e coluna a vazia no fim
@@ -603,7 +609,6 @@ function generateListProducao(data, $e, type, colorClass) {
         jObj.data("InLimit", obj.InLimit);
         jObj.data("Ligado", obj.Ligado);
         jObj.data("TypeN", type);
-
     }
 
     //for para a cria��o de v�rias esteiras no collapsible
@@ -744,6 +749,8 @@ function assignItemsTable(mapCells) {
                         });
 
                         div.attr("data-target", idModal);
+
+                        div.data("Ligado", item.Esteira.Ligado);
                     }
                 }
             }

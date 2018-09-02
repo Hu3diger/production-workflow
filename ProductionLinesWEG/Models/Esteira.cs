@@ -11,8 +11,6 @@ namespace ProductionLinesWEG.Models
     public abstract class EsteiraAbstrata : ICloneable
     {
 
-        private int _inputUse;
-
         protected Queue<Peca> _queueInputPecas;
         protected Queue<Peca> _queueOutputPecas;
 
@@ -32,7 +30,7 @@ namespace ProductionLinesWEG.Models
 
         public bool IsClone { get; set; }
 
-        protected bool BlockedEsteira { get => _inputUse >= InLimit && InLimit != -1; }
+        protected bool BlockedEsteira { get => CountInputPieces() >= InLimit && InLimit != -1; }
 
         /// <summary>
         /// Construtor abstrato que recebe um nome o limite de entrada na esteira
@@ -48,7 +46,6 @@ namespace ProductionLinesWEG.Models
             IsClone = false;
 
             InLimit = limite;
-            _inputUse = 0;
 
             Produced = 0;
             Fail = 0;
@@ -72,7 +69,6 @@ namespace ProductionLinesWEG.Models
             if (!BlockedEsteira)
             {
                 _queueInputPecas.Enqueue(peca);
-                _inputUse++;
                 return true;
             }
 
@@ -134,11 +130,6 @@ namespace ProductionLinesWEG.Models
         {
             Peca p = _queueInputPecas.Dequeue();
 
-            if (p != null)
-            {
-                _inputUse--;
-            }
-
             return p;
         }
         /// <summary>
@@ -171,7 +162,6 @@ namespace ProductionLinesWEG.Models
         /// </summary>
         public void TurnOn(Program program)
         {
-
             cleanThread();
 
             Threads t = new Threads(this, program);
@@ -221,9 +211,7 @@ namespace ProductionLinesWEG.Models
             EsteiraAbstrata e = (EsteiraAbstrata)this.MemberwiseClone();
 
             e.EsteiraInput = new List<EsteiraAbstrata>();
-
-            e._queueInputPecas = new Queue<Peca>();
-            e._queueOutputPecas = new Queue<Peca>();
+            e.RemoveAllOutput();
 
             e.IsClone = true;
 

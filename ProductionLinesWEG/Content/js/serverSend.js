@@ -84,3 +84,27 @@ function saveTableProduction(array) {
     connector.server.saveTableProduction(array);
 
 }
+
+function turnOnEsteira(id) {
+
+    connector.server.turnOnEsteira(id);
+
+}
+
+function turnOffEsteira(id) {
+
+    connector.server.turnOffEsteira(id);
+
+}
+
+function chumbarPeca(id, qtd) {
+
+    connector.server.chumbarPeca(id, qtd);
+
+}
+
+function clearDashboard() {
+
+    connector.server.clearDashboard();
+
+}

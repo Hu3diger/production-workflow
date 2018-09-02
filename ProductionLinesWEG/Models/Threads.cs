@@ -77,7 +77,7 @@ namespace ProductionLinesWEG.Models
                         }
                         else
                         {
-                            program.toDashboard(em.Name + "Esperando Peça", false);
+                            program.toDashboard(em.Name + " esperando Peça", false);
                             // fica esperando a peca (250ms para não sobrecarregar o servidor)
                             Thread.Sleep(250);
                         }
