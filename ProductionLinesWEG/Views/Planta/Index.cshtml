@@ -153,4 +153,111 @@
 
     </div>
 
+
+
+    <!-- Start of Modal41 -->
+        <div id="modal41" class="modal modal1">
+            <div class="modal-content">
+            <div class="row">
+                <div class="col s8">
+                    <h5 id="modalName"><b></b></h5><br>
+                    <p id="modalDescription"></p>
+                    <p id="modalLimit"></p>
+                    <p id="modalType"></p>
+                    <p id="modalAbout"></p>
+                </div>
+                <div class="col s4">
+                    <p>Status da esteira</p>
+                    <div id="modalSwitch" class="switch">
+                        <label>
+                            Desligado
+                            <input id="onOffEsteira" type="checkbox">
+                            <span class="lever"></span>
+                            Ligado
+                        </label>
+                    </div>
+                    <br>
+                    <div class="input-field col s8">
+                        <input id="numberC" type="number" value="1" min="1" class="active validate">
+                        <label class="active" for="numberC">Peças p/ chumbar</label>
+                    </div>
+                    <a class="waves-effect waves-light btn green darken-4" id="btnChumbar">Chumbar peça</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6 m6 l6">
+                    <table id="tablePieces">
+                        <tr>
+                            <th>Peças na fila de entrada</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>1702018</td>
+                            <td><a class="modal-trigger" href="#modal40">Detalhes</a></td>
+                            <td>1702018</td>
+                            <td><a class="modal-trigger" href="#modal40">Detalhes</a></td>
+                        </tr>
+                        <tr>
+                            <td>6900001</td>
+                            <td><a class="modal-trigger" href="#modal40">Detalhes</a></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col s6 m6 l6">
+                    <table id="tablePiecesProd">
+                        <tr>
+                            <th>Peça em produção</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>1702018</td>
+                            <td><a class="modal-trigger" href="#modal40">Detalhes</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        </div>
+    <!-- End of Modal41 -->
+
+
+    <!-- Start of Modal40 -->
+    <div id="modal40" class="modal modal2">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col s10">
+                    <p id="modalTag"><b>Tag</b>: {sucess}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <b>Processos executados</b>
+                    <table id="tableAtPiece">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nome</th>
+                            <th>Estado</th>
+                            <th>Value</th>
+                            <th>Data</th>
+                            <th>Tempo Exc.</th>
+                        </tr>
+                        <tr>
+                            <td>0001</td>
+                            <td>Lavação</td>
+                            <td>Concluído</td>
+                            <td>5474A</td>
+                            <td>2018-10-04</td>
+                            <td>55s</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button href="#!" class="waves-effect waves-green btn-flat" onclick="closeModal40()">Fechar</button>
+        </div>
+    </div>
+    <!-- End of Modal40-->
 </div>

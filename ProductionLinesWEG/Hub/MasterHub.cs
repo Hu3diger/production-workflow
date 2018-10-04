@@ -352,7 +352,10 @@ namespace ProductionLinesWEG.Hub
                         Clients.Caller.showToast("Program is in simulation, please stop the simulation");
                         return null;
                     }
-                    return pgm;
+                    else
+                    {
+                        return pgm;
+                    }
                 }
                 else
                 {
@@ -762,7 +765,10 @@ namespace ProductionLinesWEG.Hub
 
                             if (aux != null)
                             {
-                                aux.Esteira = pgm.listEsteiras.Find(x => x.Id.Equals(aux.Esteira.Id));
+                                if (aux.Esteira != null)
+                                {
+                                    aux.Esteira = (EsteiraAbstrata)pgm.listEsteiras.Find(x => x.Id.Equals(aux.Esteira.Id)).Clone();
+                                }
 
                                 aux.Up = null;
                                 aux.Front = null;
@@ -923,32 +929,6 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
-        public List<string> getInformationEsteira(string id)
-        {
-            Program pgm = CheckPgmInSimulation();
-
-            if (pgm != null)
-            {
-                List<string> list = new List<string>();
-
-                EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(id));
-
-                if (e != null)
-                {
-                    e.EsteiraInput.ForEach(x => list.Add(x.Name));
-                }
-                else
-                {
-                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", false, true);
-                    return new List<string>();
-                }
-
-                return list;
-            }
-
-            return new List<string>();
-        }
-
         public void turnOnEsteira(string id)
         {
             Program pgm = CheckPgmInSimulation();
@@ -1051,7 +1031,30 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
+        public List<Peca> getPieces(string id)
+        {
+            List<Peca> list = null;
 
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+
+                EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(id));
+
+                if (e != null)
+                {
+                    list = e.getToList();
+                }
+                else
+                {
+                    RegisterMessageDashboard("Pare a simulação e salve o programa para que as alterações tenham efeito", false, true);
+                }
+
+            }
+
+            return list;
+        }
 
 
 

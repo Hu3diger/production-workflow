@@ -12,7 +12,6 @@ namespace ProductionLinesWEG.Models
     {
 
         protected Queue<Peca> _queueInputPecas;
-        protected Queue<Peca> _queueOutputPecas;
 
         private Thread thread;
 
@@ -30,7 +29,7 @@ namespace ProductionLinesWEG.Models
 
         public bool IsClone { get; set; }
 
-        protected bool BlockedEsteira { get => CountInputPieces() >= InLimit && InLimit != -1; }
+        public bool BlockedEsteira { get => CountInputPieces() >= InLimit && InLimit != -1; }
 
         /// <summary>
         /// Construtor abstrato que recebe um nome o limite de entrada na esteira
@@ -52,7 +51,6 @@ namespace ProductionLinesWEG.Models
             Success = 0;
 
             _queueInputPecas = new Queue<Peca>();
-            _queueOutputPecas = new Queue<Peca>();
 
             EsteiraInput = new List<EsteiraAbstrata>();
         }
@@ -68,7 +66,10 @@ namespace ProductionLinesWEG.Models
         {
             if (!BlockedEsteira)
             {
-                _queueInputPecas.Enqueue(peca);
+                if (peca != null)
+                {
+                    _queueInputPecas.Enqueue(peca);
+                }
                 return true;
             }
 
@@ -108,7 +109,7 @@ namespace ProductionLinesWEG.Models
         ///  remove a esteira (e) da lsita de inputs, caso exista
         /// </summary>
         /// <param name="e"></param>
-        public void removeAllInput()
+        public void RemoveAllInput()
         {
             EsteiraInput.Clear();
         }
@@ -162,7 +163,7 @@ namespace ProductionLinesWEG.Models
         /// </summary>
         public void TurnOn(Program program)
         {
-            cleanThread();
+            CleanThread();
 
             Threads t = new Threads(this, program);
 
@@ -175,7 +176,7 @@ namespace ProductionLinesWEG.Models
         /// <summary>
         /// encerra (caso esteja inicializada) e deleta a thread
         /// </summary>
-        private void cleanThread()
+        private void CleanThread()
         {
             if (thread != null)
             {
@@ -191,18 +192,23 @@ namespace ProductionLinesWEG.Models
         {
             Ligado = false;
 
-            cleanThread();
+            CleanThread();
 
             if (GetInputPieceNoRemove() != null)
             {
                 GetInputPieceNoRemove().ListAtributos.ForEach(x =>
                 {
-                    if (x.Estado.Equals(Atributo.FAZENDO))
+                    if (x.Estado.Equals(Atributo.FAZENDO) || x.Estado.Equals(Atributo.ESPERANDO))
                     {
                         x.Estado = Atributo.INTERROMPIDO;
                     }
                 });
             }
+        }
+
+        public List<Peca> getToList()
+        {
+            return _queueInputPecas.ToList();
         }
 
         public object Clone()
@@ -244,7 +250,23 @@ namespace ProductionLinesWEG.Models
 
         public override void RemoveAllOutput()
         {
+            if (EsteiraOutput != null)
+            {
+                EsteiraOutput.EsteiraInput.Remove(this);
+            }
             EsteiraOutput = null;
+        }
+
+        public Peca PassPiece()
+        {
+            Peca peca = null;
+            if (!EsteiraOutput.BlockedEsteira)
+            {
+                peca = this.RemovePiece();
+                EsteiraOutput.InsertPiece(peca);
+            }
+
+            return peca;
         }
     }
     // classe usada para as esteiras que possuem processos internos
@@ -287,29 +309,29 @@ namespace ProductionLinesWEG.Models
         /// <summary>
         /// verifica se possu um proximo processo para a operação
         /// </summary>
-        public bool hasNextProcess()
+        public bool HasNextProcess()
         {
             return _processManager.hasNext();
         }
         /// <summary>
         /// reseta o processo para que possa ser usado novamente
         /// </summary>
-        public void resetProcess()
+        public void ResetProcess()
         {
             _processManager.Reset();
         }
         /// <summary>
-        /// retorna o proximo processo a ser executado na op~eração da esteira
+        /// retorna o proximo processo a ser executado na operação da esteira
         /// </summary>
         /// <returns>null caso nao tenha mais</returns>
-        public Processo nextProcess()
+        public Processo NextProcess()
         {
             return _processManager.Next();
         }
         /// <summary>
         /// finaliza o processo para que possa ser usado novamente
         /// </summary>
-        public void finalizeProcess()
+        public void FinalizeProcess()
         {
             _processManager.finalize();
             _processManager.Reset();

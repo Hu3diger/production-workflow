@@ -40,44 +40,78 @@ namespace ProductionLinesWEG.Models
 
                         if (pc != null)
                         {
+                            int run = 0;
                             // reseta o processo para iniciar o ciclo todo novamente
-                            em.resetProcess();
+                            em.ResetProcess();
 
                             // verifica se existe processo adiante
-                            while (em.hasNextProcess())
+                            while (em.HasNextProcess())
                             {
-                                Processo ps = em.nextProcess();
+                                Processo ps = em.NextProcess();
+                                Atributo at = new Atributo(ps.Id, ps.Name);
 
-                                program.toDashboard(ps.Name + " Executando", false);
+                                pc.addAtributo(at);
+
+                                program.toDashboard(ps.Name + "("+ps.Id+") Executando em " + em.Name, false);
+
+                                run = ps.RuntimeWithVariation;
 
                                 // seta atributo
-                                pc.setAtributo(ps.Name, "Kappa value", Atributo.FAZENDO);
+                                at.Estado = Atributo.FAZENDO;
 
                                 // simula o tempo de um proceso real 
-                                Thread.Sleep(ps.Runtime);
+                                Thread.Sleep(run);
+                                at.Time = run;
 
                                 // seta atributo
-                                pc.setAtributo(ps.Name, "Kappa value", Atributo.FEITO);
+                                if (ps.InSuccess)
+                                {
+                                    at.Estado = Atributo.FEITO;
+                                }
+                                else
+                                {
+                                    at.Estado = Atributo.DEFEITO;
+                                }
 
                                 program.toDashboard(ps.Name + " Finalizado", false);
                             }
 
                             // finalia o processo para ter um novo ciclo
-                            em.finalizeProcess();
+                            em.FinalizeProcess();
 
-                            // remove a peça da esteira para que a proxima peça possa ser executada
-                            Peca p = em.RemovePiece();
+                            if (em.EsteiraOutput == null)
+                            {
+                                program.toDashboard("Desligando esteira " + em.Name + ", sem esteiras para envio", true);
+                                em.TurnOff();
+                            }
+
+                            Peca p = em.PassPiece();
+
+                            while (p == null)
+                            {
+                                p = em.PassPiece();
+
+                                if (p != null)
+                                {
+                                    program.toDashboard(em.Name + " aguardando envio para a proxima esteira", false);
+                                    Thread.Sleep(250);
+                                }
+                            }
 
                             program.toDashboard("Exibindo atributos da peca recém 'feita':", false);
 
                             // exibe todos os estados do processo (atributos)
-                            p.ListAtributos.ForEach(x => program.toDashboard("Processo: " + x.Name + " / Estado: " + x.Estado, false));
+                            p.ListAtributos.ForEach(x => program.toDashboard("Processo: " + x.NameP + " / Estado: " + x.Estado, false));
 
                             program.toDashboard("Droped First / End\n", false);
                         }
                         else
                         {
-                            program.toDashboard(em.Name + " esperando Peça", false);
+                            //if (countShow++ > 5)
+                            //{
+                            //    program.toDashboard(em.Name + " esperando Peça", false);
+                            //    countShow = 0;
+                            //}
                             // fica esperando a peca (250ms para não sobrecarregar o servidor)
                             Thread.Sleep(250);
                         }

@@ -23,22 +23,21 @@ namespace ProductionLinesWEG.Models
         }
 
         // seta um atributo na peça
-        public void setAtributo(string name, string value, string estado)
+        public void addAtributo(Atributo a)
         {
-            Atributo at = ListAtributos.Find(x => x.Name.Equals(name));
+            Atributo at = ListAtributos.Find(x => x.IdP.Equals(a.IdP));
 
-            if (at == null)
+            if (at != null)
             {
-                at = new Atributo(name);
-                at.Value = value;
-                at.Estado = estado;
-                ListAtributos.Add(at);
+                ListAtributos.Remove(at);
             }
-            else
-            {
-                at.Estado = estado;
-                at.Value = value;
-            }
+
+            ListAtributos.Add(a);
+        }
+
+        public Atributo getAtributo(Processo p)
+        {
+            return ListAtributos.Find(x => x.IdP.Equals(p.Id));
         }
 
         //Boolean Printed { get; set; }

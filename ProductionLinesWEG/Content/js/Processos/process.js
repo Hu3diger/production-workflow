@@ -84,9 +84,13 @@
             </div>\
         </div>\
         <div class="row">\
-            <div class="input-field col s12 m6 offset-m2">\
-            <input value="' + data.Runtime + '" id="runtimeP" type="number" class="validate active">\
-            <label class="active" for="runtimeP">Tempo de execução (ms)</label>\
+            <div class="input-field col s12 m3 offset-m2">\
+                <input value="' + data.Runtime + '" id="runtimeP" type="number" class="validate active">\
+                <label class="active" for="runtimeP">Tempo de execução (ms)</label>\
+            </div>\
+            <div class="input-field col s12 m3">\
+                <input value="'+ data.ErrorProbability +'" id="probabilityP" type="number" class="validate active">\
+                <label class="active" for="probabilityP">Probabilidade de erro (%)</label>\
             </div>\
             <div class="input-field col s12 m2">\
                 <input value="' + data.VariationRuntime + '" id="variationP" type="number" class="validate active">\

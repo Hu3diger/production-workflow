@@ -56,10 +56,6 @@
                             }>
                             <a href="@Url.Action("Index", "Planta")">Planta</a>
                         </li>
-                        <li @if (ViewBag.Screen == "Producao") { @: class="active"
-                            }>
-                            <a href="@Url.Action("Index", "Producao")">Produção</a>
-                        </li>
                     </ul>
 
                     <a href="#" onclick="logOut()" class="right" style="padding-right: 20px">Log out</a>
@@ -86,10 +82,6 @@
                     <li @if (ViewBag.Screen == "Planta") { @: class="active"
                         }>
                         <a href="@Url.Action("Index", "Planta")">Planta</a>
-                    </li>
-                    <li @if (ViewBag.Screen == "Producao") { @: class="active"
-                        }>
-                        <a href="@Url.Action("Index", "Producao")">Produção</a>
                     </li>
                 </ul>
 
@@ -176,10 +168,6 @@
     else if (ViewBag.Screen == "Planta")
     {
         <script src="~/Content/js/Planta/planta.js"></script>
-    }
-    else if (ViewBag.Screen == "Producao")
-    {
-        <script src="~/Content/js/Producao/producao.js"></script>
     }
 
     <script src="/signalr/hubs" type="text/javascript"></script>

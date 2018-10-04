@@ -9,19 +9,25 @@ namespace ProductionLinesWEG.Models
     // atributos que será inserido na peca quando estiver sendo executada
     public class Atributo
     {
-        public string Name { get; private set; }
+        public string IdP { get; private set; }
+        public string NameP { get; private set; }
         public string Value { get; set; }
         public string Estado { get; set; }
+        public DateTime Data { get; set; }
+        public int Time { get; set; }
 
         public static readonly string ESPERANDO = "Esperando";
         public static readonly string FAZENDO = "Fazendo";
         public static readonly string INTERROMPIDO = "Interrompido";
+        public static readonly string DEFEITO = "Defeito";
         public static readonly string FEITO = "Feito";
 
-        public Atributo(string name)
+        public Atributo(string idP, string nameP)
         {
-            Name = name;
+            IdP = idP;
+            NameP = nameP;
             Estado = ESPERANDO;
+            Data = DateTime.Now;
         }
     }
 }

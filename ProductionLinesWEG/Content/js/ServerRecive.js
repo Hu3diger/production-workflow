@@ -73,21 +73,6 @@ function ServerReciveMethods() {
         }
 
         try {
-            $("#esteirasModelProd").html("");
-            $("#esteirasArmaProd").html("");
-            $("#esteirasEtiqProd").html("");
-            $("#esteirasDesvioProd").html("");
-
-            // Pagina Produção
-            generateListEsteiraProd(jsonRecived.listModel, $("#esteirasModelProd"), 1);
-            generateListEsteiraProd(jsonRecived.listArmazenamento, $("#esteirasArmaProd"), 2);
-            generateListEsteiraProd(jsonRecived.listEtiquetadora, $("#esteirasEtiqProd"), 3);
-            generateListEsteiraProd(jsonRecived.listDesvio, $("#esteirasDesvioProd"), 4);
-        } catch (e) {
-            // null
-        }
-
-        try {
             $("#tmodelo tbody").html("");
             $("#tarmazenamento tbody").html("");
             $("#tetiquetadora tbody").html("");

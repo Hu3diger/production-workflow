@@ -47,14 +47,41 @@ namespace ProductionLinesWEG.Models
 
     public class Processo : ICloneable
     {
+        private static long idMaster = 1;
+        private int idClones = 1;
         public BaseProcesso BaseProcesso;
 
-
+        public string Id { get; private set; }
         public string Name { get => BaseProcesso.Name; }
         public string Description { get => BaseProcesso.Description; }
         public int Runtime { get => BaseProcesso.Runtime; }
         public double VariationRuntime { get => BaseProcesso.VariationRuntime; }
         public double ErrorProbability { get => BaseProcesso.ErrorProbability; }
+
+        public int RuntimeWithVariation
+        {
+            get
+            {
+                int t = Convert.ToInt32((Runtime / 100) * VariationRuntime);
+                Random rnd = new Random();
+
+                int r = rnd.Next(t * -1, t) + Runtime;
+
+                if (r < 0) r = 0;
+
+                return r;
+            }
+        }
+
+        public bool InSuccess
+        {
+            get
+            {
+                Random rnd = new Random();
+
+                return rnd.Next(1, 101) > ErrorProbability;
+            }
+        }
 
         public int Errors { get; private set; }
         public bool InProcess { get; set; }
@@ -69,6 +96,15 @@ namespace ProductionLinesWEG.Models
         /// </summary>
         /// <param name="baseProcesso">A base em comum entre todos os processos que recebem ele</param>
         public Processo(BaseProcesso baseProcesso)
+        {
+            Id = "p" + idMaster++;
+            BaseProcesso = baseProcesso;
+            Errors = 0;
+            InProcess = false;
+            ListProcessos = new List<Processo>();
+        }
+
+        public Processo(BaseProcesso baseProcesso, bool clean)
         {
             BaseProcesso = baseProcesso;
             Errors = 0;
@@ -99,7 +135,7 @@ namespace ProductionLinesWEG.Models
         {
             if (Father != null)
             {
-                Father = new Processo(new BaseProcesso(Father.Name, "", 0));
+                Father = new Processo(new BaseProcesso(Father.Name, "", 0), true);
             }
         }
         /// <summary>
@@ -289,6 +325,8 @@ namespace ProductionLinesWEG.Models
             p.ListProcessos = CloneList();
 
             p.Father = null;
+
+            p.Id = this.Id + "c" + (idClones++);
 
             p.ListProcessos.ForEach(x =>
             {

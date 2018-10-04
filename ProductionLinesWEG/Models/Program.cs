@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNet.SignalR;
 using ProductionLinesWEG.Hub;
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -30,7 +32,7 @@ namespace ProductionLinesWEG.Models
         // como esteiras, processos e mensagens do dashboard
         public readonly List<Processo> listProcessos = new List<Processo>();
         public readonly List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
-        public readonly List<Dashboard> listDashboard = new List<Dashboard>();
+        public readonly IList listDashboard = ArrayList.Synchronized(new List<Dashboard>());
 
         public int IdCloneEm { get; set; }
         public int IdCloneEa { get; set; }
@@ -66,12 +68,19 @@ namespace ProductionLinesWEG.Models
         // verifica se a lista de mensagem e as deleta caso não seja criatica depois de uma determina posição
         private void verificarDashboard()
         {
-            if (listDashboard.Count > 10)
+            try
             {
-                if (!listDashboard[10].Critico)
+                if (listDashboard.Count > 10)
                 {
-                    listDashboard.RemoveAt(10);
+                    if (!((Dashboard)listDashboard[10]).Critico)
+                    {
+                        listDashboard.RemoveAt(10);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                toDashboard("Error 'verificarDashboard': " + e.Message, true);
             }
         }
         // adiciona um processo na lista e exibe uma mensagem ao dashboard
@@ -241,7 +250,7 @@ namespace ProductionLinesWEG.Models
         // possa ser convertida em json sem entrar em loop recurssivo
         public List<Processo> getProcessoToClient()
         {
-            Processo p = new Processo(new BaseProcesso("x", "x", 0));
+            Processo p = new Processo(new BaseProcesso("x", "x", 0), true);
 
             p.insertList(listProcessos.Where(x => x.Father == null).ToList());
 
@@ -305,7 +314,7 @@ namespace ProductionLinesWEG.Models
 
             listEsteiras.ForEach(x =>
             {
-                x.removeAllInput();
+                x.RemoveAllInput();
                 x.RemoveAllOutput();
 
                 if (x.IsClone) listEsteiraAux.Add(x);

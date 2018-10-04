@@ -4,14 +4,18 @@ var countIdEa = 0;
 var countIdEe = 0;
 var countIdEd = 0;
 
+var instances2;
 var idModal = "modal41";
 var sobre = "";
 
 var minX = 1;
 var minY = 1;
 
+var ListPieces = [];
+
 $(document).ready(function () {
-    $('.modal').modal();
+    $('.modal1').modal();
+    $('.modal2').modal();
 });
 
 function getIds() {
@@ -44,9 +48,23 @@ function setDropDragItens() {
 
     // TESTES APENAS
     $(".dragClone").click(function () {
-        connector.server.getInformationEsteira($(this).attr("id")).done(function (obj) {
-            //console.log(obj);
-        });
+        let fn = "chumbarPecaEsteira(" + this.id + ")";
+        let tn = "changeOnOff(" + this.id + ")";
+        $("#btnChumbar").attr("onclick", fn);
+        $("#modalName").html("<b>"+ $(this).data().Name +"</b>");
+        $("#modalDescription").html("<b>Descrição da esteira</b>: "+ $(this).data().Description);
+        $("#modalLimit").html("<b>Limite de entrada</b>: "+ ($(this).data().InLimit == -1 ? "Limite infinito de " : $(this).data().InLimit) + " peças");
+        $("#modalType").html("<b>Tipo da esteira</b>: "+ $(this).data().Type); 
+        $("#modalAbout").html("<b>"+ sobre +"</b>");
+        
+        $("#modalSwitch").html('\
+            <label>\
+                Desligado\
+                <input id="onOffEsteira" type="checkbox" '+ ($(this).data().Ligado ? "checked='checked'" : "") + ' onclick="changeOnOff(' + this.id + ')">\
+                <span class="lever"></span>\
+                Ligado\
+            </label>\
+            ');
 
         switch ($(this).data().TypeN) {
             case 1:
@@ -63,63 +81,34 @@ function setDropDragItens() {
                 break;
         }
 
-        $("#modalId").html('\
-        <div id="'+ idModal + '" class="modal">\
-            <div class="modal-content">\
-            <div class="row">\
-                <div class="col s8">\
-                    <h5><b>' + $(this).data().Name + '</h5></b><br>\
-                    <p><b>Descrição da esteira</b>: '+ $(this).data().Description + '</p>\
-                    <p><b>Limite de entrada</b>: '+ (($(this).data().InLimit == -1) ? "Limite infinito de" : $(this).data().InLimit) + ' peças</p>\
-                    <p><b>Tipo da esteira</b>: '+ $(this).data().Type + '</p>\
-                    <p><b>'+ sobre + '</b></p>\
-                </div>\
-                <div class="col s4">\
-                    <p>Status da esteira</p>\
-                    <div class="switch">\
-                        <label>\
-                            Desligado\
-                            <input id="onOffEsteira" type="checkbox" '+ ($(this).data().Ligado ? "checked='checked'" : "") + ' onclick="changeOnOff(' + this.id + ')">\
-                            <span class="lever"></span>\
-                            Ligado\
-                        </label>\
-                    </div>\
-                    <br>\
-                    <div class="input-field col s8">\
-                        <input id="numberC" type="number" value="1" min="1" class="active validate">\
-                        <label class="active" for="numberC">Peças p/ chumbar</label>\
-                    </div>\
-                    <a class="waves-effect waves-light btn green darken-4" onclick="chumbarPecaEsteira(' + this.id + ')">Chumbar peça</a>\
-                </div>\
-            </div>\
-            <div class="row">\
-                <div class="col s12">\
-                    <table>\
-                        <tr>\
-                            <th>Peças na fila de entrada</th>\
-                            <th>Peça em produção</th>\
-                        </tr>\
-                        <tr>\
-                            <td>Banana de aço</td>\
-                            <td>Banana de ferro</td>\
-                        </tr>\
-                        <tr>\
-                            <td>Banana de aço</td>\
-                        </tr>\
-                        <tr>\
-                            <td>Banana de borracha</td>\
-                        </tr>\
-                    </table>\
-                </div>\
-            </div>\
-        </div>\
-        <div class="modal-footer">\
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>\
-        </div>\
-        ');
+        connector.server.getPieces($(this).attr("id")).done(function (json) {
+            console.log(json);
+            ListPieces = json;
 
-        $('.modal').modal();
+            let html = "";
+
+            html += '\
+                <tr>\
+                    <th>Peças na fila de entrada</th>\
+                    <th></th>\
+                </tr>\
+            ';
+
+            for (var i = 0; i < json.length; i++) {
+                html += '\
+                    <tr>\
+                        <td>'+ json[i].Tag +'</td>\
+                        <td><a class="modal-trigger" href="#modal40" onclick="modal2show('+i+')">Detalhes</a></td>\
+                    </tr>\
+                ';
+            }
+
+            $("#tablePieces").html(html);
+        })
+        
+        $('.modal2').modal('close');
     });
+
 
     $(".dragClone").draggable({
         revert: 'invalid',
@@ -239,6 +228,39 @@ function setDropDragItens() {
             }
         }
     });
+}
+
+function modal2show(i) {
+    var html = "";
+    $("#modalTag").html("<b>Tag:</b> " + ListPieces[i].Tag);
+
+    html += "\
+    <tr>\
+        <th>Id</th>\
+        <th>Nome</th>\
+        <th>Estado</th>\
+        <th>Value</th>\
+        <th>Data</th>\
+        <th>Tempo Exc.</th>\
+    </tr>\
+    ";
+
+
+    let list = ListPieces[i].ListAtributos;
+    for (var j = 0; j < list.length; j++) {
+        html += "\
+            <tr>\
+                <td>"+ list[j].IdP +"</td>\
+                <td>"+ list[j].NameP +"</td>\
+                <td>"+ list[j].Estado +"</td>\
+                <td>"+ list[j].Value +"</td>\
+                <td>"+ list[j].Data +"</td>\
+                <td>"+ list[j].Time +"ms</td>\
+            </tr>\
+        ";
+    }
+
+    $("#tableAtPiece").html(html);
 }
 
 function changeOnOff(obj) {
@@ -748,9 +770,10 @@ function assignItemsTable(mapCells) {
                             div.data(i, item);
                         });
 
-                        div.attr("data-target", idModal);
-
-                        div.data("Ligado", item.Esteira.Ligado);
+                        if (item.Esteira) {
+                            div.attr("data-target", idModal);
+                            div.data("Ligado", item.Esteira.Ligado);
+                        }
                     }
                 }
             }
@@ -794,4 +817,10 @@ function clearContent() {
     } else {
         console.log("Object not found");
     }
+}
+
+
+
+function closeModal40(){
+    $('.modal2').modal('close');
 }
