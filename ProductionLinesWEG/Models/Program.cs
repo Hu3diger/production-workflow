@@ -27,12 +27,16 @@ namespace ProductionLinesWEG.Models
             }
         }
         public bool InSimulation { get; set; }
+        public int InDashboard { get; set; }
+        public int NivelDash { get; set; }
+        private int clearTick;
 
         // lista apenas de leitura que armazena os objetos do programa
         // como esteiras, processos e mensagens do dashboard
         public readonly List<Processo> listProcessos = new List<Processo>();
         public readonly List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
         public readonly IList listDashboard = ArrayList.Synchronized(new List<Dashboard>());
+        public readonly IList listTickDashboard = ArrayList.Synchronized(new List<Dashboard>());
 
         public int IdCloneEm { get; set; }
         public int IdCloneEa { get; set; }
@@ -57,30 +61,20 @@ namespace ProductionLinesWEG.Models
             MinY = 1;
 
             InSimulation = false;
+            InDashboard = 0;
+            NivelDash = 1;
         }
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
-        public void toDashboard(string message, bool critico)
+        public void toDashboard(string message, int nivel)
         {
-            listDashboard.Insert(0, new Dashboard(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), message, critico));
-            verificarDashboard();
-        }
-
-        // verifica se a lista de mensagem e as deleta caso não seja criatica depois de uma determina posição
-        private void verificarDashboard()
-        {
-            try
+            if (nivel == 3)
             {
-                if (listDashboard.Count > 10)
-                {
-                    if (!((Dashboard)listDashboard[10]).Critico)
-                    {
-                        listDashboard.RemoveAt(10);
-                    }
-                }
+                listDashboard.Insert(0, new Dashboard(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), message, nivel));
             }
-            catch (Exception e)
+
+            if (InDashboard > 0)
             {
-                toDashboard("Error 'verificarDashboard': " + e.Message, true);
+                listTickDashboard.Add(new Dashboard(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), message, nivel));
             }
         }
         // adiciona um processo na lista e exibe uma mensagem ao dashboard
@@ -199,7 +193,7 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
 
-            toDashboard("Sistema pré-carregado com processos\n", false);
+            toDashboard("Sistema pré-carregado com processos\n", 1);
 
 
 
@@ -231,7 +225,7 @@ namespace ProductionLinesWEG.Models
 
             attAllListBox();
 
-            toDashboard("Sistema pré-carregado com esteiras\n", false);
+            toDashboard("Sistema pré-carregado com esteiras\n", 1);
         }
 
         // liga a esteira para iniciar os processos
@@ -518,10 +512,61 @@ namespace ProductionLinesWEG.Models
             return listMapCell;
         }
 
+        public void alterFatherProcess(string nameP, int pos, Processo f)
+        {
 
+            listProcessos.ForEach(x =>
+            {
+                if (x.Name.Equals(nameP))
+                {
+                    x.removerFather();
+                    f.AddInternalProcess(pos - 1, x);
+                }
+            });
 
+        }
 
+        public void removeProcess(Processo p)
+        {
+            listProcessos.FindAll(x => x.Name.Equals(p.Name)).ForEach(y =>
+            {
+                // pega todos os filhos e os remove (com o proprio processo junto)
+                y.GetInternalOrderProcess().ForEach(z =>
+                {
+                    if (ArrayMapCells != null)
+                    {
+                        for (int i = 0; i < ArrayMapCells.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < ArrayMapCells.GetLength(1); j++)
+                            {
+                                MapCell aux = (MapCell)ArrayMapCells.GetValue(i, j);
 
+                                if (aux != null && aux.Esteira != null && aux.Esteira is EsteiraModel && ((EsteiraModel)aux.Esteira).NameProcessMaster.Equals(z.Name))
+                                {
+                                    aux.Esteira = null;
+                                    ArrayMapCells[i, j] = null;
+                                }
+                            }
+
+                        }
+                    }
+
+                    listEsteiras.FindAll(h => h is EsteiraModel).FindAll(j => ((EsteiraModel)j).NameProcessMaster.Equals(z.Name)).ForEach(e => listEsteiras.Remove(e));
+                    z.removerFather();
+                    listProcessos.Remove(z);
+                });
+            });
+
+        }
+
+        public void clearListTickDashboard()
+        {
+            if (++clearTick >= InDashboard)
+            {
+                clearTick = 0;
+                listTickDashboard.Clear();
+            }
+        }
     }
 
     // classe usada para armazenar as esteiras separadas por tipo definido

@@ -69,48 +69,50 @@ namespace ProductionLinesWEG.Hub
 
         // lista de logins para controle de acesso
         public static readonly List<Logins> listLogins = new List<Logins> {
-            new Logins("teste1",  "senha123", "OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
-            new Logins("teste2",  "senha123", "SKB/minqyPAptFbdNxdRMUJRyequO3vV3JLXd1DlnNo="),
-            new Logins("teste3",  "senha123", "R73l6UpSa0m2TKAwVfZWjlDwKbRUBF60Nz+lvo5zNsY="),
-            new Logins("teste4",  "senha123", "DY0EW9LSaamcN2kElmjBMj8O7ueqnA0eR/bsVjI5p+4="),
-            new Logins("teste5",  "senha123", "ZENQihH1ELif/yBmtQ7LpfBBgxja1IQ1rrX83UAsg1k="),
-            new Logins("teste6",  "senha123", "hDIOcptrDXxpgF2uR5vac0rwCp+2oL0O0tDYbbPTJ3Q="),
-            new Logins("teste7",  "senha123", "ZwRQjIzNwlWGlUtEw3ZLH4QNbgIuhfMRlvNnuIpFwk8="),
-            new Logins("teste8",  "senha123", "OcuBennwdzY0eaPwdQVpjEi4PkixkDizuvf+ONhGhhE="),
-            new Logins("teste9",  "senha123", "uaC/BujQFm3HsZv3cJy9oEQPMU1z6KUbTOfzx9dA8dw="),
-            new Logins("teste10", "senha123", "m+YxKSQTbs60IkCgpXeNTXA71nCyuD22s9CCk5AceRg="),
-            new Logins("teste11", "senha123", "9IiTO6J5/Qpfm3GxsI1BdI4LBJijxxUhPdXsvJ9Br68="),
-            new Logins("teste12", "senha123", "XsVZlNM1vdTBMnRwXRXX2og+DGwtnsFFBuUoNtUt0HQ="),
-            new Logins("teste13", "senha123", "rFjRfLB4yfWrXsDI/yfV+KqxaDXNcPbZ0/LftOBbte0="),
-            new Logins("teste14", "senha123", "qAsFeFMMKHR0BW+j/B+UJHyPldMUhb1NG4ckRfWkMQU="),
-            new Logins("teste15", "senha123", "HICxhJwT407lxTdFXC0ZuSDkjcUXXwUCvOyv2KEMBdA="),
-            new Logins("teste16", "senha123", "kum72wJmLuL7meRQ/FlcRnV0AjEElHQXZiWq7rNnb7A="),
-            new Logins("teste17", "senha123", "0va/K0rIllLzjg9TUE27PgjoIJp3OSaxMPxGGVjDMcE="),
-            new Logins("teste18", "senha123", "QtrUsnpimPQ6hJxLE0JHFx6aRrZscqmzECLgGH3Q+WU="),
+            new Logins("treina01",  "senha123", "OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
+            new Logins("treina02",  "senha123", "SKB/minqyPAptFbdNxdRMUJRyequO3vV3JLXd1DlnNo="),
+            new Logins("treina03",  "senha123", "R73l6UpSa0m2TKAwVfZWjlDwKbRUBF60Nz+lvo5zNsY="),
+            new Logins("treina04",  "senha123", "DY0EW9LSaamcN2kElmjBMj8O7ueqnA0eR/bsVjI5p+4="),
+            new Logins("treina05",  "senha123", "ZENQihH1ELif/yBmtQ7LpfBBgxja1IQ1rrX83UAsg1k="),
+            new Logins("treina06",  "senha123", "hDIOcptrDXxpgF2uR5vac0rwCp+2oL0O0tDYbbPTJ3Q="),
+            new Logins("treina07",  "senha123", "ZwRQjIzNwlWGlUtEw3ZLH4QNbgIuhfMRlvNnuIpFwk8="),
+            new Logins("treina08",  "senha123", "OcuBennwdzY0eaPwdQVpjEi4PkixkDizuvf+ONhGhhE="),
+            new Logins("treina09",  "senha123", "uaC/BujQFm3HsZv3cJy9oEQPMU1z6KUbTOfzx9dA8dw="),
+            new Logins("treina10", "senha123", "m+YxKSQTbs60IkCgpXeNTXA71nCyuD22s9CCk5AceRg="),
+            new Logins("treina11", "senha123", "9IiTO6J5/Qpfm3GxsI1BdI4LBJijxxUhPdXsvJ9Br68="),
+            new Logins("treina12", "senha123", "XsVZlNM1vdTBMnRwXRXX2og+DGwtnsFFBuUoNtUt0HQ="),
+            new Logins("treina13", "senha123", "rFjRfLB4yfWrXsDI/yfV+KqxaDXNcPbZ0/LftOBbte0="),
+            new Logins("treina14", "senha123", "qAsFeFMMKHR0BW+j/B+UJHyPldMUhb1NG4ckRfWkMQU="),
+            new Logins("treina15", "senha123", "HICxhJwT407lxTdFXC0ZuSDkjcUXXwUCvOyv2KEMBdA="),
+            new Logins("treina16", "senha123", "kum72wJmLuL7meRQ/FlcRnV0AjEElHQXZiWq7rNnb7A="),
+            new Logins("treina17", "senha123", "0va/K0rIllLzjg9TUE27PgjoIJp3OSaxMPxGGVjDMcE="),
+            new Logins("treina18", "senha123", "QtrUsnpimPQ6hJxLE0JHFx6aRrZscqmzECLgGH3Q+WU="),
+            new Logins("treina19", "senha123", "QtrUsnpimPQ6hJxLE0JHFx6aRrZscqmzECLgGH3Q+WU="),
             new Logins("kappa", "kappasenha", "n1ePewjNIpySkXfpU+Ylf4nsQfhZgNKxDQ8vOptDVsg=")
         };
 
         // lista de programas, "sessões"
         public static readonly List<Program> listProgram = new List<Program>() {
-            new Program(listLogins[0]),
-            new Program(listLogins[1]),
-            new Program(listLogins[2]),
-            new Program(listLogins[3]),
-            new Program(listLogins[4]),
-            new Program(listLogins[5]),
-            new Program(listLogins[6]),
-            new Program(listLogins[7]),
-            new Program(listLogins[8]),
-            new Program(listLogins[9]),
-            new Program(listLogins[10]),
-            new Program(listLogins[11]),
-            new Program(listLogins[12]),
-            new Program(listLogins[13]),
-            new Program(listLogins[14]),
-            new Program(listLogins[15]),
-            new Program(listLogins[16]),
-            new Program(listLogins[17]),
-            Testes.loadProgramTeste(listLogins[18])
+            Testes.loadProgramTeste(listLogins[0]),
+            Testes.loadProgramTeste(listLogins[1]),
+            Testes.loadProgramTeste(listLogins[2]),
+            Testes.loadProgramTeste(listLogins[3]),
+            Testes.loadProgramTeste(listLogins[4]),
+            Testes.loadProgramTeste(listLogins[5]),
+            Testes.loadProgramTeste(listLogins[6]),
+            Testes.loadProgramTeste(listLogins[7]),
+            Testes.loadProgramTeste(listLogins[8]),
+            Testes.loadProgramTeste(listLogins[9]),
+            Testes.loadProgramTeste(listLogins[10]),
+            Testes.loadProgramTeste(listLogins[11]),
+            Testes.loadProgramTeste(listLogins[12]),
+            Testes.loadProgramTeste(listLogins[13]),
+            Testes.loadProgramTeste(listLogins[14]),
+            Testes.loadProgramTeste(listLogins[15]),
+            Testes.loadProgramTeste(listLogins[16]),
+            Testes.loadProgramTeste(listLogins[17]),
+            Testes.loadProgramTeste(listLogins[18]),
+            Testes.loadProgramTeste(listLogins[19]),
         };
 
         // lista de sessões para controle de usuarios
@@ -308,7 +310,7 @@ namespace ProductionLinesWEG.Hub
                 if (pgm != null)
                 {
                     // invoca uma função do cliente para aceita-lo
-                    RegisterMessageDashboard("Logado com sucesso", false, true);
+                    RegisterMessageDashboard("Logado com sucesso", 1, true);
                     Clients.Caller.acceptLoginUser(l.AuthId);
                 }
                 else
@@ -396,13 +398,13 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
-        public void RegisterMessageDashboard(string message, bool critical, bool thisClient)
+        public void RegisterMessageDashboard(string message, int nivel, bool thisClient)
         {
             Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
-                pgm.toDashboard(message, critical);
+                pgm.toDashboard(message, nivel);
 
                 if (thisClient)
                 {
@@ -459,25 +461,25 @@ namespace ProductionLinesWEG.Hub
                         {
                             if (pcss.FindInternalProcess(name) == null)
                             {
-                                pcss.AddInternalProcess(position - 1, p);
+                                pgm.alterFatherProcess(name, position, pcss);
                             }
                             else
                             {
-                                RegisterMessageDashboard("Error: In Create: '" + name + "' Internal Process Found", false, true);
+                                RegisterMessageDashboard("Error: In Create: '" + name + "' Internal Process Found", 3, true);
                             }
                         }
                         else
                         {
-                            RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", false, true);
+                            RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", 2, true);
                         }
                     }
 
-                    RegisterMessageDashboard("Processo '" + name + "' Criado", false, true);
+                    RegisterMessageDashboard("Processo '" + name + "' Criado", 1, true);
                     CallListProcess();
                 }
                 else
                 {
-                    RegisterMessageDashboard("Processo '" + name + "' já existente", false, true);
+                    RegisterMessageDashboard("Processo '" + name + "' já existente", 2, true);
                 }
             }
         }
@@ -509,12 +511,11 @@ namespace ProductionLinesWEG.Hub
 
                             if (pcssF != null)
                             {
-                                pcss.removerFather();
-                                pcssF.AddInternalProcess(position - 1, pcss);
+                                pgm.alterFatherProcess(newName, position, pcssF);
                             }
                             else
                             {
-                                RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", false, true);
+                                RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", 2, true);
                             }
                         }
                         else
@@ -522,17 +523,17 @@ namespace ProductionLinesWEG.Hub
                             pcss.removerFather();
                         }
 
-                        RegisterMessageDashboard("Processo '" + newName + "' Alterado", false, true);
+                        RegisterMessageDashboard("Processo '" + newName + "' Alterado", 1, true);
                         CallListProcess();
                     }
                     else
                     {
-                        RegisterMessageDashboard("Error: Find Process: '" + oldName + "'", false, true);
+                        RegisterMessageDashboard("Error: Find Process: '" + oldName + "'", 3, true);
                     }
                 }
                 else
                 {
-                    RegisterMessageDashboard("Processo '" + newName + "' já existente", false, true);
+                    RegisterMessageDashboard("Processo '" + newName + "' já existente", 2, true);
                 }
             }
         }
@@ -549,19 +550,14 @@ namespace ProductionLinesWEG.Hub
 
                 if (p != null)
                 {
-                    // pega todos os filhos e os remove (com o proprio processo junto)
-                    p.GetInternalOrderProcess().ForEach(x =>
-                    {
-                        x.removerFather();
-                        pgm.listProcessos.Remove(x);
-                    });
+                    pgm.removeProcess(p);
 
-                    RegisterMessageDashboard("Processo '" + name + "' Deletado", false, true);
+                    RegisterMessageDashboard("Processo '" + name + "' Deletado", 1, true);
                     CallListProcess();
                 }
                 else
                 {
-                    RegisterMessageDashboard("Error: Find Process: '" + name + "'", false, true);
+                    RegisterMessageDashboard("Error: Find Process: '" + name + "'", 3, true);
                 }
 
 
@@ -650,7 +646,7 @@ namespace ProductionLinesWEG.Hub
                             }
                             else
                             {
-                                RegisterMessageDashboard("Processo '" + additional + "' não encontrado", false, true);
+                                RegisterMessageDashboard("Processo in Select '" + additional + "' não encontrado", 3, true);
                             }
 
                             break;
@@ -671,19 +667,19 @@ namespace ProductionLinesWEG.Hub
                             }
                             catch (System.Exception)
                             {
-                                RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", true, true);
+                                RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
                             }
 
                             break;
 
                         // esteira de desvio
                         case 4:
-                            RegisterMessageDashboard("Não é possivel criar esteiras desviadoras ainda", false, true);
+                            RegisterMessageDashboard("Não é possivel criar esteiras desviadoras ainda", 2, true);
                             break;
 
                         // caso seja bulado o sistema de tipo, cai aqui
                         default:
-                            RegisterMessageDashboard("Error: Default type in CreateEsteira", true, true);
+                            RegisterMessageDashboard("Error: Default type in CreateEsteira", 3, true);
                             break;
                     }
 
@@ -691,13 +687,13 @@ namespace ProductionLinesWEG.Hub
                     if (e != null)
                     {
                         pgm.CriarEsteira(e);
-                        RegisterMessageDashboard("Esteira '" + name + "' Criada", false, true);
+                        RegisterMessageDashboard("Esteira '" + name + "' Criada", 1, true);
                         CallListEsteira();
                     }
                 }
                 else
                 {
-                    RegisterMessageDashboard("Esteira '" + name + "' já existente", false, true);
+                    RegisterMessageDashboard("Esteira '" + name + "' já existente", 2, true);
                 }
             }
         }
@@ -919,12 +915,12 @@ namespace ProductionLinesWEG.Hub
                     pgm.MinX = recivedServ.minX;
                     pgm.MinY = recivedServ.minY;
 
-                    RegisterMessageDashboard("Project Saved", false, true);
+                    RegisterMessageDashboard("Projeto Salvo", 1, true);
 
                 }
                 catch (Exception e)
                 {
-                    RegisterMessageDashboard(e.Message, false, true);
+                    RegisterMessageDashboard(e.Message, 3, true);
                 }
             }
         }
@@ -941,13 +937,19 @@ namespace ProductionLinesWEG.Hub
 
                 if (e != null)
                 {
-                    pgm.InSimulation = true;
                     e.TurnOn(pgm);
-                    RegisterMessageDashboard("Simulação iniciada, Alterações travadas", true, false);
+                    RegisterMessageDashboard("Esteira '" + e.Name + "' ligada", 1, false);
+
+                    if (!pgm.InSimulation)
+                    {
+                        RegisterMessageDashboard("Simulação iniciada, Alterações travadas", 2, false);
+                    }
+
+                    pgm.InSimulation = true;
                 }
                 else
                 {
-                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", false, true);
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
                 }
 
             }
@@ -966,11 +968,11 @@ namespace ProductionLinesWEG.Hub
                 if (e != null)
                 {
                     e.TurnOff();
-                    RegisterMessageDashboard("Simulação parada, Alterações destravadas", true, false);
+                    RegisterMessageDashboard("Esteira '" + e.Name + "' desligada", 1, false);
                 }
                 else
                 {
-                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", false, true);
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
                 }
 
                 bool controlePgm = false;
@@ -985,6 +987,11 @@ namespace ProductionLinesWEG.Hub
                 }
 
                 pgm.InSimulation = controlePgm;
+
+                if (!pgm.InSimulation)
+                {
+                    RegisterMessageDashboard("Simulação parada, Alterações destravadas", 2, false);
+                }
             }
         }
 
@@ -1016,16 +1023,16 @@ namespace ProductionLinesWEG.Hub
 
                     if (i < qtd)
                     {
-                        RegisterMessageDashboard("Inseridas " + i + " peças na esteira '" + e.Name + "' (limite atingido)", false, true);
+                        RegisterMessageDashboard("Inseridas " + i + " peças na esteira '" + e.Name + "' (limite atingido)", 2, true);
                     }
                     else
                     {
-                        RegisterMessageDashboard("Inseridas " + i + " peças na esteira '" + e.Name + "'", false, true);
+                        RegisterMessageDashboard("Inseridas " + i + " peças na esteira '" + e.Name + "'", 1, true);
                     }
                 }
                 else
                 {
-                    RegisterMessageDashboard("Pare a simulação e salve o programa para que as alterações tenham efeito", false, true);
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
                 }
 
             }
@@ -1048,7 +1055,7 @@ namespace ProductionLinesWEG.Hub
                 }
                 else
                 {
-                    RegisterMessageDashboard("Pare a simulação e salve o programa para que as alterações tenham efeito", false, true);
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
                 }
 
             }
@@ -1074,12 +1081,18 @@ namespace ProductionLinesWEG.Hub
             if (pgm != null)
             {
                 inDashboard = true;
+                pgm.InDashboard++;
 
                 Clients.Caller.showToast("Initialized Dashboard");
+
+                Clients.Caller.setNivelDash(pgm.NivelDash);
+
+                Clients.Caller.reciveListDashboard(pgm.listDashboard);
                 while (inDashboard)
                 {
-                    Clients.Caller.reciveDashboard(pgm.listDashboard);
-                    await Task.Delay(200);
+                    Clients.Caller.reciveTickDashboard(pgm.listTickDashboard);
+                    await Task.Delay(500);
+                    pgm.clearListTickDashboard();
                 }
                 Clients.Caller.showToast("Finished Dashboard");
             }
@@ -1095,6 +1108,16 @@ namespace ProductionLinesWEG.Hub
             {
                 pgm.listDashboard.Clear();
                 Clients.Caller.showToast("Dashboard cleaned");
+            }
+        }
+
+        public void alterDash(int nivel)
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                pgm.NivelDash = nivel;
             }
         }
     }

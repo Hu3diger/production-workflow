@@ -30,105 +30,159 @@ namespace ProductionLinesWEG.Models
             {
                 EsteiraModel em = (EsteiraModel)e;
 
-                while (true)
+                if (em.EsteiraOutput == null)
                 {
-                    // verifica se a esteira esta em condição de operação (masterProcess existe) antes de iniciar
-                    if (em.IsInCondition())
+                    program.toDashboard("Abortando inicio: '" + em.Name + "' sem Output", 2);
+                    em.TurnOff();
+                }
+                else
+                {
+                    while (true)
+                    {
+                        // verifica se a esteira esta em condição de operação (masterProcess existe) antes de iniciar
+                        if (em.IsInCondition())
+                        {
+                            // pega a primeira peça da fila
+                            Peca pc = em.GetInputPieceNoRemove();
+
+                            if (pc != null)
+                            {
+                                int run = 0;
+                                // reseta o processo para iniciar o ciclo todo novamente
+                                em.ResetProcess();
+
+                                // verifica se existe processo adiante
+                                while (em.HasNextProcess())
+                                {
+                                    Processo ps = em.NextProcess();
+                                    Atributo at = new Atributo(ps.Id, ps.Name);
+
+                                    pc.addAtributo(at);
+
+                                    program.toDashboard(ps.Name + "(" + ps.Id + ") Executando em " + em.Name, 4);
+
+                                    run = ps.RuntimeWithVariation;
+
+                                    // seta atributo
+                                    at.Estado = Atributo.FAZENDO;
+
+                                    // simula o tempo de um proceso real 
+                                    Thread.Sleep(run);
+                                    at.Time = run;
+
+                                    // seta atributo
+                                    if (ps.InSuccess)
+                                    {
+                                        at.Estado = Atributo.FEITO;
+                                    }
+                                    else
+                                    {
+                                        at.Estado = Atributo.DEFEITO;
+                                    }
+
+                                    program.toDashboard(ps.Name + " Finalizado", 4);
+                                }
+
+                                // finalia o processo para ter um novo ciclo
+                                em.FinalizeProcess();
+
+                                program.toDashboard("Esteira: (" + em.Name + ")Bateria de processos finalizados", 4);
+
+                                while (!em.PassPiece())
+                                {
+                                    program.toDashboard(em.Name + " aguardando envio para a proxima esteira", 4);
+                                    Thread.Sleep(250);
+                                }
+                            }
+                            else
+                            {
+                                // fica esperando a peca (250ms para não sobrecarregar o servidor)
+                                Thread.Sleep(250);
+                            }
+                        }
+                        else
+                        {
+                            program.toDashboard("Inserir um 'Master Process' na esteira (não é possivel iniciar)", 3);
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (e is EsteiraEtiquetadora)
+            {
+                EsteiraEtiquetadora em = (EsteiraEtiquetadora)e;
+
+                if (em.EsteiraOutput == null)
+                {
+                    program.toDashboard("Abortando inicio: '" + em.Name + "' sem Output", 2);
+                    em.TurnOff();
+                }
+                else
+                {
+                    while (true)
                     {
                         // pega a primeira peça da fila
                         Peca pc = em.GetInputPieceNoRemove();
 
                         if (pc != null)
                         {
-                            int run = 0;
-                            // reseta o processo para iniciar o ciclo todo novamente
-                            em.ResetProcess();
+                            em.InsertTag();
 
-                            // verifica se existe processo adiante
-                            while (em.HasNextProcess())
+                            program.toDashboard("(" + em.Name + ") Peça entiquetada com: '" + pc.Tag + "'", 4);
+
+                            while (!em.PassPiece())
                             {
-                                Processo ps = em.NextProcess();
-                                Atributo at = new Atributo(ps.Id, ps.Name);
-
-                                pc.addAtributo(at);
-
-                                program.toDashboard(ps.Name + "("+ps.Id+") Executando em " + em.Name, false);
-
-                                run = ps.RuntimeWithVariation;
-
-                                // seta atributo
-                                at.Estado = Atributo.FAZENDO;
-
-                                // simula o tempo de um proceso real 
-                                Thread.Sleep(run);
-                                at.Time = run;
-
-                                // seta atributo
-                                if (ps.InSuccess)
-                                {
-                                    at.Estado = Atributo.FEITO;
-                                }
-                                else
-                                {
-                                    at.Estado = Atributo.DEFEITO;
-                                }
-
-                                program.toDashboard(ps.Name + " Finalizado", false);
+                                program.toDashboard(em.Name + " aguardando envio para a proxima esteira", 4);
+                                Thread.Sleep(250);
                             }
-
-                            // finalia o processo para ter um novo ciclo
-                            em.FinalizeProcess();
-
-                            if (em.EsteiraOutput == null)
-                            {
-                                program.toDashboard("Desligando esteira " + em.Name + ", sem esteiras para envio", true);
-                                em.TurnOff();
-                            }
-
-                            Peca p = em.PassPiece();
-
-                            while (p == null)
-                            {
-                                p = em.PassPiece();
-
-                                if (p != null)
-                                {
-                                    program.toDashboard(em.Name + " aguardando envio para a proxima esteira", false);
-                                    Thread.Sleep(250);
-                                }
-                            }
-
-                            program.toDashboard("Exibindo atributos da peca recém 'feita':", false);
-
-                            // exibe todos os estados do processo (atributos)
-                            p.ListAtributos.ForEach(x => program.toDashboard("Processo: " + x.NameP + " / Estado: " + x.Estado, false));
-
-                            program.toDashboard("Droped First / End\n", false);
                         }
                         else
                         {
-                            //if (countShow++ > 5)
-                            //{
-                            //    program.toDashboard(em.Name + " esperando Peça", false);
-                            //    countShow = 0;
-                            //}
                             // fica esperando a peca (250ms para não sobrecarregar o servidor)
                             Thread.Sleep(250);
                         }
                     }
-                    else
+                }
+            }
+            else if (e is EsteiraArmazenamento)
+            {
+                EsteiraArmazenamento em = (EsteiraArmazenamento)e;
+
+                if (em.EsteiraOutput == null)
+                {
+                    program.toDashboard("Abortando inicio: '" + em.Name + "' sem Output", 2);
+                    em.TurnOff();
+                }
+                else
+                {
+                    while (true)
                     {
-                        program.toDashboard("Insert a master process in Esteira", false);
-                        break;
+                        // pega a primeira peça da fila
+                        Peca pc = em.GetInputPieceNoRemove();
+
+                        if (pc != null)
+                        {
+                            while (!em.PassPiece())
+                            {
+                                program.toDashboard(em.Name + " aguardando envio para a proxima esteira", 4);
+                                Thread.Sleep(250);
+                            }
+                        }
+                        else
+                        {
+                            // fica esperando a peca (250ms para não sobrecarregar o servidor)
+                            Thread.Sleep(250);
+                        }
                     }
                 }
             }
+            else if (e is EsteiraDesvio)
+            {
+
+            }
             else
             {
-                //while (true)
-                //{
-
-                //}
+                program.toDashboard("Thread init Error", 3);
             }
         }
     }

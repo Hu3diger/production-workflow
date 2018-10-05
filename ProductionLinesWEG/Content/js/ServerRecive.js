@@ -19,7 +19,7 @@ function ServerReciveMethods() {
     };
     var t = true;
     //função para atualizar o dashboard
-    connector.client.reciveDashboard = function (jMessage) {
+    connector.client.reciveListDashboard = function (jMessage) {
         try {
             var jsonDashboard = [];
 
@@ -42,10 +42,31 @@ function ServerReciveMethods() {
         }
     };
 
+    connector.client.reciveTickDashboard = function (jMessage) {
+        try {
+            console.log(jMessage);
+
+            $(jMessage).each(function () {
+                if (this.Nivel == parseInt($("#nivelDash :selected").val()) || parseInt($("#nivelDash :selected").val()) == 4) {
+                    $("#xuxu").prepend(
+                        "<tr><td>" +
+                        this.Date +
+                        "</td><td>" +
+                        this.Message +
+                        "</td></tr>"
+                    );
+                }
+            });
+
+        } catch (e) {
+
+        }
+    }
+
     //lista os processos na tela de processos
     connector.client.listProcessos = function (jsonRecived) {
         $("#listProcesso").html("");
-        limpaInfo();
+        $("#info").html("");
 
         generateList(jsonRecived, $("#listProcesso"));
     }
@@ -90,4 +111,34 @@ function ServerReciveMethods() {
         }
     }
 
+    connector.client.setNivelDash = function (nivel) {
+        var html = '';
+
+        if (nivel == 1) {
+            html += '<option value="1" selected>Nível de mensagem</option>';
+        } else {
+            html += '<option value="1">Nível de mensagem</option>';
+        }
+
+        if (nivel == 2) {
+            html += '<option value="2" selected>Nível de aviso</option>';
+        } else {
+            html += '<option value="2">Nível de aviso</option>';
+        }
+
+        if (nivel == 3) {
+            html += '<option value="3" selected>Nível de erro</option>';
+        } else {
+            html += '<option value="3">Nível de erro</option>';
+        }
+
+        if (nivel == 4) {
+            html += '<option value="4" selected>Nível de debug</option>';
+        } else {
+            html += '<option value="4">Nível de debug</option>';
+        }
+
+        $("#nivelDash").html(html);
+        $('select').formSelect();
+    }
 };

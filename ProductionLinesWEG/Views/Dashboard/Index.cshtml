@@ -6,13 +6,23 @@
 <!-- Page content -->
 <div class="row">
     <div class="col s12 m8 offset-m2"><br>
+        <div class="row">
+            <div class="col s6">
+                <select id="nivelDash">
+                    <option value="1" selected>Nível de mensagem</option>
+                    <option value="2">Nível de aviso</option>
+                    <option value="3">Nível de erro</option>
+                    <option value="4">Nível de debug</option>
+                </select>
+                <label>Nível de dashboard</label>    
+            </div>
         <a class="waves-effect waves-light btn right red darken-4" onclick="clearDashboard()"><i class="material-icons left">clear_all</i>Limpar</a>
+        </div>
         <table class="stripped highlight" id="banana">
             <thead>
                 <tr>
                     <th>Horario</th>
                     <th>Mensagem</th>
-                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody id="xuxu"></tbody>

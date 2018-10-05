@@ -5,24 +5,12 @@
 function inserirT(jsonDash) {
     $("#xuxu").html("");
 
-    if (jsonDash.length > 5) {
-        if (!jsonDash[5].critico) {
-            jsonDash.splice(5, 1);
-        }
-    }
-
     $(jsonDash).each(function () {
-        let btn = "";
-        if (this.critico) {
-            btn = '<a href="#">Details</a>';
-        }
         $("#xuxu").append(
             "<tr><td>" +
             this.horario +
             "</td><td>" +
             this.mensagem +
-            "</td><td>" +
-            btn +
             "</td></tr>"
         );
     });
@@ -55,3 +43,10 @@ function getHorario() {
     today = mm + "/" + dd + "/" + yyyy + " - " + hh + ":" + mn + ":" + ss;
     return today;
 }
+
+$(document).ready(function () {
+    $("#nivelDash").change(function(){
+        alterDash($("#nivelDash :selected").val());
+        $("#xuxu").html("");
+    });
+});

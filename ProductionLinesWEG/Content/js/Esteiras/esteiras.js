@@ -23,7 +23,7 @@ function showCreate() {
     <div class="input-field col s12 m8 offset-m2">\
       <select id="selectTE">\
           <option value="0" disabled selected>Selecione o tipo da esteira</option>\
-          <option value="1">Esteira Model</option>\
+          <option value="1">Esteira de processamento</option>\
           <option value="2">Esteira de armazenamento</option>\
           <option value="3">Esteira etiquetadora</option>\
           <option value="4">Esteira de desvio</option>\
@@ -31,7 +31,8 @@ function showCreate() {
       <label>Tipo de esteira</label>\
     </div>\
     </div>\
-      <div class="row" id="more">\</div>\
+      <div class="row" id="more">\
+      </div>\
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
         <a class="waves-effect waves-light btn left red darken-4" onclick="limpaAbout()"><i class="material-icons left">cancel</i>cancelar</a>\
@@ -49,23 +50,31 @@ function showCreate() {
 
         //verificação de qual item foi selecionado
         if (value == '1') {
+            var html2 = '';
+            var html1 = '\
+                <div class="input-field col s12 m8 offset-m2" >\
+                    <select id="esteiraSelectProcess">\
+                        <option value="0" disabled selected>Sem Processo Pai</option>\
+                    </select>\
+                    <label>Processo master</label>\
+                </div>\
+            ';
+
+            $("#more").html(html1);
+
             connector.server.listFatherProcess('').done(function (json) {
-                var html = '<div class="input-field col s12 m8 offset-m2">\
-            <select id="esteiraSelectProcess">\
-            <option value="0" disabled selected>Sem Processo Pai</option>';
 
                 //percorre o json colocando os itens do servidor dentro do select (exibe todos os processos)
                 for (var i = 1; i < json.length + 1; i++) {
-                    html += '<option value="' + i + '">' + json[i - 1] + '</option>';
+                    html2 += '<option value="' + i + '">' + json[i - 1] + '</option>';
                 }
 
-                html += '</select>\
-            <label>Processo master</label>\
-            </div>';
-
-                $("#more").html(html);
+                $("#esteiraSelectProcess").html(html2);
                 $('select').formSelect();
             });
+
+            $('select').formSelect();
+
             $("#limiteP").attr("disabled", false);
         } else if (value == '2') {
 
@@ -124,7 +133,7 @@ function alteraEsteira(id) {
     <div class="row">\
     <div class="input-field col s12 m8 offset-m2">\
       <select id="selectTE" disabled>\
-          <option value="'+ data.TypeN +'" selected>'+ data.Type + '</option>\
+          <option value="'+ data.TypeN + '" selected>' + data.Type + '</option>\
       </select>\
       <label>Tipo de esteira</label>\
     </div>\
@@ -274,7 +283,7 @@ function generateListEsteira(data, $e, type) {
         //verifica o tipo do item, e acrescenta valores específicos para cada tipo
         if (type == 1) {
             jObj.data("Addtional", obj.NameProcessMaster);
-            jObj.data("Type", "Esteira Modelo");
+            jObj.data("Type", "Esteira de Processamento");
         } else if (type == 2) {
             jObj.data("Type", "Esteira de armazenamento");
         } else if (type == 3) {

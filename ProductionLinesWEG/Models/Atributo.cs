@@ -28,6 +28,7 @@ namespace ProductionLinesWEG.Models
             NameP = nameP;
             Estado = ESPERANDO;
             Data = DateTime.Now;
+            Value = "Default";
         }
     }
 }

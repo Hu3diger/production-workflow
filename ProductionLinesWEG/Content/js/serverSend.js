@@ -105,6 +105,12 @@ function chumbarPeca(id, qtd) {
 
 function clearDashboard() {
 
+    $("#xuxu").html("");
+
     connector.server.clearDashboard();
 
+}
+
+function alterDash(nivel){
+    connector.server.alterDash(nivel);
 }

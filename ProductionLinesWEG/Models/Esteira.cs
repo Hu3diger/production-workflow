@@ -129,7 +129,12 @@ namespace ProductionLinesWEG.Models
         /// </summary>
         public Peca RemovePiece()
         {
-            Peca p = _queueInputPecas.Dequeue();
+            Peca p = null;
+
+            if (_queueInputPecas.Count > 0)
+            {
+                p = _queueInputPecas.Dequeue();
+            }
 
             return p;
         }
@@ -213,7 +218,6 @@ namespace ProductionLinesWEG.Models
 
         public object Clone()
         {
-            TurnOff();
             EsteiraAbstrata e = (EsteiraAbstrata)this.MemberwiseClone();
 
             e.EsteiraInput = new List<EsteiraAbstrata>();
@@ -257,16 +261,17 @@ namespace ProductionLinesWEG.Models
             EsteiraOutput = null;
         }
 
-        public Peca PassPiece()
+        public bool PassPiece()
         {
-            Peca peca = null;
-            if (!EsteiraOutput.BlockedEsteira)
+            if (EsteiraOutput != null && !EsteiraOutput.BlockedEsteira)
             {
-                peca = this.RemovePiece();
+                Peca peca = this.RemovePiece();
                 EsteiraOutput.InsertPiece(peca);
+
+                return true;
             }
 
-            return peca;
+            return false;
         }
     }
     // classe usada para as esteiras que possuem processos internos
@@ -342,7 +347,8 @@ namespace ProductionLinesWEG.Models
         /// <returns></returns>
         protected override object ImplementedClone(EsteiraAbstrata e)
         {
-            ((EsteiraModel)e).insertMasterProcess(this._processMaster);
+            ((EsteiraModel)e)._processMaster = (Processo)this._processMaster.Clone("c");
+            ((EsteiraModel)e)._processManager = new ProcessManager(((EsteiraModel)e)._processMaster);
 
             return e;
         }
@@ -396,6 +402,7 @@ namespace ProductionLinesWEG.Models
         private static List<EsteiraEtiquetadora> listE = new List<EsteiraEtiquetadora>();
         public int InitialValue { get; set; }
         private int currentTag;
+        private int maxTag;
 
         public EsteiraEtiquetadora(string id, string name, string description, int limite, int initialValue) : base(name, description, limite)
         {
@@ -411,38 +418,48 @@ namespace ProductionLinesWEG.Models
             InitialValue = initialValue;
             currentTag = initialValue;
             listE.Add(this);
+            maxTag = -1;
+            SetRangeTag();
+        }
+
+        private void SetRangeTag()
+        {
+            listE.FindAll(y => !y.Equals(this)).ForEach(x =>
+            {
+                if (maxTag == -1 && x.InitialValue > InitialValue) maxTag = x.InitialValue;
+                if (x.InitialValue > InitialValue && x.InitialValue < maxTag) maxTag = x.InitialValue;
+            });
+        }
+
+        public bool RangeIsPossible(int value)
+        {
+            foreach (var x in listE)
+            {
+                if (value > x.InitialValue && value < x.currentTag) return false;
+            }
+            return true;
         }
         /// <summary>
         /// insere uma tag na peça seguindo uma ordem de valores
         /// </summary>
         public void InsertTag()
         {
-            OrderValues();
-
             if (GetInputPieceNoRemove().Tag == -1)
             {
-                GetInputPieceNoRemove().Tag = currentTag++;
-            }
-        }
-        /// <summary>
-        /// processo recursivo que verifica se o valor das tags esta "disponivel"
-        /// </summary>
-        private void OrderValues()
-        {
-            foreach (var x in listE)
-            {
-                if (currentTag >= InitialValue && currentTag <= x.currentTag)
+                if (currentTag < maxTag || maxTag == -1)
                 {
-                    currentTag = x.currentTag;
-                    OrderValues();
-                    break;
-                };
+                    GetInputPieceNoRemove().Tag = currentTag++;
+                }
+                else
+                {
+                    throw new Exception("Range máximo atingido, esteira '" + listE.Find(x => x.InitialValue == maxTag).Name + "' assumindo a sequência");
+                }
             }
         }
         /// <summary>
         /// esta função deve ser chamada na "deletação" da esteira para que não haja conflitos futuros
         /// </summary>
-        public void Destroi()
+        public void Destroy()
         {
             listE.Remove(this);
         }

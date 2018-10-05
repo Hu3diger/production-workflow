@@ -118,7 +118,7 @@
             <div class="row">\
                 <div class="col s12 m8 offset-m2">\
                 <a href="" onclick="limpaInfo()">Cancelar</a>\
-                <a class="waves-effect waves-light btn right green darken-4" id="saveProcess" onclick="alteraProcess('+ name + ')"><i class="material-icons left">sd_card</i>salvar</a>\
+                <a class="waves-effect waves-light btn right green darken-4 ml" id="saveProcess" onclick="alteraProcess('+ name + ')"><i class="material-icons left">sd_card</i>salvar</a>\
                 <a class="waves-effect waves-light btn right red darken-4 modal-trigger" href="#modal1"><i class="material-icons left">delete_forever</i>deletar</a>\
             </div>\
         </div>\
@@ -190,6 +190,7 @@
             $("#descP").val() === "" ||
             $("#runtimeP").val() === "" ||
             $("#variationP").val() === "" ||
+            $("#probabilityP") === ""  ||
             $("#positionP").val() === ""
         ) {
             M.toast({ html: 'Existem campos em branco' })
@@ -198,6 +199,8 @@
             if ($('#processSelectFather :selected').val() != '0') {
                 value = $('#processSelectFather :selected').text();
             }
+
+            
             //chama a função para a alteração do processo
             changingProcess(
                 oldname,
@@ -205,6 +208,7 @@
                 $("#descP").val(),
                 $("#runtimeP").val(),
                 $("#variationP").val(),
+                $("#probabilityP").val(),
                 value,
                 $("#positionP").val(),
             );

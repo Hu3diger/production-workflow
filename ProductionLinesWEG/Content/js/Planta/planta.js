@@ -54,8 +54,7 @@ function setDropDragItens() {
         $("#modalName").html("<b>"+ $(this).data().Name +"</b>");
         $("#modalDescription").html("<b>Descrição da esteira</b>: "+ $(this).data().Description);
         $("#modalLimit").html("<b>Limite de entrada</b>: "+ ($(this).data().InLimit == -1 ? "Limite infinito de " : $(this).data().InLimit) + " peças");
-        $("#modalType").html("<b>Tipo da esteira</b>: "+ $(this).data().Type); 
-        $("#modalAbout").html("<b>"+ sobre +"</b>");
+        $("#modalType").html("<b>Tipo da esteira</b>: "+ $(this).data().Type);
         
         $("#modalSwitch").html('\
             <label>\
@@ -80,9 +79,10 @@ function setDropDragItens() {
                 sobre = "Outras parada</b>: " + $(this).data().Addtional;
                 break;
         }
+ 
+        $("#modalAbout").html("<b>"+ sobre +"</b>");
 
         connector.server.getPieces($(this).attr("id")).done(function (json) {
-            console.log(json);
             ListPieces = json;
 
             let html = "";
@@ -231,6 +231,7 @@ function setDropDragItens() {
 }
 
 function modal2show(i) {
+
     var html = "";
     $("#modalTag").html("<b>Tag:</b> " + ListPieces[i].Tag);
 
@@ -259,7 +260,6 @@ function modal2show(i) {
             </tr>\
         ";
     }
-
     $("#tableAtPiece").html(html);
 }
 

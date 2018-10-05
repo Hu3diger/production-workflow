@@ -7,13 +7,13 @@ namespace ProductionLinesWEG.Models
     {
         public string Date { get; set; }
         public string Message { get; set; }
-        public bool Critico { get; set; }
+        public int Nivel{ get; set; }
 
-        public Dashboard(string date, string message, bool critico)
+        public Dashboard(string date, string message, int nivel)
         {
             Date = date;
             Message = message;
-            Critico = critico;
+            Nivel = nivel;
         }
     }
 }

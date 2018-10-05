@@ -13,8 +13,44 @@ namespace ProductionLinesWEG.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public int Runtime { get; set; }
-        public double VariationRuntime { get; set; }
+
+        private int _runtime;
+        public int Runtime
+        {
+            get => _runtime;
+            set
+            {
+                if (value < 0)
+                {
+                    _runtime = 0;
+                }
+                else
+                {
+                    _runtime = value;
+                }
+            }
+        }
+
+        private double _variationRuntime;
+        public double VariationRuntime
+        {
+            get => _variationRuntime;
+            set
+            {
+                if (value > 100)
+                {
+                    _variationRuntime = 100;
+                }
+                else if (value < 0)
+                {
+                    _variationRuntime = 0;
+                }
+                else
+                {
+                    _variationRuntime = value;
+                }
+            }
+        }
 
         private double _errorProbability;
         public double ErrorProbability
@@ -50,6 +86,7 @@ namespace ProductionLinesWEG.Models
         private static long idMaster = 1;
         private int idClones = 1;
         public BaseProcesso BaseProcesso;
+        private bool wNameClone;
 
         public string Id { get; private set; }
         public string Name { get => BaseProcesso.Name; }
@@ -312,21 +349,14 @@ namespace ProductionLinesWEG.Models
                 Console.WriteLine(p.Name + " || index: " + i);
             }
         }
-        /// <summary>
-        /// Clona o objeto, incluindo os objetos na lista, mantendo os Nomes em comum na BaseProcesso dos Processos.
-        /// </summary>
-        /// <returns>
-        /// object (cast to Processo...)
-        /// </returns>
+
         public object Clone()
         {
             Processo p = (Processo)this.MemberwiseClone();
 
-            p.ListProcessos = CloneList();
-
             p.Father = null;
 
-            p.Id = this.Id + "c" + (idClones++);
+            p.ListProcessos = CloneList();
 
             p.ListProcessos.ForEach(x =>
             {
@@ -334,6 +364,24 @@ namespace ProductionLinesWEG.Models
             });
 
             p.ReorderAttributes();
+
+            return p;
+        }
+        /// <summary>
+        /// Clona o objeto, incluindo os objetos na lista, mantendo os Nomes em comum na BaseProcesso dos Processos.
+        /// </summary>
+        /// <returns>
+        /// object (cast to Processo...)
+        /// </returns>
+        public object Clone(string c)
+        {
+            wNameClone = true;
+
+            Processo p = (Processo)this.Clone();
+
+            wNameClone = false;
+
+            p.Id = this.Id + c + (idClones++);
 
             return p;
         }
@@ -347,10 +395,20 @@ namespace ProductionLinesWEG.Models
         {
             List<Processo> p = new List<Processo>();
 
-            ListProcessos.ForEach(x =>
+            if (wNameClone)
             {
-                p.Add((Processo)x.Clone());
-            });
+                ListProcessos.ForEach(x =>
+                {
+                    p.Add((Processo)x.Clone("l"));
+                });
+            }
+            else
+            {
+                ListProcessos.ForEach(x =>
+                {
+                    p.Add((Processo)x.Clone());
+                });
+            }
 
             return p;
         }
