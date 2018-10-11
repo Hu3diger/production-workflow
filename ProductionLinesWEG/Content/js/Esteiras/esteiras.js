@@ -33,9 +33,11 @@ function showCreate() {
     </div>\
       <div class="row" id="more">\
       </div>\
+      <div class="row" id="moreSelection">\
+      </div>\
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
-        <a href="" onclick="limpaAbout()">cancelar</a>\
+        <a href="" onclick="limpaAbout()">Cancelar</a>\
         <a class="waves-effect waves-light btn right green darken-4" onclick="saveEsteira()"><i class="material-icons left">sd_card</i>criar</a>\
       </div>\
     </div>\
@@ -61,6 +63,7 @@ function showCreate() {
             ';
 
             $("#more").html(html1);
+            $("#moreSelection").html("");
 
             connector.server.listFatherProcess('').done(function (json) {
 
@@ -74,11 +77,10 @@ function showCreate() {
             });
 
             $('select').formSelect();
-
-            $("#limiteP").attr("disabled", false);
         } else if (value == '2') {
 
             $("#more").html("");
+            $("#moreSelection").html("");
 
         } else if (value == '3') {
             //acrescenta um input na tag #more, conforme a opção selecionada no select
@@ -88,22 +90,52 @@ function showCreate() {
                 <label for="etiqueta">Valor inicial para geração das etiquetas</label>\
             </div>\
         ');
-            $("#limiteP").attr("disabled", false);
+        $("#moreSelection").html("");
         } else if (value == '4') {
             //acrescenta um input na tag #more, conforme a opção selecionada no select
             $("#more").html('\
-            <div class="input-field col s12 m8 offset-m2">\
-                <input value="" id="desvio" type="text" class="validate">\
-                <label for="desvio">Mais coisa pro desvio</label>\
-            </div>\
-        ');
-            $("#limiteP").attr("disabled", false);
+            <div class="input-field col s12 m8 offset-m2" >\
+                <select id="typeDesvio">\
+                    <option value="0" disabled selected>Selecione o tipo de desvio</option>\
+                    <option value="1">Desvio de balanceamento</option>\
+                    <option value="2">Desvio de seleção</option>\
+                </select>\
+                <label>Tipo de desvio</label>\
+             </div>\
+            ');
+            
+
+            $("#typeDesvio").change(function () {
+                let value = $('#typeDesvio :selected').val();
+                if(value == '1'){
+                    $("#moreSelection").html('\
+                    <div class="col s8 offset-s2">\
+                        <p style="color: #9e9e9e"><b>Descrição</b>: A esteira de desvio de balanceamento faz o balanceamento das cargas esteiras de saída</p>\
+                    </div>\
+                    ');
+                }else if(value == '2'){
+                    $("#moreSelection").html('\
+                    <div class="input-field col s12 m8 offset-m2" >\
+                        <select id="teste">\
+                            <option value="0" disabled selected>Selecione qualquer coisa</option>\
+                            <option value="1">Seleção alemã</option>\
+                            <option value="2">Seleção chinesa</option>\
+                        </select>\
+                        <label>Tipo de seleção</label>\
+                    </div>\
+                    ');
+                }
+            });
+
+            $('select').formSelect();
         } else {
             $("#more").html("");
-            $("#limiteP").attr("disabled", false);
         }
     });
+
+   
 }
+
 
 
 //função para exibir os campos para edição

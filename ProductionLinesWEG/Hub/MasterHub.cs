@@ -960,7 +960,7 @@ namespace ProductionLinesWEG.Hub
                                     }
                                     else
                                     {
-                                        throw new Exception("Esteira Base = null, idM = " + idM);
+                                        throw new Exception("Esteira Base = null, idM = " + idM + " (linha: " + i + ", Coluna: " + j + ")");
                                     }
 
                                 }

@@ -490,9 +490,10 @@ namespace ProductionLinesWEG.Models
     {
         private static int _countId = 0;
         public static List<EsteiraAbstrata> EsteiraOutput { get; private set; }
+        public int Type;
 
         // esteira ainda não implementada
-        public EsteiraDesvio(string id, string name, string description, int limite) : base(name, description, limite)
+        public EsteiraDesvio(string id, string name, string description, int limite, int type) : base(name, description, limite)
         {
             if (id.Equals(""))
             {
@@ -503,6 +504,7 @@ namespace ProductionLinesWEG.Models
                 Id = id;
             }
 
+            Type = type;
             EsteiraOutput = new List<EsteiraAbstrata>();
         }
 
@@ -514,7 +516,7 @@ namespace ProductionLinesWEG.Models
             }
             else
             {
-                throw new Exception("EsteiraOutput null (Esteira Desvio)");
+                throw new Exception("EsteiraOutput List null");
             }
         }
 
@@ -523,16 +525,6 @@ namespace ProductionLinesWEG.Models
             EsteiraOutput.Clear();
         }
 
-
-        void PiecePass(EsteiraAbstrata esteira)
-        {
-            //    OutputPieceSuccess(esteira);
-        }
-
-        void PieceError(EsteiraAbstrata esteira)
-        {
-            //    OutputPieceFail(esteira);
-        }
         /// <summary>
         /// Emplementação do Clone para cada Classe
         /// </summary>

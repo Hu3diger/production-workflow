@@ -16,11 +16,11 @@ namespace ProductionLinesWEG.Models
         public DateTime Data { get; set; }
         public int Time { get; set; }
 
-        public static readonly string ESPERANDO = "Esperando";
-        public static readonly string FAZENDO = "Fazendo";
+        public static readonly string ESPERANDO = "Aguardando";
+        public static readonly string FAZENDO = "Executando";
         public static readonly string INTERROMPIDO = "Interrompido";
         public static readonly string DEFEITO = "Defeito";
-        public static readonly string FEITO = "Feito";
+        public static readonly string FEITO = "Concluido";
 
         public Atributo(string idP, string nameP)
         {

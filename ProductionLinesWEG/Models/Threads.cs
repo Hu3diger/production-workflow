@@ -4,6 +4,7 @@ using ProductionLinesWEG.Hub;
 using ProductionLinesWEG.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Web.Script.Serialization;
 
@@ -57,7 +58,7 @@ namespace ProductionLinesWEG.Models
 
                                     pc.addAtributo(at);
 
-                                    program.toDashboard(ps.Name + "Esteira: (" + em.Name + ") (" + ps.Id + ") Executando", 4);
+                                    program.toDashboard("Esteira: (" + em.Name + ") (" + ps.Id + ") Executando", 4);
 
                                     run = ps.RuntimeWithVariation;
 
@@ -113,9 +114,31 @@ namespace ProductionLinesWEG.Models
 
                         if (pc != null)
                         {
+                            Atributo at = new Atributo(ee.Id, ee.Name);
+
                             try
                             {
+                                Stopwatch stopWatch = new Stopwatch();
+
+                                program.toDashboard("Esteira: (" + ee.Name + ") Inserindo TAG", 4);
+
+                                pc.addAtributo(at);
+
+                                // seta atributo
+                                at.Estado = Atributo.FAZENDO;
+
+                                stopWatch.Start();
+
+                                Thread.Sleep(100);
                                 ee.InsertTag();
+
+                                stopWatch.Stop();
+
+                                TimeSpan ts = stopWatch.Elapsed;
+                                at.Time = ts.Milliseconds;
+
+                                at.Estado = Atributo.FEITO;
+                                at.Value = "Tag inserida";
 
                                 program.toDashboard("(" + ee.Name + ") Peça entiquetada com: '" + pc.Tag + "'", 4);
 
@@ -127,6 +150,9 @@ namespace ProductionLinesWEG.Models
                             catch (Exception e)
                             {
                                 program.toDashboard("(" + ee.Name + " desligando) " + e.Message, 2);
+                                at.Estado = Atributo.DEFEITO;
+                                at.Value = "Sem etiqueta";
+
                                 ee.TurnOff();
                             }
 
@@ -147,6 +173,17 @@ namespace ProductionLinesWEG.Models
 
                         if (pc != null)
                         {
+
+                            Atributo at = new Atributo(ea.Id, ea.Name);
+
+                            pc.addAtributo(at);
+
+                            at.Time = 0;
+                            at.Estado = Atributo.FEITO;
+                            at.Value = "Peça encaminhada";
+
+                            program.toDashboard("(" + ea.Name + ") Peça '" + pc.Tag + "' encaminhada", 4);
+
                             while (!ea.PassPiece())
                             {
                                 Thread.Sleep(250);
@@ -162,7 +199,7 @@ namespace ProductionLinesWEG.Models
             }
             else if (e is EsteiraDesvio ed)
             {
-                
+
             }
             else
             {
