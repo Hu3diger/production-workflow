@@ -616,7 +616,7 @@ namespace ProductionLinesWEG.Hub
 
 
 
-
+        
         // cria uma esteira e a insere no programa
         public void CreateEsteira(string name, string desc, int inlimit, int type, string additional)
         {
@@ -663,7 +663,7 @@ namespace ProductionLinesWEG.Hub
                             {
                                 int initialValue = int.Parse(additional);
 
-                                e = new EsteiraEtiquetadora("", name, desc, inlimit, initialValue);
+                                e = new EsteiraEtiquetadora(pgm.Login, "", name, desc, inlimit, initialValue);
                             }
                             catch (System.Exception)
                             {
@@ -694,6 +694,103 @@ namespace ProductionLinesWEG.Hub
                 else
                 {
                     RegisterMessageDashboard("Esteira '" + name + "' já existente", 2, true);
+                }
+            }
+        }
+
+        
+        // cria uma esteira e a insere no programa
+        public void ChangingEsteira(string oldname, string newname, string desc, int inlimit, int type, string additional)
+        {
+            Program pgm = CheckReturnPgm();
+
+            if (pgm != null)
+            {
+                // procura pela esteira e veficica se exite
+                if (pgm.listEsteiras.Find(x => x.Name.Equals(newname)) == null)
+                {
+                    EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Name.Equals(oldname));
+
+                    if (e != null)
+                    {
+                        e.Name = newname;
+                        e.Description = desc;
+                        e.InLimit = inlimit;
+
+                        // verifica o tipo de esteira e trabalha de acordo com o tipo
+                        switch (type)
+                        {
+                            // esteira model
+                            case 1:
+
+                                Processo p = pgm.listProcessos.Find(x => x.Name.Equals(additional));
+
+                                if (p != null)
+                                {
+                                    EsteiraModel em = (EsteiraModel)e;
+
+                                    if (!em.NameProcessMaster.Equals(additional))
+                                    {
+                                        em.insertMasterProcess(p);
+                                    }
+                                }
+                                else
+                                {
+                                    RegisterMessageDashboard("Processo in Select '" + additional + "' não encontrado", 3, true);
+                                }
+
+                                break;
+
+                            // esteira de armazenamento
+                            case 2:
+                                break;
+
+                            // esteira etiquetadora
+                            case 3:
+
+                                try
+                                {
+                                    int initialValue = int.Parse(additional);
+
+                                    if (EsteiraEtiquetadora.RangeIsPossible(pgm.Login, initialValue))
+                                    {
+                                        EsteiraEtiquetadora ee = (EsteiraEtiquetadora)e;
+                                        ee.InitialValue = initialValue;
+                                    }
+                                    else
+                                    {
+                                        RegisterMessageDashboard("Range não permitido (já utilizado)", 3, true);
+                                    }
+                                }
+                                catch (System.Exception)
+                                {
+                                    RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
+                                }
+
+                                break;
+
+                            // esteira de desvio
+                            case 4:
+                                RegisterMessageDashboard("Não é possivel alterar esteiras desviadoras ainda", 2, true);
+                                break;
+
+                            // caso seja bulado o sistema de tipo, cai aqui
+                            default:
+                                RegisterMessageDashboard("Error: Default type in CreateEsteira", 3, true);
+                                break;
+                        }
+
+                        RegisterMessageDashboard("Esteira '" + newname + "' Alterada", 1, true);
+                        CallListEsteira();
+                    }
+                    else
+                    {
+                        RegisterMessageDashboard("Error: Find Esteira: '" + oldname + "'", 3, true);
+                    }
+                }
+                else
+                {
+                    RegisterMessageDashboard("Esteira '" + oldname + "' já existente", 2, true);
                 }
             }
         }
@@ -938,12 +1035,13 @@ namespace ProductionLinesWEG.Hub
                 if (e != null)
                 {
                     e.TurnOn(pgm);
-                    RegisterMessageDashboard("Esteira '" + e.Name + "' ligada", 1, false);
 
                     if (!pgm.InSimulation)
                     {
                         RegisterMessageDashboard("Simulação iniciada, Alterações travadas", 2, false);
                     }
+
+                    RegisterMessageDashboard("Esteira '" + e.Name + "' ligada", 1, false);
 
                     pgm.InSimulation = true;
                 }
@@ -1091,8 +1189,7 @@ namespace ProductionLinesWEG.Hub
                 while (inDashboard)
                 {
                     Clients.Caller.reciveTickDashboard(pgm.listTickDashboard);
-                    await Task.Delay(500);
-                    pgm.clearListTickDashboard();
+                    await Task.Delay(250);
                 }
                 Clients.Caller.showToast("Finished Dashboard");
             }
@@ -1107,6 +1204,7 @@ namespace ProductionLinesWEG.Hub
             if (pgm != null)
             {
                 pgm.listDashboard.Clear();
+                pgm.listTickDashboard.Clear();
                 Clients.Caller.showToast("Dashboard cleaned");
             }
         }

@@ -44,6 +44,13 @@ function changingProcess(oldname, newname, desc, runtime, variationRuntime, prob
 
 }
 
+//função para a remoção de processos, recebendo os dados do processo e enviando para o servidor
+function deleteProcess(name) {
+
+    connector.server.deleteProcess(name);
+
+}
+
 //função para a criação de esteiras, recebendo os dados da esteira e enviando para o servidor
 function createEsteira(name, desc, inlimit, type, additional) {
 
@@ -51,10 +58,17 @@ function createEsteira(name, desc, inlimit, type, additional) {
 
 }
 
-//função para a remoção de processos, recebendo os dados do processo e enviando para o servidor
-function deleteProcess(name) {
+//função para a alteração de esteiras, recebendo os dados da esteira e enviando para o servidor
+function changingEsteira(oldName, newName, desc, inlimit, type, additional) {
 
-    connector.server.deleteProcess(name);
+    connector.server.changingEsteira(oldName, newName, desc, inlimit, type, additional);
+
+}
+
+//função para a remoção de processos, recebendo os dados do processo e enviando para o servidor
+function deleteEsteira(name) {
+
+    connector.server.deleteEsteira(name);
 
 }
 

@@ -35,7 +35,7 @@ function showCreate() {
       </div>\
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
-        <a class="waves-effect waves-light btn left red darken-4" onclick="limpaAbout()"><i class="material-icons left">cancel</i>cancelar</a>\
+        <a href="" onclick="limpaAbout()">cancelar</a>\
         <a class="waves-effect waves-light btn right green darken-4" onclick="saveEsteira()"><i class="material-icons left">sd_card</i>criar</a>\
       </div>\
     </div>\
@@ -142,13 +142,26 @@ function alteraEsteira(id) {
       </div>\
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
-        <a class="waves-effect waves-light btn left red darken-4" onclick="limpaAbout()"><i class="material-icons left">cancel</i>cancelar</a>\
-        <a class="waves-effect waves-light btn right green darken-4" onclick="saveEsteira()"><i class="material-icons left">sd_card</i>salvar</a>\
+      <a href="" onclick="limpaAbout()">Cancelar</a>\
+        <a class="waves-effect waves-light btn right green darken-4" onclick="changeEsteira(\''+ data.Name +'\')"><i class="material-icons left">sd_card</i>salvar</a>\
+        <a class="waves-effect waves-light btn right red darken-4 modal-trigger" href="#modal1"><i class="material-icons left">delete_forever</i>deletar</a>\
       </div>\
     </div>\
     </form>\
     </div>\
+    <div id="modal1" class="modal">\
+        <div class="modal-content">\
+            <h5>Atenção!</h5>\
+            <p>Deseja mesmo deletar esta esteira?</p>\
+            <p>Obs: Irá também deletar todos os registros da esteira selecionada.   </p>\
+        </div>\
+        <div class="modal-footer">\
+            <a href="#!" class="modal-close waves-effect www waves-light btn-flat">Não</a>\
+            <a href="#!" class="modal-close waves-effect waves-light btn green darken-4" onclick="deleteEsteira(\''+ data.Name +'\')">Sim</a>\
+        </div>\
+    </div>\
     ');
+        
         //variável pega o tipo da esteira selecionada para edição
         let value = data.TypeN;
 
@@ -197,7 +210,7 @@ function alteraEsteira(id) {
         }
 
         $('select').formSelect();
-
+        $('.modal').modal();
     }
 }
 
@@ -242,6 +255,58 @@ function saveEsteira() {
         } else {
             //chama o método para a criação da esteira
             createEsteira(
+                $("#nameP").val(),
+                $("#descP").val(),
+                $("#limiteP").val(),
+                type,
+                value.toString()
+            );
+        }
+    }
+}
+
+//função para salvar a esteira (criar ela no servidor)
+function changeEsteira(oldName) {
+
+    //variavel com o tipo da esteira, tipo vindo do item selecionado no collapsible
+    let type = $('#selectTE :selected').val();
+    let value = '';
+    var typeBool = true;
+    console.log($('#selectTE :selected').val());
+
+    //faz a verificação do tipo, e atribui para a tag value, o valor do campo extra de cada tipo de esteira.
+    if (type == '1') {
+        if ($('#esteiraSelectProcess :selected').val() == '0') {
+            M.toast({ html: 'Processo inválido' });
+            typeBool = false;
+        } else {
+            value = $('#esteiraSelectProcess :selected').text();
+        }
+    } else if (type == '2') {
+        value = ' ';
+    } else if (type == '3') {
+        value = $('#etiqueta').val();
+    } else if (type == '4') {
+        value = $('#desvio').val();
+    } else {
+        M.toast({ html: 'Type inválido' });
+        typeBool = false;
+    }
+
+    //verifica se o tipo existe
+    if (typeBool) {
+        //verifica se os campos estão em branco
+        if (
+            $("#nameP").val() === "" ||
+            $("#descP").val() === "" ||
+            $("#limiteP").val() === "" ||
+            value === ""
+        ) {
+            M.toast({ html: 'Existem campos em branco' })
+        } else {
+            //chama o método para a criação da esteira
+            changingEsteira(
+                oldName,
                 $("#nameP").val(),
                 $("#descP").val(),
                 $("#limiteP").val(),

@@ -216,7 +216,7 @@ namespace ProductionLinesWEG.Models
 
             ((EsteiraModel)listEsteiras[3]).insertMasterProcess(listProcessos[3]);
 
-            listEsteiras.Add(new EsteiraEtiquetadora("", "Esteira Etiquetadora", "Atribui uam tag com inicio 10000...", 1, 10000));
+            listEsteiras.Add(new EsteiraEtiquetadora(this.Login, "", "Esteira Etiquetadora", "Atribui uam tag com inicio 10000...", 1, 10000));
 
             listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 1 100pc", "Armazena X itens na esteira", 100));
             listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 2 10pc", "Armazena X itens na esteira", 10));

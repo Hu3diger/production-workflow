@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using ProductionLinesWEG.Hub;
 
 namespace ProductionLinesWEG.Models
 {
@@ -22,7 +23,7 @@ namespace ProductionLinesWEG.Models
         public bool Ligado { get; private set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int InLimit { get; private set; }
+        public int InLimit { get; set; }
         public int Fail { get; private set; }
         public int Success { get; private set; }
         public int Produced { get; private set; }
@@ -400,11 +401,12 @@ namespace ProductionLinesWEG.Models
         private static int _countId = 0;
 
         private static List<EsteiraEtiquetadora> listE = new List<EsteiraEtiquetadora>();
+        public Logins Login { get; private set; }
         public int InitialValue { get; set; }
+        public int MaxTag { get; set; }
         private int currentTag;
-        private int maxTag;
 
-        public EsteiraEtiquetadora(string id, string name, string description, int limite, int initialValue) : base(name, description, limite)
+        public EsteiraEtiquetadora(Logins login, string id, string name, string description, int limite, int initialValue) : base(name, description, limite)
         {
             if (id.Equals(""))
             {
@@ -417,25 +419,35 @@ namespace ProductionLinesWEG.Models
 
             InitialValue = initialValue;
             currentTag = initialValue;
+            Login = login;
             listE.Add(this);
-            maxTag = -1;
+            MaxTag = -1;
             SetRangeTag();
         }
 
         private void SetRangeTag()
         {
-            listE.FindAll(y => !y.Equals(this)).ForEach(x =>
+            if (RangeIsPossible(this.Login, InitialValue))
             {
-                if (maxTag == -1 && x.InitialValue > InitialValue) maxTag = x.InitialValue;
-                if (x.InitialValue > InitialValue && x.InitialValue < maxTag) maxTag = x.InitialValue;
-            });
+                listE.FindAll(y => y.Login.Equals(this.Login)).ForEach(x =>
+                {
+                    listE.FindAll(z => z.Login.Equals(this.Login)).ForEach(t =>
+                    {
+                        if (x.InitialValue < t.InitialValue && x.currentTag < t.InitialValue && (x.MaxTag == -1 || t.InitialValue < x.MaxTag)) x.MaxTag = t.InitialValue;
+                    });
+                });
+            }
+            else
+            {
+                throw new Exception("Range não possivel, outra esteira cobre esse Range");
+            }
         }
 
-        public bool RangeIsPossible(int value)
+        public static bool RangeIsPossible(Logins login, int initialValue)
         {
             foreach (var x in listE)
             {
-                if (value > x.InitialValue && value < x.currentTag) return false;
+                if (x.Login.Equals(login) && initialValue > x.InitialValue && initialValue < x.currentTag) return false;
             }
             return true;
         }
@@ -446,13 +458,13 @@ namespace ProductionLinesWEG.Models
         {
             if (GetInputPieceNoRemove().Tag == -1)
             {
-                if (currentTag < maxTag || maxTag == -1)
+                if (currentTag < MaxTag || MaxTag == -1)
                 {
                     GetInputPieceNoRemove().Tag = currentTag++;
                 }
                 else
                 {
-                    throw new Exception("Range máximo atingido, esteira '" + listE.Find(x => x.InitialValue == maxTag).Name + "' assumindo a sequência");
+                    throw new Exception("Range máximo atingido, sequência em '" + listE.Find(x => x.InitialValue == MaxTag).Name + "'");
                 }
             }
         }

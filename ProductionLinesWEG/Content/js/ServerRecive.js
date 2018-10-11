@@ -44,9 +44,12 @@ function ServerReciveMethods() {
 
     connector.client.reciveTickDashboard = function (jMessage) {
         try {
-            console.log(jMessage);
+
+            $("#xuxu").html("");
 
             $(jMessage).each(function () {
+                console.log(this);
+
                 if (this.Nivel == parseInt($("#nivelDash :selected").val()) || parseInt($("#nivelDash :selected").val()) == 4) {
                     $("#xuxu").prepend(
                         "<tr><td>" +

@@ -51,7 +51,7 @@
             </div>\
             <div class="row">\
             <div class="col s12 m8 offset-m2">\
-            <a class="waves-effect waves-light btn left red darken-4" onclick="limpaInfo()"><i class="material-icons left">cancel</i>cancelar</a>\
+            <a href="" onclick="limpaInfo()">Cancelar</a>\
             <a class="waves-effect waves-light btn right green darken-4" onclick="enviaProcess()"><i class="material-icons left">sd_card</i>criar</a>\
             </div>\
         </div>\

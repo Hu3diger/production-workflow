@@ -26,16 +26,14 @@ namespace ProductionLinesWEG.Models
         /// </summary>
         public void threadEsteira()
         {
-            if (e is EsteiraModel)
+            if (e is SetableOutput)
             {
-                EsteiraModel em = (EsteiraModel)e;
-
-                if (em.EsteiraOutput == null)
+                if (((SetableOutput)e).EsteiraOutput == null)
                 {
-                    program.toDashboard("Abortando inicio: '" + em.Name + "' sem Output", 2);
-                    em.TurnOff();
+                    program.toDashboard("Esteira: (" + e.Name + ") Abortando inicio: sem Output", 2);
+                    e.TurnOff();
                 }
-                else
+                else if (e is EsteiraModel em)
                 {
                     while (true)
                     {
@@ -59,7 +57,7 @@ namespace ProductionLinesWEG.Models
 
                                     pc.addAtributo(at);
 
-                                    program.toDashboard(ps.Name + "(" + ps.Id + ") Executando em " + em.Name, 4);
+                                    program.toDashboard(ps.Name + "Esteira: (" + em.Name + ") (" + ps.Id + ") Executando", 4);
 
                                     run = ps.RuntimeWithVariation;
 
@@ -80,17 +78,16 @@ namespace ProductionLinesWEG.Models
                                         at.Estado = Atributo.DEFEITO;
                                     }
 
-                                    program.toDashboard(ps.Name + " Finalizado", 4);
+                                    program.toDashboard("Esteira: (" + em.Name + ") " + ps.Name + " Finalizado", 4);
                                 }
 
                                 // finalia o processo para ter um novo ciclo
                                 em.FinalizeProcess();
 
-                                program.toDashboard("Esteira: (" + em.Name + ")Bateria de processos finalizados", 4);
+                                program.toDashboard("Esteira: (" + em.Name + ") Bateria de processos finalizados", 4);
 
                                 while (!em.PassPiece())
                                 {
-                                    program.toDashboard(em.Name + " aguardando envio para a proxima esteira", 4);
                                     Thread.Sleep(250);
                                 }
                             }
@@ -107,32 +104,51 @@ namespace ProductionLinesWEG.Models
                         }
                     }
                 }
-            }
-            else if (e is EsteiraEtiquetadora)
-            {
-                EsteiraEtiquetadora em = (EsteiraEtiquetadora)e;
-
-                if (em.EsteiraOutput == null)
-                {
-                    program.toDashboard("Abortando inicio: '" + em.Name + "' sem Output", 2);
-                    em.TurnOff();
-                }
-                else
+                else if (e is EsteiraEtiquetadora ee)
                 {
                     while (true)
                     {
                         // pega a primeira peça da fila
-                        Peca pc = em.GetInputPieceNoRemove();
+                        Peca pc = ee.GetInputPieceNoRemove();
 
                         if (pc != null)
                         {
-                            em.InsertTag();
-
-                            program.toDashboard("(" + em.Name + ") Peça entiquetada com: '" + pc.Tag + "'", 4);
-
-                            while (!em.PassPiece())
+                            try
                             {
-                                program.toDashboard(em.Name + " aguardando envio para a proxima esteira", 4);
+                                ee.InsertTag();
+
+                                program.toDashboard("(" + ee.Name + ") Peça entiquetada com: '" + pc.Tag + "'", 4);
+
+                                while (!ee.PassPiece())
+                                {
+                                    Thread.Sleep(250);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                program.toDashboard("(" + ee.Name + " desligando) " + e.Message, 2);
+                                ee.TurnOff();
+                            }
+
+                        }
+                        else
+                        {
+                            // fica esperando a peca (250ms para não sobrecarregar o servidor)
+                            Thread.Sleep(250);
+                        }
+                    }
+                }
+                else if (e is EsteiraArmazenamento ea)
+                {
+                    while (true)
+                    {
+                        // pega a primeira peça da fila
+                        Peca pc = ea.GetInputPieceNoRemove();
+
+                        if (pc != null)
+                        {
+                            while (!ea.PassPiece())
+                            {
                                 Thread.Sleep(250);
                             }
                         }
@@ -144,41 +160,9 @@ namespace ProductionLinesWEG.Models
                     }
                 }
             }
-            else if (e is EsteiraArmazenamento)
+            else if (e is EsteiraDesvio ed)
             {
-                EsteiraArmazenamento em = (EsteiraArmazenamento)e;
-
-                if (em.EsteiraOutput == null)
-                {
-                    program.toDashboard("Abortando inicio: '" + em.Name + "' sem Output", 2);
-                    em.TurnOff();
-                }
-                else
-                {
-                    while (true)
-                    {
-                        // pega a primeira peça da fila
-                        Peca pc = em.GetInputPieceNoRemove();
-
-                        if (pc != null)
-                        {
-                            while (!em.PassPiece())
-                            {
-                                program.toDashboard(em.Name + " aguardando envio para a proxima esteira", 4);
-                                Thread.Sleep(250);
-                            }
-                        }
-                        else
-                        {
-                            // fica esperando a peca (250ms para não sobrecarregar o servidor)
-                            Thread.Sleep(250);
-                        }
-                    }
-                }
-            }
-            else if (e is EsteiraDesvio)
-            {
-
+                
             }
             else
             {
