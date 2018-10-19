@@ -37,7 +37,7 @@ function showCreate() {
       </div>\
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
-        <a href="" onclick="limpaAbout()">Cancelar</a>\
+        <a href="" onclick="limpaInfo()">Cancelar</a>\
         <a class="waves-effect waves-light btn right green darken-4" onclick="saveEsteira()"><i class="material-icons left">sd_card</i>criar</a>\
       </div>\
     </div>\
@@ -90,11 +90,11 @@ function showCreate() {
                 <label for="etiqueta">Valor inicial para geração das etiquetas</label>\
             </div>\
         ');
-        $("#moreSelection").html("");
+            $("#moreSelection").html("");
         } else if (value == '4') {
             //acrescenta um input na tag #more, conforme a opção selecionada no select
             $("#more").html('\
-            <div class="input-field col s12 m8 offset-m2" >\
+            <div class="input-field col s12 m8 offset-m2">\
                 <select id="typeDesvio">\
                     <option value="0" disabled selected>Selecione o tipo de desvio</option>\
                     <option value="1">Desvio de balanceamento</option>\
@@ -103,28 +103,24 @@ function showCreate() {
                 <label>Tipo de desvio</label>\
              </div>\
             ');
-            
+
 
             $("#typeDesvio").change(function () {
                 let value = $('#typeDesvio :selected').val();
-                if(value == '1'){
+                if (value == '1') {
                     $("#moreSelection").html('\
                     <div class="col s8 offset-s2">\
-                        <p style="color: #9e9e9e"><b>Descrição</b>: A esteira de desvio de balanceamento faz o balanceamento das cargas esteiras de saída</p>\
+                        <p style="color: #9e9e9e"><b>Descrição</b>: A esteira de desvio de balanceamento faz o balanceamento de carga nas esteiras de saída</p>\
                     </div>\
                     ');
-                }else if(value == '2'){
+                } else if (value == '2') {
                     $("#moreSelection").html('\
-                    <div class="input-field col s12 m8 offset-m2" >\
-                        <select id="teste">\
-                            <option value="0" disabled selected>Selecione qualquer coisa</option>\
-                            <option value="1">Seleção alemã</option>\
-                            <option value="2">Seleção chinesa</option>\
-                        </select>\
-                        <label>Tipo de seleção</label>\
+                    <div class="col s8 offset-s2">\
+                        <p style="color: #9e9e9e"><b>Descrição</b>: A esteira de desvio de seleção deve conter apenas três esteiras de saída onde será verificado o último processo.<br/>Primeira Esteira: Processo Concluído/Aguardando<br/>Segunda Esteira: Processo Defeituoso<br/>Terceira Esteira: Processo Interrompido</p>\
                     </div>\
                     ');
                 }
+                $('select').formSelect();
             });
 
             $('select').formSelect();
@@ -133,7 +129,7 @@ function showCreate() {
         }
     });
 
-   
+
 }
 
 
@@ -172,10 +168,12 @@ function alteraEsteira(id) {
     </div>\
       <div class="row" id="more">\
       </div>\
+      <div class="row" id="moreSelection">\
+      </div>\
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
       <a href="" onclick="limpaAbout()">Cancelar</a>\
-        <a class="waves-effect waves-light btn right green darken-4" onclick="changeEsteira(\''+ data.Name +'\')"><i class="material-icons left">sd_card</i>salvar</a>\
+        <a class="waves-effect waves-light btn right green darken-4" onclick="changeEsteira(\''+ data.Name + '\')"><i class="material-icons left">sd_card</i>salvar</a>\
         <a class="waves-effect waves-light btn right red darken-4 modal-trigger" href="#modal1"><i class="material-icons left">delete_forever</i>deletar</a>\
       </div>\
     </div>\
@@ -189,11 +187,11 @@ function alteraEsteira(id) {
         </div>\
         <div class="modal-footer">\
             <a href="#!" class="modal-close waves-effect www waves-light btn-flat">Não</a>\
-            <a href="#!" class="modal-close waves-effect waves-light btn green darken-4" onclick="deleteEsteira(\''+ data.Name +'\')">Sim</a>\
+            <a href="#!" class="modal-close waves-effect waves-light btn green darken-4" onclick="deleteEsteira(\''+ data.Name + '\')">Sim</a>\
         </div>\
     </div>\
     ');
-        
+
         //variável pega o tipo da esteira selecionada para edição
         let value = data.TypeN;
 
@@ -228,13 +226,31 @@ function alteraEsteira(id) {
         ');
             $("#limiteP").attr("disabled", false);
         } else if (value == '4') {
-            //acrescenta um input na tag #more, conforme a opção selecionada no select, contendo o valor da esteira
+
+            //acrescenta um input na tag #more, conforme a opção selecionada no select
             $("#more").html('\
             <div class="input-field col s12 m8 offset-m2">\
-                <input value="'+ data.Addtional + '" id="desvio" type="text" class="validate active">\
-                <label class="active" for="desvio">Mais coisa pro desvio</label>\
-            </div>\
-        ');
+                <select id="typeDesvio" disabled>\
+                    '+ (data.Addtional == 1 ? '<option value="1" selected disabled>Desvio de balanceamento</option>' : '<option value="2" selected disabled>Desvio de seleção</option>') + '\
+                </select>\
+                <label>Tipo de desvio</label>\
+             </div>\
+            ');
+
+            if (data.Addtional == 1) {
+                $("#moreSelection").html('\
+                <div class="col s8 offset-s2">\
+                    <p style="color: #9e9e9e"><b>Descrição</b>: A esteira de desvio de balanceamento faz o balanceamento de carga nas esteiras de saída</p>\
+                </div>\
+                ');
+            } else if (data.Addtional == 2) {
+                $("#moreSelection").html('\
+                <div class="col s8 offset-s2">\
+                    <p style="color: #9e9e9e"><b>Descrição</b>: A esteira de desvio de seleção deve conter apenas três esteiras de saída onde será verificado o último processo.<br/>Primeira Esteira: Processo Concluído/Aguardando<br/>Segunda Esteira: Processo Defeituoso<br/>Terceira Esteira: Processo Interrompido</p>\
+                </div>\
+                ');
+            }
+
             $("#limiteP").attr("disabled", false);
         } else {
             $("#more").html("");
@@ -253,7 +269,6 @@ function saveEsteira() {
     let type = $('#selectTE :selected').val();
     let value = '';
     var typeBool = true;
-    console.log($('#selectTE :selected').val());
 
     //faz a verificação do tipo, e atribui para a tag value, o valor do campo extra de cada tipo de esteira.
     if (type == '1') {
@@ -268,7 +283,7 @@ function saveEsteira() {
     } else if (type == '3') {
         value = $('#etiqueta').val();
     } else if (type == '4') {
-        value = $('#desvio').val();
+        value = $('#typeDesvio :selected').val();
     } else {
         M.toast({ html: 'Type inválido' });
         typeBool = false;
@@ -319,7 +334,7 @@ function changeEsteira(oldName) {
     } else if (type == '3') {
         value = $('#etiqueta').val();
     } else if (type == '4') {
-        value = $('#desvio').val();
+        value = $('#typeSelect :selected').text();
     } else {
         M.toast({ html: 'Type inválido' });
         typeBool = false;
@@ -355,7 +370,7 @@ function limpaAbout() {
 }
 
 //função para gerar a lista das esteiras
-function generateListEsteira(data, $e, type) {
+function generateListEsteira(data, $e, type, colorr) {
 
     //função para gerar a lista interna das esteiras
     function InnerList(obj, $target) {
@@ -364,7 +379,7 @@ function generateListEsteira(data, $e, type) {
         li.append(
             '<div id="' + obj.Id + '" class="collapsible-header" tabindex="0" onclick="alteraEsteira(this.id)">\
                 <div class="col s12 m12">\
-                    <i class="fas fa-cogs colorIconPrincipal"></i>' + obj.Name + "\
+                    <i class="fas fa-pallet '+ colorr + '"></i>' + obj.Name + "\
                 </div>\
             </div>"
         );
@@ -387,7 +402,7 @@ function generateListEsteira(data, $e, type) {
             jObj.data("Addtional", obj.InitialValue);
             jObj.data("Type", "Esteira etiquetadora");
         } else if (type == 4) {
-            jObj.data("Addtional", "");
+            jObj.data("Addtional", obj.tipoDesvio);
             jObj.data("Type", "Esteira de desvio");
         }
     }

@@ -52,8 +52,6 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
-
-
         public SessionAuth(string authId, HashSet<string> sessionGroup)
         {
             Login = MasterHub.listLogins.Find(x => x.AuthId.Equals(authId));
@@ -92,26 +90,49 @@ namespace ProductionLinesWEG.Hub
         };
 
         // lista de programas, "sessões"
+        //public static readonly List<Program> listProgram = new List<Program>() {
+        //    Testes.loadProgramTeste(listLogins[0]),
+        //    Testes.loadProgramTeste(listLogins[1]),
+        //    Testes.loadProgramTeste(listLogins[2]),
+        //    Testes.loadProgramTeste(listLogins[3]),
+        //    Testes.loadProgramTeste(listLogins[4]),
+        //    Testes.loadProgramTeste(listLogins[5]),
+        //    Testes.loadProgramTeste(listLogins[6]),
+        //    Testes.loadProgramTeste(listLogins[7]),
+        //    Testes.loadProgramTeste(listLogins[8]),
+        //    Testes.loadProgramTeste(listLogins[9]),
+        //    Testes.loadProgramTeste(listLogins[10]),
+        //    Testes.loadProgramTeste(listLogins[11]),
+        //    Testes.loadProgramTeste(listLogins[12]),
+        //    Testes.loadProgramTeste(listLogins[13]),
+        //    Testes.loadProgramTeste(listLogins[14]),
+        //    Testes.loadProgramTeste(listLogins[15]),
+        //    Testes.loadProgramTeste(listLogins[16]),
+        //    Testes.loadProgramTeste(listLogins[17]),
+        //    Testes.loadProgramTeste(listLogins[18]),
+        //    Testes.loadProgramTeste(listLogins[19]),
+        //};
+
         public static readonly List<Program> listProgram = new List<Program>() {
-            Testes.loadProgramTeste(listLogins[0]),
-            Testes.loadProgramTeste(listLogins[1]),
-            Testes.loadProgramTeste(listLogins[2]),
-            Testes.loadProgramTeste(listLogins[3]),
-            Testes.loadProgramTeste(listLogins[4]),
-            Testes.loadProgramTeste(listLogins[5]),
-            Testes.loadProgramTeste(listLogins[6]),
-            Testes.loadProgramTeste(listLogins[7]),
-            Testes.loadProgramTeste(listLogins[8]),
-            Testes.loadProgramTeste(listLogins[9]),
-            Testes.loadProgramTeste(listLogins[10]),
-            Testes.loadProgramTeste(listLogins[11]),
-            Testes.loadProgramTeste(listLogins[12]),
-            Testes.loadProgramTeste(listLogins[13]),
-            Testes.loadProgramTeste(listLogins[14]),
-            Testes.loadProgramTeste(listLogins[15]),
-            Testes.loadProgramTeste(listLogins[16]),
-            Testes.loadProgramTeste(listLogins[17]),
-            Testes.loadProgramTeste(listLogins[18]),
+            new Program(listLogins[0]),
+            new Program(listLogins[1]),
+            new Program(listLogins[2]),
+            new Program(listLogins[3]),
+            new Program(listLogins[4]),
+            new Program(listLogins[5]),
+            new Program(listLogins[6]),
+            new Program(listLogins[7]),
+            new Program(listLogins[8]),
+            new Program(listLogins[9]),
+            new Program(listLogins[10]),
+            new Program(listLogins[11]),
+            new Program(listLogins[12]),
+            new Program(listLogins[13]),
+            new Program(listLogins[14]),
+            new Program(listLogins[15]),
+            new Program(listLogins[16]),
+            new Program(listLogins[17]),
+            new Program(listLogins[18]),
             Testes.loadProgramTeste(listLogins[19]),
         };
 
@@ -559,9 +580,6 @@ namespace ProductionLinesWEG.Hub
                 {
                     RegisterMessageDashboard("Error: Find Process: '" + name + "'", 3, true);
                 }
-
-
-
             }
         }
 
@@ -674,7 +692,28 @@ namespace ProductionLinesWEG.Hub
 
                         // esteira de desvio
                         case 4:
-                            RegisterMessageDashboard("Não é possivel criar esteiras desviadoras ainda", 2, true);
+                            try
+                            {
+                                int typeD = int.Parse(additional);
+
+                                if (typeD == 1)
+                                {
+                                    e = new EsteiraBalanceadora("", name, desc, inlimit);
+                                }
+                                else if (typeD == 2)
+                                {
+                                    e = new EsteiraSeletora("", name, desc, inlimit);
+                                }
+                                else
+                                {
+                                    RegisterMessageDashboard("Tipo de Desvio inválido: " + typeD, 3, true);
+                                }
+                            }
+                            catch (System.Exception)
+                            {
+                                RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
+                            }
+
                             break;
 
                         // caso seja bulado o sistema de tipo, cai aqui
@@ -698,7 +737,7 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
-        
+
         // cria uma esteira e a insere no programa
         public void ChangingEsteira(string oldname, string newname, string desc, int inlimit, int type, string additional)
         {
@@ -771,7 +810,6 @@ namespace ProductionLinesWEG.Hub
 
                             // esteira de desvio
                             case 4:
-                                RegisterMessageDashboard("Não é possivel alterar esteiras desviadoras ainda", 2, true);
                                 break;
 
                             // caso seja bulado o sistema de tipo, cai aqui
@@ -795,6 +833,30 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
+        // cria uma esteira e a insere no programa
+        public void DeleteEsteira(string name)
+        {
+            Program pgm = CheckReturnPgm();
+
+            if (pgm != null)
+            {
+
+                EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Name.Equals(name));
+
+                if (e != null)
+                {
+                    pgm.removeEsteira(e);
+
+                    RegisterMessageDashboard("Esteira '" + name + "' Deletado", 1, true);
+                    CallListEsteira();
+                }
+                else
+                {
+                    RegisterMessageDashboard("Error: Find Process: '" + name + "'", 3, true);
+                }
+            }
+        }
+
         // retorna todas as esteiras separadas em tipos para o usuario
         public void CallListEsteira()
         {
@@ -805,6 +867,33 @@ namespace ProductionLinesWEG.Hub
 
             if (pgm != null)
             {
+                ListEsteiraClient l = pgm.getEsteirasToClient();
+
+                Debug.WriteLine("========= Debug List E to Client Recursive =========");
+                for (int i = 0; i < l.listArmazenamento.Count; i++)
+                {
+                    Debug.WriteLine(l.listArmazenamento[i] +" > "+ l.listArmazenamento[i].EsteiraOutput);
+                }
+                for (int i = 0; i < l.listDesvio.Count; i++)
+                {
+                    Debug.WriteLine(l.listDesvio[i].Id + " {");
+                    for (int j = 0; j < l.listDesvio[i].EsteiraOutput.Count; j++)
+                    {
+                        Debug.WriteLine(l.listDesvio[i].EsteiraOutput[j]);
+                    }
+                    Debug.WriteLine("}");
+                }
+                for (int i = 0; i < l.listEtiquetadora.Count; i++)
+                {
+                    Debug.WriteLine(l.listEtiquetadora[i] + " > " + l.listArmazenamento[i].EsteiraOutput);
+                }
+                for (int i = 0; i < l.listModel.Count; i++)
+                {
+                    Debug.WriteLine(l.listModel[i] + " > " + l.listModel[i].EsteiraOutput);
+                }
+
+                Debug.WriteLine("======= Fim Debug List E to Client Recursive =======");
+
                 Clients.Clients(connections).listEsteiras(pgm.getEsteirasToClient());
             }
         }

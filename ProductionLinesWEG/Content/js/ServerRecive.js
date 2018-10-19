@@ -77,21 +77,15 @@ function ServerReciveMethods() {
     //lista as esteiras na tela de esteiras
     connector.client.listEsteiras = function (jsonRecived) {
         try {
-            limpaAbout();
-        } catch (e) {
-            // null
-        }
-
-        try {
             $("#esteirasModel").html("");
             $("#esteirasArma").html("");
             $("#esteirasEtiq").html("");
             $("#esteirasDesvio").html("");
 
-            generateListEsteira(jsonRecived.listModel, $("#esteirasModel"), 1);
-            generateListEsteira(jsonRecived.listArmazenamento, $("#esteirasArma"), 2);
-            generateListEsteira(jsonRecived.listEtiquetadora, $("#esteirasEtiq"), 3);
-            generateListEsteira(jsonRecived.listDesvio, $("#esteirasDesvio"), 4);
+            generateListEsteira(jsonRecived.listModel, $("#esteirasModel"), 1, "colorEModel");
+            generateListEsteira(jsonRecived.listArmazenamento, $("#esteirasArma"), 2, "colorEArmazem");
+            generateListEsteira(jsonRecived.listEtiquetadora, $("#esteirasEtiq"), 3, "colorEEtiqueta");
+            generateListEsteira(jsonRecived.listDesvio, $("#esteirasDesvio"), 4, "colorEDesvio");
         } catch (e) {
             // null
         }
@@ -106,7 +100,7 @@ function ServerReciveMethods() {
             generateListProducao(jsonRecived.listModel, $("#tmodelo tbody"), 1, "blue darken-4");
             generateListProducao(jsonRecived.listArmazenamento, $("#tarmazenamento tbody"), 2, "orange darken-4");
             generateListProducao(jsonRecived.listEtiquetadora, $("#tetiquetadora tbody"), 3, "lime darken-2");
-            generateListProducao(jsonRecived.listDesvio, $("#tdesvio tbody"), 4, "teal darken-2");
+            generateListProducao(jsonRecived.listDesvio, $("#tdesvio tbody"), 4, "purple lighten-1");
 
             setDropDragItens();
         } catch (e) {
@@ -143,5 +137,9 @@ function ServerReciveMethods() {
 
         $("#nivelDash").html(html);
         $('select').formSelect();
+    }
+
+    connector.client.setOnOff = function (id, state) {
+        setOnOff(id, state);
     }
 };

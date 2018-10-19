@@ -10,6 +10,21 @@
     vertical-align: middle;
 }
 
+.dragBase{
+    cursor: grab;
+}
+.dragClone{
+    cursor: pointer;
+}
+
+.dragBase:active{
+    cursor: grabbing;
+}
+
+.ui-draggable-dragging{
+    cursor: grabbing;
+}
+
 .conectorP {
     width: 100px;
     border-radius: 5px 15px 15px 5px;

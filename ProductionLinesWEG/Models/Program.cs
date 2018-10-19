@@ -81,73 +81,17 @@ namespace ProductionLinesWEG.Models
         public void CriaProcesso(Processo p)
         {
             listProcessos.Add(p);
-
-            attAllListBox();
         }
         // insere o processo 2 dentro do processo 1
         public void InsertProcesso(string processo1, string processo2)
         {
             listProcessos.Find(x => x.Name.Equals(processo1)).AddInternalProcess(-1, listProcessos.Find(x => x.Name.Equals(processo2)));
-
-            attAllListBox();
         }
-
-
-
-
-        // metodos para "acompanhamento" para retirada de duvidas
-        public void listBox1_SelectedIndexChanged()
-        {
-            //string value = listBox1.GetItemText(listBox1.SelectedItem);
-
-            attListBox2();
-        }
-
-        public void attAllListBox()
-        {
-            attListBox1();
-            attListBox2();
-            attListBox3();
-            attListBox4();
-            attListBox5();
-        }
-
-        public void attListBox1()
-        {
-            //listBox1.DataSource = listProcessos.Where(x => x.getFather() == null).Select(x => x.Name).ToList();
-        }
-
-        public void attListBox2()
-        {
-
-            //listBox2.DataSource = listProcessos.Where(x => x.GetFathersProcess().Find(y => y.Name.Equals(listBox1.GetItemText(listBox1.SelectedItem))) == null).Select(x => x.Name).ToList();
-        }
-
-        public void attListBox3()
-        {
-            //listBox3.DataSource = listProcessos.Select(x => x.Name).ToList();
-        }
-
-        public void attListBox4()
-        {
-            //listBox4.DataSource = listEsteiras.Select(x => x.Name).ToList();
-        }
-
-        public void attListBox5()
-        {
-            //listBox5.DataSource = listEsteiras.Select(x => x.Name).ToList();
-        }
-        // fim dos metodos para "acompanhamento" para retirada de duvidas
-
-
-
 
         // insere a esteira na lista de esteira do programa
         public void CriarEsteira(EsteiraAbstrata e)
         {
             listEsteiras.Add(e);
-
-            attAllListBox();
         }
 
         // insere o processo dentro da esteira model a ser procurada
@@ -156,8 +100,6 @@ namespace ProductionLinesWEG.Models
             EsteiraModel em = (EsteiraModel)listEsteiras.Find(x => x.Name.Equals(esteira));
 
             em.insertMasterProcess(listProcessos.Find(x => x.Name.Equals(processo)));
-
-            attAllListBox();
         }
 
         // pré carrega alguns processos e esteiras no programa
@@ -176,6 +118,7 @@ namespace ProductionLinesWEG.Models
             listProcessos.Add(new Processo(new BaseProcesso("h", "Processo qualquer", 1000)));
             listProcessos.Add(new Processo(new BaseProcesso("i", "Processo qualquer", 1000)));
             listProcessos.Add(new Processo(new BaseProcesso("j", "Processo qualquer", 1000)));
+            listProcessos.Add(new Processo(new BaseProcesso("teste de erro", "Processo para teste de erro", 500)));
 
             listProcessos[0].AddInternalProcess(-1, listProcessos[1]);
             listProcessos[0].AddInternalProcess(-1, listProcessos[3]);
@@ -191,7 +134,7 @@ namespace ProductionLinesWEG.Models
             listProcessos[7].AddInternalProcess(-1, listProcessos[8]);
             listProcessos[7].AddInternalProcess(-1, listProcessos[9]);
 
-            attAllListBox();
+            listProcessos[10].BaseProcesso.ErrorProbability = 50;
 
             toDashboard("Sistema pré-carregado com processos\n", 1);
 
@@ -207,6 +150,7 @@ namespace ProductionLinesWEG.Models
             listEsteiras.Add(new EsteiraModel("", "Esteira com Processo b", "Executa o processo b", 2));
             listEsteiras.Add(new EsteiraModel("", "Esteira com Processo c", "Executa o processo c", 3));
             listEsteiras.Add(new EsteiraModel("", "Esteira com Processo d", "Executa o processo d", 1));
+            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo teste", "Executa o processo teste de erro", 5));
 
             ((EsteiraModel)listEsteiras[0]).insertMasterProcess(listProcessos[0]);
 
@@ -216,14 +160,17 @@ namespace ProductionLinesWEG.Models
 
             ((EsteiraModel)listEsteiras[3]).insertMasterProcess(listProcessos[3]);
 
+            ((EsteiraModel)listEsteiras[4]).insertMasterProcess(listProcessos[10]);
+
             listEsteiras.Add(new EsteiraEtiquetadora(this.Login, "", "Esteira Etiquetadora", "Atribui uam tag com inicio 10000...", 1, 10000));
 
             listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 1 100pc", "Armazena X itens na esteira", 100));
             listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 2 10pc", "Armazena X itens na esteira", 10));
             listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 3 50pc", "Armazena X itens na esteira", 50));
             listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 4 Xpc", "Armazena infinitos itens na esteira", -1));
-
-            attAllListBox();
+            
+            listEsteiras.Add(new EsteiraBalanceadora("", "Esteira Balanceadora", "Balanceia as peças nas esteiras de saída", 5));
+            listEsteiras.Add(new EsteiraSeletora("", "Esteira Seletora", "Divide entre 3 saidas de acordo com os atributos do último processo", 5));
 
             toDashboard("Sistema pré-carregado com esteiras\n", 1);
         }
@@ -290,7 +237,7 @@ namespace ProductionLinesWEG.Models
             listEsteiras.FindAll(x => x is EsteiraModel && !x.IsClone).ForEach(x => list.listModel.Add((EsteiraModel)x));
             listEsteiras.FindAll(x => x is EsteiraArmazenamento && !x.IsClone).ForEach(x => list.listArmazenamento.Add((EsteiraArmazenamento)x));
             listEsteiras.FindAll(x => x is EsteiraEtiquetadora && !x.IsClone).ForEach(x => list.listEtiquetadora.Add((EsteiraEtiquetadora)x));
-            listEsteiras.FindAll(x => x is EsteiraDesvio && !x.IsClone).ForEach(x => list.listDesvio.Add((EsteiraDesvio)x));
+            listEsteiras.FindAll(x => x is EsteiraDesvio a && !x.IsClone).ForEach(x => list.listDesvio.Add((EsteiraDesvio)x));
 
             return list;
         }
@@ -557,6 +504,29 @@ namespace ProductionLinesWEG.Models
                 });
             });
 
+        }
+
+        public void removeEsteira(EsteiraAbstrata e)
+        {
+            if (ArrayMapCells != null)
+            {
+                for (int i = 0; i < ArrayMapCells.GetLength(0); i++)
+                {
+                    for (int j = 0; j < ArrayMapCells.GetLength(1); j++)
+                    {
+                        MapCell aux = (MapCell)ArrayMapCells.GetValue(i, j);
+
+                        if (aux != null && aux.Esteira != null && aux.Esteira.Name.Equals(e.Name))
+                        {
+                            aux.Esteira = null;
+                            ArrayMapCells[i, j] = null;
+                        }
+                    }
+
+                }
+            }
+
+            listEsteiras.Remove(e);
         }
 
         public void clearListTickDashboard()

@@ -26,20 +26,20 @@ namespace ProductionLinesWEG.Models
         /// Thread pricipal de controle da esteira
         /// </summary>
         public void threadEsteira()
-        {
-            if (e is SetableOutput)
+        {// verifica se a esteira esta em condição de operação (masterProcess existe) antes de iniciar
+            if (e.IsInCondition())
             {
-                if (((SetableOutput)e).EsteiraOutput == null)
+                if (e is SetableOutput es)
                 {
-                    program.toDashboard("Esteira: (" + e.Name + ") Abortando inicio: sem Output", 2);
-                    e.TurnOff();
-                }
-                else if (e is EsteiraModel em)
-                {
-                    while (true)
+                    if (es.EsteiraOutput == null)
                     {
-                        // verifica se a esteira esta em condição de operação (masterProcess existe) antes de iniciar
-                        if (em.IsInCondition())
+                        program.toDashboard("Esteira: (" + e.Name + ") Abortando inicio: sem Output", 2);
+                        e.TurnOff();
+                    }
+                    else if (es is EsteiraModel em)
+                    {
+
+                        while (true)
                         {
                             // pega a primeira peça da fila
                             Peca pc = em.GetInputPieceNoRemove();
@@ -98,112 +98,150 @@ namespace ProductionLinesWEG.Models
                                 Thread.Sleep(250);
                             }
                         }
-                        else
+                    }
+                    else if (es is EsteiraEtiquetadora ee)
+                    {
+                        while (true)
                         {
-                            program.toDashboard("Inserir um 'Master Process' na esteira (não é possivel iniciar)", 3);
-                            break;
+                            // pega a primeira peça da fila
+                            Peca pc = ee.GetInputPieceNoRemove();
+
+                            if (pc != null)
+                            {
+                                Atributo at = new Atributo(ee.Id, ee.Name);
+
+                                try
+                                {
+                                    Stopwatch stopWatch = new Stopwatch();
+
+                                    program.toDashboard("Esteira: (" + ee.Name + ") Inserindo TAG", 4);
+
+                                    pc.addAtributo(at);
+
+                                    // seta atributo
+                                    at.Estado = Atributo.FAZENDO;
+
+                                    stopWatch.Start();
+
+                                    Thread.Sleep(100);
+                                    ee.InsertTag();
+
+                                    stopWatch.Stop();
+
+                                    TimeSpan ts = stopWatch.Elapsed;
+                                    at.Time = ts.Milliseconds;
+
+                                    at.Estado = Atributo.FEITO;
+                                    at.Value = "Tag inserida";
+
+                                    program.toDashboard("(" + ee.Name + ") Peça entiquetada com: '" + pc.Tag + "'", 4);
+
+                                    while (!ee.PassPiece())
+                                    {
+                                        Thread.Sleep(250);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    program.toDashboard("(" + ee.Name + " desligando) " + e.Message, 2);
+                                    at.Estado = Atributo.DEFEITO;
+                                    at.Value = "Sem etiqueta";
+
+                                    ee.TurnOff();
+                                }
+
+                            }
+                            else
+                            {
+                                // fica esperando a peca (250ms para não sobrecarregar o servidor)
+                                Thread.Sleep(250);
+                            }
                         }
                     }
-                }
-                else if (e is EsteiraEtiquetadora ee)
-                {
-                    while (true)
+                    else if (es is EsteiraArmazenamento ea)
                     {
-                        // pega a primeira peça da fila
-                        Peca pc = ee.GetInputPieceNoRemove();
-
-                        if (pc != null)
+                        while (true)
                         {
-                            Atributo at = new Atributo(ee.Id, ee.Name);
+                            // pega a primeira peça da fila
+                            Peca pc = ea.GetInputPieceNoRemove();
 
-                            try
+                            if (pc != null)
                             {
-                                Stopwatch stopWatch = new Stopwatch();
 
-                                program.toDashboard("Esteira: (" + ee.Name + ") Inserindo TAG", 4);
+                                Atributo at = new Atributo(ea.Id, ea.Name);
 
                                 pc.addAtributo(at);
 
-                                // seta atributo
-                                at.Estado = Atributo.FAZENDO;
-
-                                stopWatch.Start();
-
                                 Thread.Sleep(100);
-                                ee.InsertTag();
 
-                                stopWatch.Stop();
-
-                                TimeSpan ts = stopWatch.Elapsed;
-                                at.Time = ts.Milliseconds;
-
+                                at.Time = 100;
                                 at.Estado = Atributo.FEITO;
-                                at.Value = "Tag inserida";
+                                at.Value = "Peça encaminhada";
 
-                                program.toDashboard("(" + ee.Name + ") Peça entiquetada com: '" + pc.Tag + "'", 4);
+                                program.toDashboard("(" + ea.Name + ") Peça '" + pc.Tag + "' encaminhada", 4);
 
-                                while (!ee.PassPiece())
+                                while (!ea.PassPiece())
                                 {
                                     Thread.Sleep(250);
                                 }
                             }
-                            catch (Exception e)
+                            else
                             {
-                                program.toDashboard("(" + ee.Name + " desligando) " + e.Message, 2);
-                                at.Estado = Atributo.DEFEITO;
-                                at.Value = "Sem etiqueta";
-
-                                ee.TurnOff();
-                            }
-
-                        }
-                        else
-                        {
-                            // fica esperando a peca (250ms para não sobrecarregar o servidor)
-                            Thread.Sleep(250);
-                        }
-                    }
-                }
-                else if (e is EsteiraArmazenamento ea)
-                {
-                    while (true)
-                    {
-                        // pega a primeira peça da fila
-                        Peca pc = ea.GetInputPieceNoRemove();
-
-                        if (pc != null)
-                        {
-
-                            Atributo at = new Atributo(ea.Id, ea.Name);
-
-                            pc.addAtributo(at);
-
-                            at.Time = 0;
-                            at.Estado = Atributo.FEITO;
-                            at.Value = "Peça encaminhada";
-
-                            program.toDashboard("(" + ea.Name + ") Peça '" + pc.Tag + "' encaminhada", 4);
-
-                            while (!ea.PassPiece())
-                            {
+                                // fica esperando a peca (250ms para não sobrecarregar o servidor)
                                 Thread.Sleep(250);
                             }
                         }
-                        else
-                        {
-                            // fica esperando a peca (250ms para não sobrecarregar o servidor)
-                            Thread.Sleep(250);
-                        }
                     }
                 }
-            }
-            else if (e is EsteiraDesvio ed)
-            {
+                else if (e is EsteiraDesvio ed)
+                {
+                    if (ed.EsteiraOutput != null && ed.EsteiraOutput.Count > 0)
+                    {
+                        while (true)
+                        {
+                            // pega a primeira peça da fila
+                            Peca pc = ed.GetInputPieceNoRemove();
 
+                            if (pc != null)
+                            {
+
+                                Atributo at = new Atributo(ed.Id, ed.Name);
+
+                                pc.addAtributo(at);
+
+                                Thread.Sleep(100);
+
+                                at.Time = 100;
+                                at.Estado = Atributo.FEITO;
+                                at.Value = "Peça encaminhada";
+
+                                program.toDashboard("(" + ed.Name + ") Peça '" + pc.Tag + "' encaminhada", 4);
+
+                                while (!ed.PassPiece())
+                                {
+                                    Thread.Sleep(250);
+                                }
+                            }
+                            else
+                            {
+                                // fica esperando a peca (250ms para não sobrecarregar o servidor)
+                                Thread.Sleep(250);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        program.toDashboard("Esteira: (" + ed.Name + ") Abortando inicio: sem Output", 3);
+                    }
+                }
+                else
+                {
+                    program.toDashboard("Thread init Error", 3);
+                }
             }
             else
             {
-                program.toDashboard("Thread init Error", 3);
+                program.toDashboard("Esteira: (" + e.Name + ") Abortando inicio: não esta em condição de operação, verificar integridade da planta", 3);
             }
         }
     }

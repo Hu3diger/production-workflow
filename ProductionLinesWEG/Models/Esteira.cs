@@ -219,6 +219,10 @@ namespace ProductionLinesWEG.Models
 
         public object Clone()
         {
+            if (!IsClone)
+            {
+                _queueInputPecas = new Queue<Peca>();
+            }
             EsteiraAbstrata e = (EsteiraAbstrata)this.MemberwiseClone();
 
             e.EsteiraInput = new List<EsteiraAbstrata>();
@@ -229,7 +233,16 @@ namespace ProductionLinesWEG.Models
             return ImplementedClone(e);
         }
 
+        public abstract bool IsInCondition();
+
+        public abstract bool PassPiece();
+
         protected abstract object ImplementedClone(EsteiraAbstrata e);
+
+        public override string ToString()
+        {
+            return this.Name + " id " + this.Id;
+        }
     }
 
     // classe usada para as esteiras que implementa apenas uma esteira de saida
@@ -262,7 +275,7 @@ namespace ProductionLinesWEG.Models
             EsteiraOutput = null;
         }
 
-        public bool PassPiece()
+        public override bool PassPiece()
         {
             if (EsteiraOutput != null && !EsteiraOutput.BlockedEsteira)
             {
@@ -308,7 +321,7 @@ namespace ProductionLinesWEG.Models
         /// <summary>
         /// verifica se a esteira esta em condição de operação
         /// </summary>
-        public bool IsInCondition()
+        public override bool IsInCondition()
         {
             return _processManager != null && _processMaster != null;
         }
@@ -384,6 +397,13 @@ namespace ProductionLinesWEG.Models
         public List<Peca> List()
         {
             return _queueInputPecas.ToList();
+        }
+        /// <summary>
+        /// verifica se a esteira esta em condição de operação
+        /// </summary>
+        public override bool IsInCondition()
+        {
+            return true;
         }
         /// <summary>
         /// Emplementação do Clone para cada Classe
@@ -476,6 +496,13 @@ namespace ProductionLinesWEG.Models
             listE.Remove(this);
         }
         /// <summary>
+        /// verifica se a esteira esta em condição de operação
+        /// </summary>
+        public override bool IsInCondition()
+        {
+            return RangeIsPossible(Login, currentTag);
+        }
+        /// <summary>
         /// Emplementação do Clone para cada Classe
         /// </summary>
         /// <returns></returns>
@@ -486,14 +513,14 @@ namespace ProductionLinesWEG.Models
     }
 
     // classe usada para desviar os processos conforme as condições passadas
-    public class EsteiraDesvio : EsteiraAbstrata
+    public abstract class EsteiraDesvio : EsteiraAbstrata
     {
         private static int _countId = 0;
-        public static List<EsteiraAbstrata> EsteiraOutput { get; private set; }
-        public int Type;
+        public List<EsteiraAbstrata> EsteiraOutput { get; private set; }
+        public int tipoDesvio;
 
         // esteira ainda não implementada
-        public EsteiraDesvio(string id, string name, string description, int limite, int type) : base(name, description, limite)
+        public EsteiraDesvio(string id, string name, string description, int limite) : base(name, description, limite)
         {
             if (id.Equals(""))
             {
@@ -504,13 +531,12 @@ namespace ProductionLinesWEG.Models
                 Id = id;
             }
 
-            Type = type;
             EsteiraOutput = new List<EsteiraAbstrata>();
         }
 
         public override void InsertOutput(EsteiraAbstrata e)
         {
-            if (EsteiraOutput == null)
+            if (EsteiraOutput != null)
             {
                 EsteiraOutput.Add(e);
             }
@@ -522,7 +548,7 @@ namespace ProductionLinesWEG.Models
 
         public override void RemoveAllOutput()
         {
-            EsteiraOutput.Clear();
+            EsteiraOutput = new List<EsteiraAbstrata>();
         }
 
         /// <summary>
@@ -532,6 +558,83 @@ namespace ProductionLinesWEG.Models
         protected override object ImplementedClone(EsteiraAbstrata e)
         {
             return e;
+        }
+    }
+
+    public class EsteiraBalanceadora : EsteiraDesvio
+    {
+        public EsteiraBalanceadora(string id, string name, string description, int limite) : base(id, name, description, limite)
+        {
+            tipoDesvio = 1;
+        }
+
+        public override bool PassPiece()
+        {
+            EsteiraAbstrata e = null;
+            EsteiraOutput.ForEach(x =>
+            {
+                if (e == null || (x.CountInputPieces() < e.CountInputPieces() && !x.BlockedEsteira))
+                {
+                    e = x;
+                }
+            });
+
+            if (e != null && !e.BlockedEsteira)
+            {
+                return e.InsertPiece(this.RemovePiece());
+            }
+            else
+            {
+                return false;
+            }
+        }
+        /// <summary>
+        /// verifica se a esteira esta em condição de operação
+        /// </summary>
+        public override bool IsInCondition()
+        {
+            return EsteiraOutput.Count >= 1;
+        }
+    }
+
+    public class EsteiraSeletora : EsteiraDesvio
+    {
+        public EsteiraSeletora(string id, string name, string description, int limite) : base(id, name, description, limite)
+        {
+            tipoDesvio = 2;
+        }
+
+        public override bool PassPiece()
+        {
+            Peca pc = GetInputPieceNoRemove();
+
+            if (pc.ListAtributos.Count > 1)
+            {
+                Atributo at = pc.ListAtributos[pc.ListAtributos.Count - 2];
+
+                if (at.Estado.Equals(Atributo.INTERROMPIDO) && !this.EsteiraOutput[2].BlockedEsteira)
+                {
+                    return this.EsteiraOutput[2].InsertPiece(this.RemovePiece());
+                }
+                else if (at.Estado.Equals(Atributo.DEFEITO) && !this.EsteiraOutput[1].BlockedEsteira)
+                {
+                    return this.EsteiraOutput[1].InsertPiece(this.RemovePiece());
+                }
+            }
+
+            if (!this.EsteiraOutput[0].BlockedEsteira)
+            {
+            return this.EsteiraOutput[0].InsertPiece(this.RemovePiece());
+            }
+
+            return false;
+        }
+        /// <summary>
+        /// verifica se a esteira esta em condição de operação
+        /// </summary>
+        public override bool IsInCondition()
+        {
+            return EsteiraOutput.Count == 3;
         }
     }
 }

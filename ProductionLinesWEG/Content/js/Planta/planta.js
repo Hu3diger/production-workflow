@@ -50,6 +50,7 @@ function setDropDragItens() {
     $(".dragClone").click(function () {
         let fn = "chumbarPecaEsteira(" + this.id + ")";
         let tn = "changeOnOff(" + this.id + ")";
+        $("#item").data("id", this.id);
         $("#btnChumbar").attr("onclick", fn);
         $("#modalName").html("<b>"+ $(this).data().Name +"</b>");
         $("#modalDescription").html("<b>Descrição da esteira</b>: "+ $(this).data().Description);
@@ -84,7 +85,6 @@ function setDropDragItens() {
 
         connector.server.getPieces($(this).attr("id")).done(function (json) {
             ListPieces = json;
-
             let html = "";
 
             html += '\
@@ -621,7 +621,7 @@ function generateListProducao(data, $e, type, colorClass) {
             jObj.data("Addtional", obj.InitialValue);
             jObj.data("Type", "Esteira etiquetadora");
         } else if (type == 4) {
-            jObj.data("Addtional", "");
+            jObj.data("Addtional", obj.tipoDesvio);
             jObj.data("Type", "Esteira de desvio");
         }
 
@@ -819,8 +819,20 @@ function clearContent() {
     }
 }
 
-
-
 function closeModal40(){
     $('.modal2').modal('close');
+}
+
+function setOnOff(id, state) {
+    $("#" + id).data("Ligado", state);
+    if ($("#item").data().id == id) {
+        $("#modalSwitch").html('\
+            <label>\
+                Desligado\
+                <input id="onOffEsteira" type="checkbox" '+ ($("#" + id).data().Ligado ? "checked='checked'" : "") + ' onclick="changeOnOff(' + id + ')">\
+                <span class="lever"></span>\
+                Ligado\
+            </label>\
+            ');
+    }
 }
