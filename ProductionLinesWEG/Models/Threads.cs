@@ -72,32 +72,40 @@ namespace ProductionLinesWEG.Models
                                 while (em.HasNextProcess())
                                 {
                                     Processo ps = em.NextProcess();
-                                    Atributo at = new Atributo(ps.Id, ps.Name);
 
-                                    pc.addAtributo(at);
-
-                                    pgm.toDashboard("Esteira: (" + em.Name + ") (" + ps.Id + ") Executando", 4, false);
-
-                                    run = ps.RuntimeWithVariation;
-
-                                    // seta atributo
-                                    at.Estado = Atributo.FAZENDO;
-
-                                    // simula o tempo de um proceso real 
-                                    Thread.Sleep(run);
-                                    at.Time = run;
-
-                                    // seta atributo
-                                    if (ps.InSuccess)
+                                    if (!pc.ListAtributos.Find(c => c.IdP.Equals(ps.Id)).Estado.Equals(Atributo.INTERROMPIDO))
                                     {
-                                        at.Estado = Atributo.FEITO;
+                                        Atributo at = new Atributo(ps.Id, ps.Name);
+
+                                        pc.addAtributo(at);
+
+                                        pgm.toDashboard("Esteira: (" + em.Name + ") (" + ps.Id + ") Executando", 4, false);
+
+                                        run = ps.RuntimeWithVariation;
+
+                                        // seta atributo
+                                        at.Estado = Atributo.FAZENDO;
+
+                                        // simula o tempo de um proceso real 
+                                        Thread.Sleep(run);
+                                        at.Time = run;
+
+                                        // seta atributo
+                                        if (ps.InSuccess)
+                                        {
+                                            at.Estado = Atributo.FEITO;
+                                        }
+                                        else
+                                        {
+                                            at.Estado = Atributo.DEFEITO;
+                                        }
+
+                                        pgm.toDashboard("Esteira: (" + em.Name + ") '" + ps.Name + "' Finalizado", 4, false);
                                     }
                                     else
                                     {
-                                        at.Estado = Atributo.DEFEITO;
+                                        pgm.toDashboard("Esteira: (" + em.Name + ") Processo '" + ps.Name + "' já feito (interrompido)", 4, false);
                                     }
-
-                                    pgm.toDashboard("Esteira: (" + em.Name + ") " + ps.Name + " Finalizado", 4, false);
                                 }
 
                                 // finalia o processo para ter um novo ciclo

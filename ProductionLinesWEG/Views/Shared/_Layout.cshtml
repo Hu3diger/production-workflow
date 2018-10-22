@@ -112,6 +112,7 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/jquery-cookie.js"></script>
     <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/jquery.ui.touch-punch.min.js"></script>
     <script src="~/Scripts/materialize.min.js"></script>
 
     <!-- JS signalR -->
@@ -143,12 +144,12 @@
             //starta a conexão
             $.connection.hub.start().done(function () {
                 console.log("Conexão Habilitada");
-                
+
                 @if(ViewBag.Screen != "Login"){
                 @:getFirstConnection();
                 @:getNavColor();
                 }
-                
+
                 @if (ViewBag.Screen == "Login")
                 {
                 @:testConnection();
@@ -198,7 +199,8 @@
     else if (ViewBag.Screen == "Estatistica")
     {
         <script src="~/Content/js/Estatisticas/estatistica.js"></script>
-    }else if (ViewBag.Screen == "__Planta")
+    }
+    else if (ViewBag.Screen == "__Planta")
     {
         <script src="~/Content/js/Planta/__planta.js"></script>
     }
