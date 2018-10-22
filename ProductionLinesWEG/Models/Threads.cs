@@ -15,13 +15,30 @@ namespace ProductionLinesWEG.Models
         private readonly IHubConnectionContext<dynamic> Clients = GlobalHost.ConnectionManager.GetHubContext<MasterHub>().Clients;
         private EsteiraAbstrata e;
 
-        private Program program;
+        private Program pgm;
+        private string ClientId;
 
-        public Threads(EsteiraAbstrata e, Program p)
+        public Threads(EsteiraAbstrata e, Program p, string clientId)
         {
             this.e = e;
-            program = p;
+            pgm = p;
+            ClientId = clientId;
         }
+
+        private void initSimulation()
+        {
+            e.Ligado = true;
+
+            if (!pgm.InSimulation)
+            {
+                pgm.toDashboard("Simulação iniciada, Alterações travadas", 2, true);
+            }
+
+            pgm.toDashboard("Esteira '" + e.Name + "' ligada", 1, ClientId);
+
+            pgm.InSimulation = true;
+        }
+
         /// <summary>
         /// Thread pricipal de controle da esteira
         /// </summary>
@@ -29,16 +46,17 @@ namespace ProductionLinesWEG.Models
         {// verifica se a esteira esta em condição de operação (masterProcess existe) antes de iniciar
             if (e.IsInCondition())
             {
+
                 if (e is SetableOutput es)
                 {
                     if (es.EsteiraOutput == null)
                     {
-                        program.toDashboard("Esteira: (" + e.Name + ") Abortando inicio: sem Output", 2);
-                        e.TurnOff();
+                        pgm.toDashboard("Esteira: (" + e.Name + ") Abortando inicio: sem Output", 2, ClientId);
+                        e.TurnOff(pgm);
                     }
                     else if (es is EsteiraModel em)
                     {
-
+                        initSimulation();
                         while (true)
                         {
                             // pega a primeira peça da fila
@@ -58,7 +76,7 @@ namespace ProductionLinesWEG.Models
 
                                     pc.addAtributo(at);
 
-                                    program.toDashboard("Esteira: (" + em.Name + ") (" + ps.Id + ") Executando", 4);
+                                    pgm.toDashboard("Esteira: (" + em.Name + ") (" + ps.Id + ") Executando", 4, false);
 
                                     run = ps.RuntimeWithVariation;
 
@@ -79,13 +97,13 @@ namespace ProductionLinesWEG.Models
                                         at.Estado = Atributo.DEFEITO;
                                     }
 
-                                    program.toDashboard("Esteira: (" + em.Name + ") " + ps.Name + " Finalizado", 4);
+                                    pgm.toDashboard("Esteira: (" + em.Name + ") " + ps.Name + " Finalizado", 4, false);
                                 }
 
                                 // finalia o processo para ter um novo ciclo
                                 em.FinalizeProcess();
 
-                                program.toDashboard("Esteira: (" + em.Name + ") Bateria de processos finalizados", 4);
+                                pgm.toDashboard("Esteira: (" + em.Name + ") Bateria de processos finalizados", 4, false);
 
                                 while (!em.PassPiece())
                                 {
@@ -101,6 +119,7 @@ namespace ProductionLinesWEG.Models
                     }
                     else if (es is EsteiraEtiquetadora ee)
                     {
+                        initSimulation();
                         while (true)
                         {
                             // pega a primeira peça da fila
@@ -114,7 +133,7 @@ namespace ProductionLinesWEG.Models
                                 {
                                     Stopwatch stopWatch = new Stopwatch();
 
-                                    program.toDashboard("Esteira: (" + ee.Name + ") Inserindo TAG", 4);
+                                    pgm.toDashboard("Esteira: (" + ee.Name + ") Inserindo TAG", 4, false);
 
                                     pc.addAtributo(at);
 
@@ -134,7 +153,7 @@ namespace ProductionLinesWEG.Models
                                     at.Estado = Atributo.FEITO;
                                     at.Value = "Tag inserida";
 
-                                    program.toDashboard("(" + ee.Name + ") Peça entiquetada com: '" + pc.Tag + "'", 4);
+                                    pgm.toDashboard("(" + ee.Name + ") Peça entiquetada com: '" + pc.Tag + "'", 4, false);
 
                                     while (!ee.PassPiece())
                                     {
@@ -143,11 +162,11 @@ namespace ProductionLinesWEG.Models
                                 }
                                 catch (Exception e)
                                 {
-                                    program.toDashboard("(" + ee.Name + " desligando) " + e.Message, 2);
+                                    pgm.toDashboard("(" + ee.Name + " desligando) " + e.Message, 2, ClientId);
                                     at.Estado = Atributo.DEFEITO;
                                     at.Value = "Sem etiqueta";
-
-                                    ee.TurnOff();
+                                    
+                                    ee.TurnOff(pgm);
                                 }
 
                             }
@@ -160,6 +179,7 @@ namespace ProductionLinesWEG.Models
                     }
                     else if (es is EsteiraArmazenamento ea)
                     {
+                        initSimulation();
                         while (true)
                         {
                             // pega a primeira peça da fila
@@ -178,7 +198,7 @@ namespace ProductionLinesWEG.Models
                                 at.Estado = Atributo.FEITO;
                                 at.Value = "Peça encaminhada";
 
-                                program.toDashboard("(" + ea.Name + ") Peça '" + pc.Tag + "' encaminhada", 4);
+                                pgm.toDashboard("(" + ea.Name + ") Peça '" + pc.Tag + "' encaminhada", 4, false);
 
                                 while (!ea.PassPiece())
                                 {
@@ -197,6 +217,7 @@ namespace ProductionLinesWEG.Models
                 {
                     if (ed.EsteiraOutput != null && ed.EsteiraOutput.Count > 0)
                     {
+                        initSimulation();
                         while (true)
                         {
                             // pega a primeira peça da fila
@@ -215,7 +236,7 @@ namespace ProductionLinesWEG.Models
                                 at.Estado = Atributo.FEITO;
                                 at.Value = "Peça encaminhada";
 
-                                program.toDashboard("(" + ed.Name + ") Peça '" + pc.Tag + "' encaminhada", 4);
+                                pgm.toDashboard("(" + ed.Name + ") Peça '" + pc.Tag + "' encaminhada", 4, false);
 
                                 while (!ed.PassPiece())
                                 {
@@ -231,116 +252,19 @@ namespace ProductionLinesWEG.Models
                     }
                     else
                     {
-                        program.toDashboard("Esteira: (" + ed.Name + ") Abortando inicio: sem Output", 3);
+                        pgm.toDashboard("Esteira: (" + ed.Name + ") Abortando inicio: sem Output", 3, ClientId);
                     }
                 }
                 else
                 {
-                    program.toDashboard("Thread init Error", 3);
+                    pgm.toDashboard("Thread init Error", 3, ClientId);
                 }
             }
             else
             {
-                program.toDashboard("Esteira: (" + e.Name + ") Abortando inicio: não esta em condição de operação, verificar integridade da planta", 3);
+                pgm.toDashboard("Esteira: (" + e.Name + ") Abortando inicio: sem condição de operação, verificar integridade da planta", 3, ClientId);
             }
+            pgm.CheckSimulation();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //      private async void startButton_Click(object sender, RoutedEventArgs e)
-    //      {
-    //          // Instantiate the CancellationTokenSource.  
-    //          cts = new CancellationTokenSource();
-    //      
-    //          resultsTextBox.Clear();
-    //      
-    //          try
-    //          {
-    //              await AccessTheWebAsync(cts.Token);
-    //              // ***Small change in the display lines.  
-    //              resultsTextBox.Text += "\r\nDownloads complete.";
-    //          }
-    //          catch (OperationCanceledException)
-    //          {
-    //              resultsTextBox.Text += "\r\nDownloads canceled.";
-    //          }
-    //          catch (Exception)
-    //          {
-    //              resultsTextBox.Text += "\r\nDownloads failed.";
-    //          }
-    //      
-    //          // Set the CancellationTokenSource to null when the download is complete.  
-    //          cts = null;
-    //      }
-    //      
-    //      // Add an event handler for the Cancel button.  
-    //      private void cancelButton_Click(object sender, RoutedEventArgs e)
-    //      {
-    //          if (cts != null)
-    //          {
-    //              cts.Cancel();
-    //          }
-    //      }
-    //      
-    //      // Provide a parameter for the CancellationToken.  
-    //      // ***Change the return type to Task because the method has no return statement.  
-    //      async Task AccessTheWebAsync(CancellationToken ct)
-    //      {
-    //          // Declare an HttpClient object.  
-    //          HttpClient client = new HttpClient();
-    //      
-    //          // ***Call SetUpURLList to make a list of web addresses.  
-    //          List<string> urlList = SetUpURLList();
-    //      
-    //          // ***Add a loop to process the list of web addresses.  
-    //          foreach (var url in urlList)
-    //          {
-    //              // GetAsync returns a Task<HttpResponseMessage>.   
-    //              // Argument ct carries the message if the Cancel button is chosen.   
-    //              // ***Note that the Cancel button can cancel all remaining downloads.  
-    //              HttpResponseMessage response = await client.GetAsync(url, ct);
-    //      
-    //              // Retrieve the website contents from the HttpResponseMessage.  
-    //              byte[] urlContents = await response.Content.ReadAsByteArrayAsync();
-    //      
-    //              resultsTextBox.Text +=
-    //                  String.Format("\r\nLength of the downloaded string: {0}.\r\n", urlContents.Length);
-    //          }
-    //      }
-    //      
-    //      // ***Add a method that creates a list of web addresses.  
-    //      private List<string> SetUpURLList()
-    //      {
-    //          List<string> urls = new List<string>
-    //              {
-    //                  "http://msdn.microsoft.com",
-    //                  "http://msdn.microsoft.com/library/hh290138.aspx",
-    //                  "http://msdn.microsoft.com/library/hh290140.aspx",
-    //                  "http://msdn.microsoft.com/library/dd470362.aspx",
-    //                  "http://msdn.microsoft.com/library/aa578028.aspx",
-    //                  "http://msdn.microsoft.com/library/ms404677.aspx",
-    //                  "http://msdn.microsoft.com/library/ff730837.aspx"
-    //              };
-    //          return urls;
-    //      }
-
 }

@@ -20,49 +20,49 @@ function ServerReciveMethods() {
     var t = true;
     //função para atualizar o dashboard
     connector.client.reciveListDashboard = function (jMessage) {
-        try {
-            var jsonDashboard = [];
+        var jsonDashboard = [];
 
-            for (var i = 0; i < jMessage.length; i++) {
-                var v = jMessage[i];
+        for (var i = 0; i < jMessage.length; i++) {
+            var v = jMessage[i];
 
 
-                let line = {
-                    horario: v.Date,
-                    mensagem: v.Message,
-                    critico: v.Critico
-                };
+            let line = {
+                horario: v.Date,
+                mensagem: v.Message,
+                critico: v.Critico
+            };
 
-                jsonDashboard.push(line);
-            }
-
-            inserirT(jsonDashboard);
-        } catch (e) {
-
+            jsonDashboard.push(line);
         }
+
+        inserirT(jsonDashboard);
     };
 
     connector.client.reciveTickDashboard = function (jMessage) {
-        try {
+        $(jMessage).each(function () {
 
-            $("#xuxu").html("");
+            if (this.Nivel == parseInt($("#nivelDash :selected").val()) || parseInt($("#nivelDash :selected").val()) == 4) {
+                $("#xuxu").prepend(
+                    "<tr><td>" +
+                    this.Date +
+                    "</td><td>" +
+                    this.Message +
+                    "</td></tr>"
+                );
+            }
+        });
 
-            $(jMessage).each(function () {
-                console.log(this);
+        getTickDashboard();
+    }
 
-                if (this.Nivel == parseInt($("#nivelDash :selected").val()) || parseInt($("#nivelDash :selected").val()) == 4) {
-                    $("#xuxu").prepend(
-                        "<tr><td>" +
-                        this.Date +
-                        "</td><td>" +
-                        this.Message +
-                        "</td></tr>"
-                    );
-                }
-            });
-
-        } catch (e) {
-
+    connector.client.reciveTickEsteira = function (esteira, pecas) {
+        var id = $("#item").data().id;
+        if (id != "") {
+            setOnOff(id, esteira.Ligado);
+            console.log(esteira);
+            console.log(pecas);
+            setPiecesModal(pecas);
+            getTickEsteira();
         }
     }
 
@@ -141,5 +141,20 @@ function ServerReciveMethods() {
 
     connector.client.setOnOff = function (id, state) {
         setOnOff(id, state);
+    }
+
+    connector.client.setFirstConnection = function () {
+        getFirstConnection();
+    }
+
+    connector.client.setNavColor = function (inSimulation) {
+
+        if (inSimulation && !$("#navId").hasClass("red darken-2")) {
+            $("#navId").removeAttr("class");
+            $("#navId").addClass("red darken-2");
+        } else if (!inSimulation && !$("#navId").hasClass("light-blue darken-2")) {
+            $("#navId").removeAttr("class");
+            $("#navId").addClass("light-blue darken-2");
+        }
     }
 };

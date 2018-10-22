@@ -32,7 +32,7 @@
     {
         <!-- Nav Bar -->
         <div class="navbar-fixed">
-            <nav class="light-blue darken-2">
+            <nav id="navId" class="light-blue darken-2">
                 <div class="nav-wrapper">
                     <a href="#" data-target="mobile-menu" class="sidenav-trigger">
                         <i class="material-icons">menu</i>
@@ -143,6 +143,12 @@
             //starta a conexão
             $.connection.hub.start().done(function () {
                 console.log("Conexão Habilitada");
+                
+                @if(ViewBag.Screen != "Login"){
+                @:getFirstConnection();
+                @:getNavColor();
+                }
+                
                 @if (ViewBag.Screen == "Login")
                 {
                 @:testConnection();
@@ -156,7 +162,7 @@
                 @:callListEsteira();
                 }else if (ViewBag.Screen == "Dashboard")
                 {
-                @:getAttDashboard();
+                @:getFirstAttDashboard();
                 }
 
                 @if (ViewBag.Screen == "Planta")
@@ -192,6 +198,9 @@
     else if (ViewBag.Screen == "Estatistica")
     {
         <script src="~/Content/js/Estatisticas/estatistica.js"></script>
+    }else if (ViewBag.Screen == "__Planta")
+    {
+        <script src="~/Content/js/Planta/__planta.js"></script>
     }
 
     <script src="/signalr/hubs" type="text/javascript"></script>

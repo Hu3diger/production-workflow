@@ -13,9 +13,13 @@ function requestLogin(user, pass) {
 }
 
 //requisita a atualização do dashboard continuamente
-function getAttDashboard() {
+function getFirstAttDashboard() {
 
-    connector.server.getAttDashboard();
+    connector.server.getFirstAttDashboard().done(function (rs) {
+        if (rs == "Fail") {
+
+        }
+    });
 
 }
 
@@ -125,6 +129,22 @@ function clearDashboard() {
 
 }
 
-function alterDash(nivel){
+function alterDash(nivel) {
     connector.server.alterDash(nivel);
+}
+
+function getTickDashboard() {
+    connector.server.getTickDashboard();
+}
+
+function getTickEsteira() {
+    connector.server.getTickEsteira($("#item").data().id);
+}
+
+function getFirstConnection() {
+    connector.server.firstConnection();
+}
+
+function getNavColor() {
+    connector.server.getNavColor();
 }

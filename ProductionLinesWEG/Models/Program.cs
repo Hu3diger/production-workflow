@@ -27,9 +27,10 @@ namespace ProductionLinesWEG.Models
             }
         }
         public bool InSimulation { get; set; }
-        public int InDashboard { get; set; }
+        public bool InDashboard { get; set; }
+        public bool IsHostingAllClients { get; set; }
         public int NivelDash { get; set; }
-        private int clearTick;
+        public int ControllTick { get; set; }
 
         // lista apenas de leitura que armazena os objetos do programa
         // como esteiras, processos e mensagens do dashboard
@@ -37,6 +38,7 @@ namespace ProductionLinesWEG.Models
         public readonly List<EsteiraAbstrata> listEsteiras = new List<EsteiraAbstrata>();
         public readonly IList listDashboard = ArrayList.Synchronized(new List<Dashboard>());
         public readonly IList listTickDashboard = ArrayList.Synchronized(new List<Dashboard>());
+        public readonly IList listToAllClients = ArrayList.Synchronized(new List<DashboardClient>());
 
         public int IdCloneEm { get; set; }
         public int IdCloneEa { get; set; }
@@ -61,20 +63,39 @@ namespace ProductionLinesWEG.Models
             MinY = 1;
 
             InSimulation = false;
-            InDashboard = 0;
-            NivelDash = 1;
+            NivelDash = 4;
         }
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
-        public void toDashboard(string message, int nivel)
+        private Dashboard toDashboard(string message, int nivel)
         {
+            Dashboard d = new Dashboard(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), message, nivel);
+
             if (nivel == 3)
             {
-                listDashboard.Insert(0, new Dashboard(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), message, nivel));
+                listDashboard.Insert(0, d);
             }
 
-            if (InDashboard > 0)
+            if (InDashboard)
             {
-                listTickDashboard.Add(new Dashboard(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), message, nivel));
+                listTickDashboard.Add(d);
+            }
+
+            return d;
+        }
+        // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
+        public void toDashboard(string message, int nivel, bool toAllClients)
+        {
+            if (toAllClients)
+            {
+                listToAllClients.Add(new DashboardClient(toDashboard(message, nivel), true));
+            }
+        }
+        // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
+        public void toDashboard(string message, int nivel, string clientId)
+        {
+            if (!clientId.Equals(""))
+            {
+                listToAllClients.Add(new DashboardClient(toDashboard(message, nivel), clientId));
             }
         }
         // adiciona um processo na lista e exibe uma mensagem ao dashboard
@@ -136,7 +157,7 @@ namespace ProductionLinesWEG.Models
 
             listProcessos[10].BaseProcesso.ErrorProbability = 50;
 
-            toDashboard("Sistema pré-carregado com processos\n", 1);
+            toDashboard("Sistema pré-carregado com processos\n", 1, false);
 
 
 
@@ -172,19 +193,7 @@ namespace ProductionLinesWEG.Models
             listEsteiras.Add(new EsteiraBalanceadora("", "Esteira Balanceadora", "Balanceia as peças nas esteiras de saída", 5));
             listEsteiras.Add(new EsteiraSeletora("", "Esteira Seletora", "Divide entre 3 saidas de acordo com os atributos do último processo", 5));
 
-            toDashboard("Sistema pré-carregado com esteiras\n", 1);
-        }
-
-        // liga a esteira para iniciar os processos
-        public void LigarEsteira(string esteira)
-        {
-            listEsteiras.Find(x => x.Name.Equals(esteira)).TurnOn(this);
-        }
-
-        // desliga a esteira e para os processos
-        public void DesligarEsteira(string esteira)
-        {
-            listEsteiras.Find(x => x.Name.Equals(esteira)).TurnOff();
+            toDashboard("Sistema pré-carregado com esteiras\n", 1, false);
         }
 
         // converte a lsita de processos para uma forma com que depois
@@ -529,12 +538,27 @@ namespace ProductionLinesWEG.Models
             listEsteiras.Remove(e);
         }
 
-        public void clearListTickDashboard()
+        internal void CheckSimulation()
         {
-            if (++clearTick >= InDashboard)
+            if (InSimulation)
             {
-                clearTick = 0;
-                listTickDashboard.Clear();
+                bool controlePgm = false;
+
+                foreach (var x in listEsteiras)
+                {
+                    if (x.Ligado)
+                    {
+                        controlePgm = true;
+                        break;
+                    }
+                }
+
+                InSimulation = controlePgm;
+
+                if (!InSimulation)
+                {
+                    toDashboard("Simulação parada, Alterações destravadas", 2, true);
+                }
             }
         }
     }

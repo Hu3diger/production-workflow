@@ -187,6 +187,7 @@
     <Compile Include="Controllers\EsteirasController.cs" />
     <Compile Include="Controllers\ProcessosController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\WikiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -212,6 +213,7 @@
     <Content Include="Views\Esteiras\Index.cshtml" />
     <Content Include="Views\Processos\Index.cshtml" />
     <Content Include="Views\Planta\Index.cshtml" />
+    <Content Include="Views\Wiki\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

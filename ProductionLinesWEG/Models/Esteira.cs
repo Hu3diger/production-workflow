@@ -20,7 +20,7 @@ namespace ProductionLinesWEG.Models
 
 
         public string Id { get; set; }
-        public bool Ligado { get; private set; }
+        public bool Ligado { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int InLimit { get; set; }
@@ -167,17 +167,15 @@ namespace ProductionLinesWEG.Models
         /// <summary>
         /// Liga a esteira e possibilita o trabalho dela
         /// </summary>
-        public void TurnOn(Program program)
+        public void TurnOn(Program program, string clientId)
         {
             CleanThread();
 
-            Threads t = new Threads(this, program);
+            Threads t = new Threads(this, program, clientId);
 
             thread = new Thread(t.threadEsteira);
 
             thread.Start();
-
-            Ligado = true;
         }
         /// <summary>
         /// encerra (caso esteja inicializada) e deleta a thread
@@ -194,7 +192,7 @@ namespace ProductionLinesWEG.Models
         /// <summary>
         /// Desliga a esteira e impossibilita o trabalho dela
         /// </summary>
-        public void TurnOff()
+        public void TurnOff(Program pgm)
         {
             Ligado = false;
 
@@ -210,9 +208,11 @@ namespace ProductionLinesWEG.Models
                     }
                 });
             }
+
+            pgm.CheckSimulation();
         }
 
-        public List<Peca> getToList()
+        public List<Peca> getPiecesToList()
         {
             return _queueInputPecas.ToList();
         }

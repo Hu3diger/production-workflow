@@ -1,41 +1,43 @@
 ﻿var ctx = document.getElementById('myChart').getContext('2d');
-var listinha = [0, 10, 5, 2, 20, 30, 10];
-var listona = [{
-    label: "Primeiro",
+
+var valores = [100, 100, 105, 102, 120, 103, 101];
+var valores2 = [];
+var graficos = [{
+    label: "Esteira com processo b",
     backgroundColor: 'rgb(255, 99, 132)',
     borderColor: 'rgb(255, 99, 132)',
-    data:listinha,
+    data:valores,
+    lineTension: 0,
     fill: false,
 },
 {
-    label: "Segundo",
+    label: "Esteira com processo c",
     backgroundColor: 'rgb(30, 99, 132)',
     borderColor: 'rgb(30, 99, 132)',
-    data: [0, 5, 50, 12, 120, 30, 10],
+    lineTension: 0,
+    data: [200, 205, 150, 120, 120, 130, 100],
     fill: false,
 }];
 
-var kappa = [];
-
 for (let i = 0; i < 7; i++) {
-    kappa.push(i*10);
+    valores2.push(i*10 - i*5);
 }
 
 var x = {
-    label: "Terceiro",
+    label: "Esteira com Processo a",
     backgroundColor: 'rgb(30, 255, 132)',
     borderColor: 'rgb(30, 255, 132)',
-    data: kappa,
+    data: valores2,
+    lineTension: 0,
     fill: false,
 };
 
-listona.push(x);
-
+graficos.push(x);
 var itens = {
     type: 'line',
     data: {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: listona
+        labels: ["1001", "1002", "1003", "1004", "1005", "1006", "1007"],
+        datasets: graficos
     },
 
 

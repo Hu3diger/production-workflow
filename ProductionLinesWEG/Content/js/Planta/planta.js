@@ -16,12 +16,19 @@ var ListPieces = [];
 $(document).ready(function () {
     $('.modal1').modal();
     $('.modal2').modal();
+
+    $('.modal1').modal({
+        onCloseStart: function(){
+            $("#item").data("id", "");
+        },
+        onOpenStart: function () {
+            getTickEsteira();
+        }
+    })
 });
 
 function getIds() {
     connector.server.getValuesPgm().done(function (reciveContentTable) {
-
-        console.log(reciveContentTable);
 
         countIdEm = reciveContentTable.Array[0];
         countIdEa = reciveContentTable.Array[1];
@@ -56,15 +63,8 @@ function setDropDragItens() {
         $("#modalDescription").html("<b>Descrição da esteira</b>: "+ $(this).data().Description);
         $("#modalLimit").html("<b>Limite de entrada</b>: "+ ($(this).data().InLimit == -1 ? "Limite infinito de " : $(this).data().InLimit) + " peças");
         $("#modalType").html("<b>Tipo da esteira</b>: "+ $(this).data().Type);
-        
-        $("#modalSwitch").html('\
-            <label>\
-                Desligado\
-                <input id="onOffEsteira" type="checkbox" '+ ($(this).data().Ligado ? "checked='checked'" : "") + ' onclick="changeOnOff(' + this.id + ')">\
-                <span class="lever"></span>\
-                Ligado\
-            </label>\
-            ');
+
+        setOnOff(id, $(this).data().Ligado);
 
         switch ($(this).data().TypeN) {
             case 1:
@@ -84,29 +84,11 @@ function setDropDragItens() {
         $("#modalAbout").html("<b>"+ sobre +"</b>");
 
         connector.server.getPieces($(this).attr("id")).done(function (json) {
-            ListPieces = json;
-            let html = "";
-
-            html += '\
-                <tr>\
-                    <th>Peças na fila de entrada</th>\
-                    <th></th>\
-                </tr>\
-            ';
-
-            for (var i = 0; i < json.length; i++) {
-                html += '\
-                    <tr>\
-                        <td>'+ json[i].Tag +'</td>\
-                        <td><a class="modal-trigger" href="#modal40" onclick="modal2show('+i+')">Detalhes</a></td>\
-                    </tr>\
-                ';
-            }
-
-            $("#tablePieces").html(html);
+            setPiecesModal(json);
         })
         
         $('.modal2').modal('close');
+        
     });
 
 
@@ -835,4 +817,27 @@ function setOnOff(id, state) {
             </label>\
             ');
     }
+}
+
+function setPiecesModal(json){
+    ListPieces = json;
+    let html = "";
+
+    html += '\
+                <tr>\
+                    <th>Peças na fila de entrada</th>\
+                    <th></th>\
+                </tr>\
+            ';
+
+    for (var i = 0; i < json.length; i++) {
+        html += '\
+                    <tr>\
+                        <td>'+ json[i].Tag + '</td>\
+                        <td><a class="modal-trigger" href="#modal40" onclick="modal2show('+ i + ')">Detalhes</a></td>\
+                    </tr>\
+                ';
+    }
+
+    $("#tablePieces").html(html);
 }

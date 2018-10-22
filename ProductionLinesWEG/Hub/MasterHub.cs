@@ -31,6 +31,8 @@ namespace ProductionLinesWEG.Hub
     public class SessionAuth
     {
         public Logins Login { get; private set; }
+        public bool InDashboard;
+        public bool IsHostingAllClients;
 
         public HashSet<string> SessionGroup { get; set; }
         public string AuthId
@@ -59,12 +61,10 @@ namespace ProductionLinesWEG.Hub
         }
     }
 
-    // iisexpress-proxy 53139 to 3000
+    // iisexpress-proxy 53139 to 80
     // classe principal para a communicação com o servidor
     public class MasterHub : Microsoft.AspNet.SignalR.Hub
     {
-        private bool inDashboard = false;
-
         // lista de logins para controle de acesso
         public static readonly List<Logins> listLogins = new List<Logins> {
             new Logins("treina01",  "senha123", "OvZVPeUiR/Oty38YoQ5aWSbpAUkeneSW7wZQS2cn5YY="),
@@ -155,6 +155,37 @@ namespace ProductionLinesWEG.Hub
             return Enumerable.Empty<string>();
         }
 
+        // retorna o session vinculado ao connectionId passado
+        public static SessionAuth GetSessionByConnectionId(string connectionId)
+        {
+            foreach (var session in sessions)
+            {
+                if (session.Value.SessionGroup.Contains(connectionId) == true)
+                {
+                    return session.Value;
+                }
+            }
+
+            // retorna vazio caso não encontre
+            return null;
+        }
+
+        // retorna o session vinculado ao connectionId passado
+        public static List<SessionAuth> GetAllSessionByConnectionId(string connectionId)
+        {
+            List<SessionAuth> l = new List<SessionAuth>();
+
+            foreach (var session in sessions)
+            {
+                if (session.Value.SessionGroup.Contains(connectionId) == true)
+                {
+                    l.Add(session.Value);
+                }
+            }
+
+            return l;
+        }
+
         // retorna o AuthId de acordo com o connectionId (caso esteja logado)
         public static string GetAuthIdByConnectionId(string connectionId)
         {
@@ -207,7 +238,31 @@ namespace ProductionLinesWEG.Hub
         // sobrescreve o metodo onde é chamado quando um usuario se desconecta do servidor
         public override Task OnDisconnected(bool stopCalled)
         {
-            inDashboard = false;
+            Program pgm = CheckPgmInSimulation();
+            SessionAuth Sa = GetSessionByConnectionId(Context.ConnectionId);
+            if (pgm != null && Sa != null)
+            {
+                if (Sa.InDashboard)
+                {
+                    Sa.InDashboard = false;
+                    pgm.InDashboard = false;
+                    pgm.ControllTick = 0;
+                    pgm.listTickDashboard.Clear();
+                }
+
+                if (Sa.IsHostingAllClients)
+                {
+                    pgm.IsHostingAllClients = false;
+                    Sa.IsHostingAllClients = false;
+
+                    List<SessionAuth> l = GetAllSessionByConnectionId(Context.ConnectionId);
+
+                    if (l.Count > 0 && l[0].SessionGroup.Count > 0)
+                    {
+                        Clients.Client(l[0].SessionGroup.ToList()[0]).setFirstConnection();
+                    }
+                }
+            }
             // remove o usuario (apenas uma conexão por vez) da lista de usuarios (sessions)
 
             var connectionIds = null as SessionAuth;
@@ -425,7 +480,7 @@ namespace ProductionLinesWEG.Hub
 
             if (pgm != null)
             {
-                pgm.toDashboard(message, nivel);
+                pgm.toDashboard(message, nivel, false);
 
                 if (thisClient)
                 {
@@ -634,7 +689,7 @@ namespace ProductionLinesWEG.Hub
 
 
 
-        
+
         // cria uma esteira e a insere no programa
         public void CreateEsteira(string name, string desc, int inlimit, int type, string additional)
         {
@@ -872,7 +927,7 @@ namespace ProductionLinesWEG.Hub
                 Debug.WriteLine("========= Debug List E to Client Recursive =========");
                 for (int i = 0; i < l.listArmazenamento.Count; i++)
                 {
-                    Debug.WriteLine(l.listArmazenamento[i] +" > "+ l.listArmazenamento[i].EsteiraOutput);
+                    Debug.WriteLine(l.listArmazenamento[i] + " > " + l.listArmazenamento[i].EsteiraOutput);
                 }
                 for (int i = 0; i < l.listDesvio.Count; i++)
                 {
@@ -1049,7 +1104,7 @@ namespace ProductionLinesWEG.Hub
                                     }
                                     else
                                     {
-                                        throw new Exception("Esteira Base = null, idM = " + idM + " (linha: " + i + ", Coluna: " + j + ")");
+                                        throw new Exception("Esteira Base = null, idM = '" + idM + "' (linha: " + i + ", Coluna: " + j + ")");
                                     }
 
                                 }
@@ -1123,16 +1178,7 @@ namespace ProductionLinesWEG.Hub
 
                 if (e != null)
                 {
-                    e.TurnOn(pgm);
-
-                    if (!pgm.InSimulation)
-                    {
-                        RegisterMessageDashboard("Simulação iniciada, Alterações travadas", 2, false);
-                    }
-
-                    RegisterMessageDashboard("Esteira '" + e.Name + "' ligada", 1, false);
-
-                    pgm.InSimulation = true;
+                    e.TurnOn(pgm, Context.ConnectionId);
                 }
                 else
                 {
@@ -1154,30 +1200,12 @@ namespace ProductionLinesWEG.Hub
 
                 if (e != null)
                 {
-                    e.TurnOff();
-                    RegisterMessageDashboard("Esteira '" + e.Name + "' desligada", 1, false);
+                    e.TurnOff(pgm);
+                    RegisterMessageDashboard("Esteira '" + e.Name + "' desligada", 1, true);
                 }
                 else
                 {
                     RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
-                }
-
-                bool controlePgm = false;
-
-                foreach (var x in pgm.listEsteiras)
-                {
-                    if (x.Ligado)
-                    {
-                        controlePgm = true;
-                        break;
-                    }
-                }
-
-                pgm.InSimulation = controlePgm;
-
-                if (!pgm.InSimulation)
-                {
-                    RegisterMessageDashboard("Simulação parada, Alterações destravadas", 2, false);
                 }
             }
         }
@@ -1238,7 +1266,7 @@ namespace ProductionLinesWEG.Hub
 
                 if (e != null)
                 {
-                    list = e.getToList();
+                    list = e.getPiecesToList();
                 }
                 else
                 {
@@ -1261,29 +1289,61 @@ namespace ProductionLinesWEG.Hub
 
 
 
-        public async Task<string> getAttDashboard()
+        public void getFirstAttDashboard()
+        {
+            Program pgm = CheckPgmInSimulation();
+            SessionAuth Sa = GetSessionByConnectionId(Context.ConnectionId);
+
+            if (pgm != null && Sa != null)
+            {
+                if (!pgm.InDashboard)
+                {
+                    Sa.InDashboard = true;
+                    pgm.InDashboard = true;
+
+                    Clients.Caller.showToast("Initialized Dashboard");
+
+                    Clients.Caller.setNivelDash(pgm.NivelDash);
+
+                    Clients.Caller.reciveListDashboard(pgm.listDashboard);
+
+                    Clients.Caller.reciveTickDashboard(pgm.listTickDashboard);
+                }
+                else
+                {
+                    Clients.Caller.showToast("Já há um Dashboard aberto");
+                }
+            }
+        }
+
+        public async Task<string> getTickDashboard()
         {
             Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
             {
-                inDashboard = true;
-                pgm.InDashboard++;
-
-                Clients.Caller.showToast("Initialized Dashboard");
-
-                Clients.Caller.setNivelDash(pgm.NivelDash);
-
-                Clients.Caller.reciveListDashboard(pgm.listDashboard);
-                while (inDashboard)
+                try
                 {
-                    Clients.Caller.reciveTickDashboard(pgm.listTickDashboard);
-                    await Task.Delay(250);
+                    for (int i = 0; i < pgm.ControllTick; i++)
+                    {
+                        pgm.listTickDashboard.RemoveAt(0);
+                    }
                 }
-                Clients.Caller.showToast("Finished Dashboard");
+                catch (Exception)
+                {
+                    Clients.Caller.showToast("Debug to: getTickDashboard()");
+                }
+
+                await Task.Delay(500);
+
+                List<Dashboard> t = pgm.listTickDashboard.Cast<Dashboard>().ToList();
+
+                pgm.ControllTick = t.Count;
+
+                Clients.Caller.reciveTickDashboard(pgm.listTickDashboard);
             }
 
-            return "Finished Dashboard";
+            return "Finish";
         }
 
         public void clearDashboard()
@@ -1305,6 +1365,72 @@ namespace ProductionLinesWEG.Hub
             if (pgm != null)
             {
                 pgm.NivelDash = nivel;
+            }
+        }
+
+        public async Task<string> getTickEsteira(string id)
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                await Task.Delay(500);
+
+                EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(id));
+
+                Clients.Caller.reciveTickEsteira((EsteiraAbstrata)e.Clone(), e.getPiecesToList());
+            }
+
+            return "Finish";
+        }
+
+        public async Task<string> firstConnection()
+        {
+            Program pgm = CheckPgmInSimulation();
+            SessionAuth Sa = GetSessionByConnectionId(Context.ConnectionId);
+
+            if (pgm != null && !pgm.IsHostingAllClients && Sa != null)
+            {
+                pgm.IsHostingAllClients = true;
+                Sa.IsHostingAllClients = true;
+
+                while (pgm.IsHostingAllClients)
+                {
+                    List<DashboardClient> delete = new List<DashboardClient>();
+
+                    pgm.listToAllClients.Cast<DashboardClient>().ToList().ForEach(x =>
+                    {
+                        if (x.ToAllClients)
+                        {
+                            Clients.Clients(GetAllConnectionIdsByAuthId(pgm.AuthId).ToList()).showToast(x.dashboard.Message);
+                        }
+                        else
+                        {
+                            Clients.Client(x.ClientId).showToast(x.dashboard.Message);
+                        }
+                        delete.Add(x);
+                    });
+
+                    delete.ForEach(x => pgm.listToAllClients.Remove(x));
+
+                    delete.Clear();
+
+                    Clients.Clients(GetAllConnectionIdsByAuthId(pgm.AuthId).ToList()).setNavColor(pgm.InSimulation);
+
+                    await Task.Delay(500);
+                }
+            }
+
+            return "Finish";
+        }
+
+        public void getNavColor()
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                Clients.Caller.setNavColor(pgm.InSimulation);
             }
         }
     }
