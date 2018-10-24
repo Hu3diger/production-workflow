@@ -194,22 +194,25 @@ namespace ProductionLinesWEG.Models
         /// </summary>
         public void TurnOff(Program pgm)
         {
-            Ligado = false;
-
-            CleanThread();
-
-            if (GetInputPieceNoRemove() != null)
+            if (Ligado)
             {
-                GetInputPieceNoRemove().ListAtributos.ForEach(x =>
-                {
-                    if (x.Estado.Equals(Atributo.FAZENDO) || x.Estado.Equals(Atributo.ESPERANDO))
-                    {
-                        x.Estado = Atributo.INTERROMPIDO;
-                    }
-                });
-            }
+                Ligado = false;
 
-            pgm.CheckSimulation();
+                CleanThread();
+
+                if (GetInputPieceNoRemove() != null)
+                {
+                    GetInputPieceNoRemove().ListAtributos.ForEach(x =>
+                    {
+                        if (x.Estado.Equals(Atributo.FAZENDO))
+                        {
+                            x.Estado = Atributo.INTERROMPIDO;
+                        }
+                    });
+                }
+
+                pgm.CheckSimulation();
+            }
         }
 
         public List<Peca> getPiecesToList()

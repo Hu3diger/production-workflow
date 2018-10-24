@@ -58,6 +58,8 @@ function deleteProcess(name) {
 //função para a criação de esteiras, recebendo os dados da esteira e enviando para o servidor
 function createEsteira(name, desc, inlimit, type, additional) {
 
+    $("#aboutEsteira").html("");
+
     connector.server.createEsteira(name, desc, inlimit, type, additional);
 
 }
@@ -65,12 +67,16 @@ function createEsteira(name, desc, inlimit, type, additional) {
 //função para a alteração de esteiras, recebendo os dados da esteira e enviando para o servidor
 function changingEsteira(oldName, newName, desc, inlimit, type, additional) {
 
+    $("#aboutEsteira").html("");
+
     connector.server.changingEsteira(oldName, newName, desc, inlimit, type, additional);
 
 }
 
 //função para a remoção de processos, recebendo os dados do processo e enviando para o servidor
 function deleteEsteira(name) {
+
+    $("#aboutEsteira").html("");
 
     connector.server.deleteEsteira(name);
 
@@ -147,4 +153,16 @@ function getFirstConnection() {
 
 function getNavColor() {
     connector.server.getNavColor();
+}
+
+function turnOnAllFront(obj) {
+
+    connector.server.turnOnAllFront($(obj).attr("id"));
+
+}
+
+function turnOffAllFront(obj) {
+
+    connector.server.turnOffAllFront($(obj).attr("id"));
+
 }

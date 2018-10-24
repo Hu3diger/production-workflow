@@ -1188,6 +1188,48 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
+        public void turnOnAllFront(string id)
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                List<string> list = new List<string>();
+
+                EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(id));
+
+                if (e != null)
+                {
+                    turnOnAllFrontR(pgm, e);
+                }
+                else
+                {
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
+                }
+
+            }
+        }
+
+        private void turnOnAllFrontR(Program pgm, EsteiraAbstrata e)
+        {
+            if (e is SetableOutput se)
+            {
+                if (se.EsteiraOutput != null)
+                {
+                    e.TurnOn(pgm, Context.ConnectionId);
+                    turnOnAllFrontR(pgm, se.EsteiraOutput);
+                }
+            }
+            else if (e is EsteiraDesvio ed)
+            {
+                if (ed.EsteiraOutput.Count > 0)
+                {
+                    e.TurnOn(pgm, Context.ConnectionId);
+                    ed.EsteiraOutput.ForEach(x => { turnOnAllFrontR(pgm, x); });
+                }
+            }
+        }
+
         public void turnOffEsteira(string id)
         {
             Program pgm = CheckPgmInSimulation();
@@ -1207,6 +1249,48 @@ namespace ProductionLinesWEG.Hub
                 {
                     RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
                 }
+            }
+        }
+
+        public void turnOffAllFront(string id)
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                List<string> list = new List<string>();
+
+                EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(id));
+
+                if (e != null)
+                {
+                    turnOffAllFrontR(pgm, e);
+                }
+                else
+                {
+                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
+                }
+            }
+        }
+
+        private void turnOffAllFrontR(Program pgm, EsteiraAbstrata e)
+        {
+            if (e.Ligado)
+            {
+                e.TurnOff(pgm);
+                RegisterMessageDashboard("Esteira '" + e.Name + "' desligada", 1, true);
+            }
+
+            if (e is SetableOutput se)
+            {
+                if (se.EsteiraOutput != null)
+                {
+                    turnOffAllFrontR(pgm, se.EsteiraOutput);
+                }
+            }
+            else if (e is EsteiraDesvio ed)
+            {
+                ed.EsteiraOutput.ForEach(x => { turnOffAllFrontR(pgm, x); });
             }
         }
 

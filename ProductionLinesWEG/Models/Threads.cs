@@ -31,7 +31,7 @@ namespace ProductionLinesWEG.Models
 
             if (!pgm.InSimulation)
             {
-                pgm.toDashboard("Simulação iniciada, Alterações travadas", 2, true);
+                pgm.toDashboard("Simulação iniciada", 2, true);
             }
 
             pgm.toDashboard("Esteira '" + e.Name + "' ligada", 1, ClientId);
@@ -72,8 +72,8 @@ namespace ProductionLinesWEG.Models
                                 while (em.HasNextProcess())
                                 {
                                     Processo ps = em.NextProcess();
-
-                                    if (!pc.ListAtributos.Find(c => c.IdP.Equals(ps.Id)).Estado.Equals(Atributo.INTERROMPIDO))
+                                    Atributo atributo = pc.ListAtributos.Find(c => c.IdP.Equals(ps.Id));
+                                    if (atributo == null  || (atributo != null && !atributo.Estado.Equals(Atributo.INTERROMPIDO)))
                                     {
                                         Atributo at = new Atributo(ps.Id, ps.Name);
 

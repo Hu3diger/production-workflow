@@ -57,14 +57,20 @@ function setDropDragItens() {
     $(".dragClone").click(function () {
         let fn = "chumbarPecaEsteira(" + this.id + ")";
         let tn = "changeOnOff(" + this.id + ")";
+
+        let onAll = "turnOnAllFront(" + $(this).attr("id") + ")";
+        let offAll = "turnOffAllFront(" + $(this).attr("id") + ")";
+
         $("#item").data("id", this.id);
         $("#btnChumbar").attr("onclick", fn);
+        $("#btnOnAll").attr("onclick", onAll);
+        $("#btnOffAll").attr("onclick", offAll);
         $("#modalName").html("<b>"+ $(this).data().Name +"</b>");
         $("#modalDescription").html("<b>Descrição da esteira</b>: "+ $(this).data().Description);
         $("#modalLimit").html("<b>Limite de entrada</b>: "+ ($(this).data().InLimit == -1 ? "Limite infinito de " : $(this).data().InLimit) + " peças");
         $("#modalType").html("<b>Tipo da esteira</b>: "+ $(this).data().Type);
 
-        setOnOff(id, $(this).data().Ligado);
+        setOnOff(this.id, $(this).data().Ligado);
 
         switch ($(this).data().TypeN) {
             case 1:

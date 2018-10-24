@@ -59,8 +59,6 @@ function ServerReciveMethods() {
         var id = $("#item").data().id;
         if (id != "") {
             setOnOff(id, esteira.Ligado);
-            console.log(esteira);
-            console.log(pecas);
             setPiecesModal(pecas);
             getTickEsteira();
         }
@@ -69,7 +67,6 @@ function ServerReciveMethods() {
     //lista os processos na tela de processos
     connector.client.listProcessos = function (jsonRecived) {
         $("#listProcesso").html("");
-        $("#info").html("");
 
         generateList(jsonRecived, $("#listProcesso"));
     }

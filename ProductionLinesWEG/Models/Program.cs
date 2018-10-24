@@ -85,17 +85,19 @@ namespace ProductionLinesWEG.Models
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
         public void toDashboard(string message, int nivel, bool toAllClients)
         {
+            Dashboard dash = toDashboard(message, nivel);
             if (toAllClients)
             {
-                listToAllClients.Add(new DashboardClient(toDashboard(message, nivel), true));
+                listToAllClients.Add(new DashboardClient(dash, true));
             }
         }
         // adiciona uma mensagem  a lista de dashboard e o quão critico é a mensagem
         public void toDashboard(string message, int nivel, string clientId)
         {
+            Dashboard dash = toDashboard(message, nivel);
             if (!clientId.Equals(""))
             {
-                listToAllClients.Add(new DashboardClient(toDashboard(message, nivel), clientId));
+                listToAllClients.Add(new DashboardClient(dash, clientId));
             }
         }
         // adiciona um processo na lista e exibe uma mensagem ao dashboard
@@ -557,7 +559,7 @@ namespace ProductionLinesWEG.Models
 
                 if (!InSimulation)
                 {
-                    toDashboard("Simulação parada, Alterações destravadas", 2, true);
+                    toDashboard("Simulação parada", 2, true);
                 }
             }
         }
