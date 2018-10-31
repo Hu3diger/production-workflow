@@ -1,0 +1,28 @@
+G1 > barras - media de tempo por esteiras
+	- column (esteiras)
+	maior tempo
+	menor tempo
+	media de tempo
+	- line (tempo)
+	esteira(s)
+
+G2 > line - tempo por peca
+	- column (n peca)
+	peca
+	-line (tempo)
+	esteira(s)
+
+G3 > barras - falhas e sucessos por esteira
+	- column (esteiras)
+	produzidos
+	sucesso
+	falha
+	- line (numero de sucesso/falha)
+	esteira(s)
+
+G4 > barras - media de pecas ate uma falha/sucesso por esteira
+	- column (esteiras)
+	sucesso
+	falha
+	- line (numero de pecas)
+	esteira(s)

@@ -66,7 +66,7 @@ namespace ProductionLinesWEG.Models
                             {
                                 int run = 0;
                                 // reseta o processo para iniciar o ciclo todo novamente
-                                em.ResetProcess();
+                                em.FinalizeProcess();
 
                                 // verifica se existe processo adiante
                                 while (em.HasNextProcess())
@@ -107,9 +107,6 @@ namespace ProductionLinesWEG.Models
                                         pgm.toDashboard("Esteira: (" + em.Name + ") Processo '" + ps.Name + "' já feito (interrompido)", 4, false);
                                     }
                                 }
-
-                                // finalia o processo para ter um novo ciclo
-                                em.FinalizeProcess();
 
                                 pgm.toDashboard("Esteira: (" + em.Name + ") Bateria de processos finalizados", 4, false);
 

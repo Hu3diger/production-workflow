@@ -438,7 +438,6 @@ namespace ProductionLinesWEG.Models
         /// </summary>
         public void Reset()
         {
-            _ordem = 0;
             while (hasNext())
             {
                 Next();
@@ -455,7 +454,7 @@ namespace ProductionLinesWEG.Models
         /// <summary>
         /// finaliza o processo deixando todos os processos como fora de execução (InProcess = false)
         /// </summary>
-        public void finalize()
+        private void finalize()
         {
             if (_ordem != 0)
             {
@@ -470,7 +469,7 @@ namespace ProductionLinesWEG.Models
             _ordem = 0;
         }
         /// <summary>
-        /// retorna o proximo processo a ser executado pela esteira e adiciona aos Count
+        /// retorna o proximo processo a ser executado pela esteira e adiciona ao Count
         /// </summary>
         /// <returns>null caso não tenha proximo</returns>
         public Processo Next()

@@ -40,6 +40,18 @@ namespace ProductionLinesWEG.Models
             return ListAtributos.Find(x => x.IdP.Equals(p.Id));
         }
 
+        public Atributo getLastAtributo()
+        {
+            if (ListAtributos.Count > 0)
+            {
+                return ListAtributos[ListAtributos.Count - 1];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         //Boolean Printed { get; set; }
         //int PrintedError;
 

@@ -24,9 +24,11 @@ namespace ProductionLinesWEG.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int InLimit { get; set; }
-        public int Fail { get; private set; }
+        private List<int> listFail;
+        private List<int> listSuccess;
+        public List<int> listTime;
+        public int Fail { get; protected set; }
         public int Success { get; private set; }
-        public int Produced { get; private set; }
 
         public bool IsClone { get; set; }
 
@@ -47,13 +49,32 @@ namespace ProductionLinesWEG.Models
 
             InLimit = limite;
 
-            Produced = 0;
             Fail = 0;
             Success = 0;
 
             _queueInputPecas = new Queue<Peca>();
 
             EsteiraInput = new List<EsteiraAbstrata>();
+
+            listFail = new List<int>();
+            listSuccess = new List<int>();
+        }
+
+        public int getProduced()
+        {
+            return Success + Fail;
+        }
+
+        protected void addSuccess()
+        {
+            Success++;
+            listSuccess.Add(getProduced());
+        }
+
+        protected void addFail()
+        {
+            Fail++;
+            listSuccess.Add(getProduced());
         }
         /// <summary>
         /// Insere uma peça na lista e retorna se foi possivel ou não
@@ -207,6 +228,7 @@ namespace ProductionLinesWEG.Models
                         if (x.Estado.Equals(Atributo.FAZENDO))
                         {
                             x.Estado = Atributo.INTERROMPIDO;
+                            Fail++;
                         }
                     });
                 }
@@ -225,6 +247,9 @@ namespace ProductionLinesWEG.Models
             if (!IsClone)
             {
                 _queueInputPecas = new Queue<Peca>();
+                listFail = new List<int>();
+                listSuccess = new List<int>();
+                listTime = new List<int>();
             }
             EsteiraAbstrata e = (EsteiraAbstrata)this.MemberwiseClone();
 
@@ -236,9 +261,9 @@ namespace ProductionLinesWEG.Models
             return ImplementedClone(e);
         }
 
-        public abstract bool IsInCondition();
-
         public abstract bool PassPiece();
+
+        public abstract bool IsInCondition();
 
         protected abstract object ImplementedClone(EsteiraAbstrata e);
 
@@ -282,14 +307,17 @@ namespace ProductionLinesWEG.Models
         {
             if (EsteiraOutput != null && !EsteiraOutput.BlockedEsteira)
             {
-                Peca peca = this.RemovePiece();
-                EsteiraOutput.InsertPiece(peca);
+                ImplementedFailSuccess();
+
+                EsteiraOutput.InsertPiece(this.RemovePiece());
 
                 return true;
             }
 
             return false;
         }
+
+        public abstract void ImplementedFailSuccess();
     }
     // classe usada para as esteiras que possuem processos internos
     public class EsteiraModel : SetableOutput
@@ -338,7 +366,7 @@ namespace ProductionLinesWEG.Models
         /// <summary>
         /// reseta o processo para que possa ser usado novamente
         /// </summary>
-        public void ResetProcess()
+        public void FinalizeProcess()
         {
             _processManager.Reset();
         }
@@ -351,14 +379,6 @@ namespace ProductionLinesWEG.Models
             return _processManager.Next();
         }
         /// <summary>
-        /// finaliza o processo para que possa ser usado novamente
-        /// </summary>
-        public void FinalizeProcess()
-        {
-            _processManager.finalize();
-            _processManager.Reset();
-        }
-        /// <summary>
         /// Emplementação do Clone para cada Classe
         /// </summary>
         /// <returns></returns>
@@ -368,6 +388,48 @@ namespace ProductionLinesWEG.Models
             ((EsteiraModel)e)._processManager = new ProcessManager(((EsteiraModel)e)._processMaster);
 
             return e;
+        }
+
+        public override void ImplementedFailSuccess()
+        {
+
+            Peca peca = this.GetInputPieceNoRemove();
+
+            if (peca != null)
+            {
+                bool t = true;
+                int time = 0;
+                FinalizeProcess();
+
+                while (HasNextProcess())
+                {
+                    Processo process = NextProcess();
+
+                    Atributo at = peca.ListAtributos.Find(x => x.IdP.Equals(process.Id));
+                    if (at != null)
+                    {
+                        if (!at.Estado.Equals(Atributo.FEITO) && !at.Estado.Equals(Atributo.ESPERANDO))
+                        {
+                            t = false;
+                        }
+                        time += at.Time;
+                    }
+
+                }
+
+                FinalizeProcess();
+
+                if (t)
+                {
+                    addSuccess();
+                }
+                else
+                {
+                    Fail++;
+                }
+
+                listTime.Add(time);
+            }
         }
     }
 
@@ -415,6 +477,29 @@ namespace ProductionLinesWEG.Models
         protected override object ImplementedClone(EsteiraAbstrata e)
         {
             return e;
+        }
+
+        public override void ImplementedFailSuccess()
+        {
+            Peca peca = this.GetInputPieceNoRemove();
+
+            if (peca != null)
+            {
+                Atributo at = peca.getLastAtributo();
+                if (at != null)
+                {
+                    if (at.Estado.Equals(Atributo.FEITO) || at.Estado.Equals(Atributo.ESPERANDO))
+                    {
+                        addSuccess();
+                    }
+                    else
+                    {
+                        Fail++;
+                    }
+
+                    listTime.Add(at.Time);
+                }
+            }
         }
     }
 
@@ -513,6 +598,30 @@ namespace ProductionLinesWEG.Models
         {
             return e;
         }
+
+        public override void ImplementedFailSuccess()
+        {
+
+            Peca peca = this.GetInputPieceNoRemove();
+
+            if (peca != null)
+            {
+                Atributo at = peca.getLastAtributo();
+                if (at != null)
+                {
+                    if (at.Estado.Equals(Atributo.FEITO) || at.Estado.Equals(Atributo.ESPERANDO))
+                    {
+                        addSuccess();
+                    }
+                    else
+                    {
+                        Fail++;
+                    }
+
+                    listTime.Add(at.Time);
+                }
+            }
+        }
     }
 
     // classe usada para desviar os processos conforme as condições passadas
@@ -584,7 +693,27 @@ namespace ProductionLinesWEG.Models
 
             if (e != null && !e.BlockedEsteira)
             {
-                return e.InsertPiece(this.RemovePiece());
+                Peca peca = this.RemovePiece();
+
+                if (peca != null)
+                {
+                    Atributo at = peca.getLastAtributo();
+                    if (at != null)
+                    {
+                        if (at.Estado.Equals(Atributo.FEITO) || at.Estado.Equals(Atributo.ESPERANDO))
+                        {
+                            addSuccess();
+                        }
+                        else
+                        {
+                            Fail++;
+                        }
+
+                        listTime.Add(at.Time);
+                    }
+                }
+
+                return e.InsertPiece(peca);
             }
             else
             {
@@ -617,17 +746,23 @@ namespace ProductionLinesWEG.Models
 
                 if (at.Estado.Equals(Atributo.INTERROMPIDO) && !this.EsteiraOutput[2].BlockedEsteira)
                 {
+                    Fail++;
+                    listTime.Add(pc.ListAtributos[pc.ListAtributos.Count - 1].Time);
                     return this.EsteiraOutput[2].InsertPiece(this.RemovePiece());
                 }
                 else if (at.Estado.Equals(Atributo.DEFEITO) && !this.EsteiraOutput[1].BlockedEsteira)
                 {
+                    Fail++;
+                    listTime.Add(pc.ListAtributos[pc.ListAtributos.Count - 1].Time);
                     return this.EsteiraOutput[1].InsertPiece(this.RemovePiece());
                 }
             }
 
             if (!this.EsteiraOutput[0].BlockedEsteira)
             {
-            return this.EsteiraOutput[0].InsertPiece(this.RemovePiece());
+                addSuccess();
+                listTime.Add(pc.ListAtributos[pc.ListAtributos.Count - 1].Time);
+                return this.EsteiraOutput[0].InsertPiece(this.RemovePiece());
             }
 
             return false;
