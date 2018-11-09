@@ -20,9 +20,6 @@ G3 > barras - falhas e sucessos por esteira
 	- line (numero de sucesso/falha)
 	esteira(s)
 
-G4 > barras - media de pecas ate uma falha/sucesso por esteira
-	- column (esteiras)
-	sucesso
-	falha
-	- line (numero de pecas)
-	esteira(s)
+G4 > circular - pecas boas/ruins de todas as esteiras
+	- cor (pecas boas ruins)
+	- circulo (n de pecas boas / ruins)

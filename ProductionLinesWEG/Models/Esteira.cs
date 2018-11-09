@@ -24,11 +24,9 @@ namespace ProductionLinesWEG.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int InLimit { get; set; }
-        private List<int> listFail;
-        private List<int> listSuccess;
         public List<int> listTime;
         public int Fail { get; protected set; }
-        public int Success { get; private set; }
+        public int Success { get; protected set; }
 
         public bool IsClone { get; set; }
 
@@ -55,26 +53,13 @@ namespace ProductionLinesWEG.Models
             _queueInputPecas = new Queue<Peca>();
 
             EsteiraInput = new List<EsteiraAbstrata>();
-
-            listFail = new List<int>();
-            listSuccess = new List<int>();
+            
+            listTime = new List<int>();
         }
 
         public int getProduced()
         {
             return Success + Fail;
-        }
-
-        protected void addSuccess()
-        {
-            Success++;
-            listSuccess.Add(getProduced());
-        }
-
-        protected void addFail()
-        {
-            Fail++;
-            listSuccess.Add(getProduced());
         }
         /// <summary>
         /// Insere uma peça na lista e retorna se foi possivel ou não
@@ -247,8 +232,6 @@ namespace ProductionLinesWEG.Models
             if (!IsClone)
             {
                 _queueInputPecas = new Queue<Peca>();
-                listFail = new List<int>();
-                listSuccess = new List<int>();
                 listTime = new List<int>();
             }
             EsteiraAbstrata e = (EsteiraAbstrata)this.MemberwiseClone();
@@ -421,7 +404,7 @@ namespace ProductionLinesWEG.Models
 
                 if (t)
                 {
-                    addSuccess();
+                    Success++;
                 }
                 else
                 {
@@ -490,7 +473,7 @@ namespace ProductionLinesWEG.Models
                 {
                     if (at.Estado.Equals(Atributo.FEITO) || at.Estado.Equals(Atributo.ESPERANDO))
                     {
-                        addSuccess();
+                        Success++;
                     }
                     else
                     {
@@ -611,7 +594,7 @@ namespace ProductionLinesWEG.Models
                 {
                     if (at.Estado.Equals(Atributo.FEITO) || at.Estado.Equals(Atributo.ESPERANDO))
                     {
-                        addSuccess();
+                        Success++;
                     }
                     else
                     {
@@ -702,7 +685,7 @@ namespace ProductionLinesWEG.Models
                     {
                         if (at.Estado.Equals(Atributo.FEITO) || at.Estado.Equals(Atributo.ESPERANDO))
                         {
-                            addSuccess();
+                            Success++;
                         }
                         else
                         {
@@ -760,7 +743,7 @@ namespace ProductionLinesWEG.Models
 
             if (!this.EsteiraOutput[0].BlockedEsteira)
             {
-                addSuccess();
+                Success++;
                 listTime.Add(pc.ListAtributos[pc.ListAtributos.Count - 1].Time);
                 return this.EsteiraOutput[0].InsertPiece(this.RemovePiece());
             }
