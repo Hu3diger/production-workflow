@@ -180,4 +180,12 @@ function ServerReciveMethods() {
             $("#navId").addClass("light-blue darken-2");
         }
     }
+
+    connector.client.clearProcess = function () {
+        limpaInfo();
+    }
+
+    connector.client.clearEsteira = function () {
+        limpaAbout();
+    }
 };

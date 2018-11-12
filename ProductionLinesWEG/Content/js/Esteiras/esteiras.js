@@ -6,7 +6,7 @@ function showCreate() {
     <form class="col s12">\
     <div class="row">\
       <div class="input-field col s12 m8 offset-m2">\
-          <input value="" id="nameP" type="text" class="validate">\
+          <input maxlength="30" value="" id="nameP" type="text" class="validate">\
           <label for="nameP">Nome</label>\
         </div>\
         <div class="input-field col s12 m8 offset-m2">\
@@ -145,7 +145,7 @@ function alteraEsteira(id) {
     <form class="col s12">\
     <div class="row">\
       <div class="input-field col s12 m8 offset-m2">\
-          <input value="'+ data.Name + '" id="nameP" type="text" class="validate active">\
+          <input maxlength="30" value="'+ data.Name + '" id="nameP" type="text" class="validate active">\
           <label class="active" for="nameP">Nome</label>\
         </div>\
         <div class="input-field col s12 m8 offset-m2">\

@@ -493,6 +493,16 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
+        public void RegisterMessageDashboard(string message, int nivel, string silentMode)
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                pgm.toDashboard(message, nivel, false);
+            }
+        }
+
 
 
 
@@ -521,41 +531,49 @@ namespace ProductionLinesWEG.Hub
 
             if (pgm != null)
             {
-                if (pgm.listProcessos.Find(x => x.Name.Equals(name)) == null)
+                if (name.Length <= 30)
                 {
-                    // cria o processo e insere suas primeiras informações
-                    Processo p = new Processo(new BaseProcesso(name, description, runTime));
-                    p.BaseProcesso.VariationRuntime = variationRuntime;
-                    p.BaseProcesso.ErrorProbability = errorProbability;
-
-                    pgm.CriaProcesso(p);
-
-                    if (!nameFather.Equals(""))
+                    if (pgm.listProcessos.Find(x => x.Name.Equals(name)) == null)
                     {
-                        Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(nameFather));
-                        if (pcss != null)
+                        // cria o processo e insere suas primeiras informações
+                        Processo p = new Processo(new BaseProcesso(name, description, runTime));
+                        p.BaseProcesso.VariationRuntime = variationRuntime;
+                        p.BaseProcesso.ErrorProbability = errorProbability;
+
+                        pgm.CriaProcesso(p);
+
+                        if (!nameFather.Equals(""))
                         {
-                            if (pcss.FindInternalProcess(name) == null)
+                            Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(nameFather));
+                            if (pcss != null)
                             {
-                                pgm.alterFatherProcess(name, position, pcss);
+                                if (pcss.FindInternalProcess(name) == null)
+                                {
+                                    pgm.alterFatherProcess(name, position, pcss);
+                                }
+                                else
+                                {
+                                    RegisterMessageDashboard("Error: In Create: '" + name + "' Internal Process Found", 3, true);
+                                }
                             }
                             else
                             {
-                                RegisterMessageDashboard("Error: In Create: '" + name + "' Internal Process Found", 3, true);
+                                RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", 2, true);
                             }
                         }
-                        else
-                        {
-                            RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", 2, true);
-                        }
-                    }
 
-                    RegisterMessageDashboard("Processo '" + name + "' Criado", 1, true);
-                    CallListProcess();
+                        RegisterMessageDashboard("Processo '" + name + "' Criado", 1, true);
+                        Clients.Caller.clearProcess();
+                        CallListProcess();
+                    }
+                    else
+                    {
+                        RegisterMessageDashboard("Processo '" + name + "' já existente", 2, true);
+                    }
                 }
                 else
                 {
-                    RegisterMessageDashboard("Processo '" + name + "' já existente", 2, true);
+                    RegisterMessageDashboard("Limite de caracteres antingido", 2, true);
                 }
             }
         }
@@ -569,53 +587,61 @@ namespace ProductionLinesWEG.Hub
             if (pgm != null)
             {
 
-                if (oldName.Equals(newName) || pgm.listProcessos.Find(x => x.Name.Equals(newName)) == null)
+                if (newName.Length <= 30)
                 {
-
-                    Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(oldName));
-                    if (pcss != null)
+                    if (oldName.Equals(newName) || pgm.listProcessos.Find(x => x.Name.Equals(newName)) == null)
                     {
 
-                        if (!nameFather.Equals(""))
+                        Processo pcss = pgm.listProcessos.Find(x => x.Name.Equals(oldName));
+                        if (pcss != null)
                         {
-                            Processo pcssF = pgm.listProcessos.Find(x => x.Name.Equals(nameFather));
 
-                            if (pcssF != null)
+                            if (!nameFather.Equals(""))
                             {
-                                pgm.alterFatherProcess(oldName, position, pcssF);
+                                Processo pcssF = pgm.listProcessos.Find(x => x.Name.Equals(nameFather));
+
+                                if (pcssF != null)
+                                {
+                                    pgm.alterFatherProcess(oldName, position, pcssF);
+                                }
+                                else
+                                {
+                                    RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", 2, true);
+                                    edit = false;
+                                }
                             }
                             else
                             {
-                                RegisterMessageDashboard("Pai '" + nameFather + "' não encontrado", 2, true);
-                                edit = false;
+                                pcss.removerFather();
+                            }
+
+                            if (edit)
+                            {
+                                // faz suas alterações no processo
+                                pcss.BaseProcesso.Name = newName;
+                                pcss.BaseProcesso.Description = description;
+                                pcss.BaseProcesso.Runtime = runTime;
+                                pcss.BaseProcesso.VariationRuntime = variationRuntime;
+                                pcss.BaseProcesso.ErrorProbability = errorProbability;
+
+                                RegisterMessageDashboard("Processo '" + oldName + "' Alterado", 1, true);
+                                Clients.Caller.clearProcess();
+                                CallListProcess();
                             }
                         }
                         else
                         {
-                            pcss.removerFather();
-                        }
-
-                        if (edit)
-                        {
-                            // faz suas alterações no processo
-                            pcss.BaseProcesso.Name = newName;
-                            pcss.BaseProcesso.Description = description;
-                            pcss.BaseProcesso.Runtime = runTime;
-                            pcss.BaseProcesso.VariationRuntime = variationRuntime;
-                            pcss.BaseProcesso.ErrorProbability = errorProbability;
-
-                            RegisterMessageDashboard("Processo '" + oldName + "' Alterado", 1, true);
-                            CallListProcess();
+                            RegisterMessageDashboard("Error: Find Process: '" + oldName + "'", 3, true);
                         }
                     }
                     else
                     {
-                        RegisterMessageDashboard("Error: Find Process: '" + oldName + "'", 3, true);
+                        RegisterMessageDashboard("Processo '" + newName + "' já existente", 2, true);
                     }
                 }
                 else
                 {
-                    RegisterMessageDashboard("Processo '" + newName + "' já existente", 2, true);
+                    RegisterMessageDashboard("Limite de caracteres antingido", 2, true);
                 }
             }
         }
@@ -635,6 +661,7 @@ namespace ProductionLinesWEG.Hub
                     pgm.removeProcess(p);
 
                     RegisterMessageDashboard("Processo '" + name + "' Deletado", 1, true);
+                    Clients.Caller.clearProcess();
                     CallListProcess();
                 }
                 else
@@ -703,104 +730,112 @@ namespace ProductionLinesWEG.Hub
 
             if (pgm != null)
             {
-                // procura pela esteira e veficica se exite
-                if (pgm.listEsteiras.Find(x => x.Name.Equals(name)) == null)
+                if (name.Length <= 30)
                 {
-                    if (inlimit >= -1 && inlimit != 0)
+                    // procura pela esteira e veficica se exite
+                    if (pgm.listEsteiras.Find(x => x.Name.Equals(name)) == null)
                     {
-                        EsteiraAbstrata e = null;
-
-                        // verifica o tipo de esteira e trabalha de acordo com o tipo
-                        switch (type)
+                        if (inlimit >= -1 && inlimit != 0)
                         {
-                            // esteira model
-                            case 1:
+                            EsteiraAbstrata e = null;
 
-                                Processo p = pgm.listProcessos.Find(x => x.Name.Equals(additional));
+                            // verifica o tipo de esteira e trabalha de acordo com o tipo
+                            switch (type)
+                            {
+                                // esteira model
+                                case 1:
 
-                                if (p != null)
-                                {
-                                    e = new EsteiraModel("", name, desc, inlimit);
-                                    EsteiraModel em = (EsteiraModel)e;
+                                    Processo p = pgm.listProcessos.Find(x => x.Name.Equals(additional));
 
-                                    em.insertMasterProcess(p);
-                                }
-                                else
-                                {
-                                    RegisterMessageDashboard("Processo in Select '" + additional + "' não encontrado", 3, true);
-                                }
-
-                                break;
-
-                            // esteira de armazenamento
-                            case 2:
-                                e = new EsteiraArmazenamento("", name, desc, inlimit);
-                                break;
-
-                            // esteira etiquetadora
-                            case 3:
-
-                                try
-                                {
-                                    int initialValue = int.Parse(additional);
-
-                                    e = new EsteiraEtiquetadora(pgm.Login, "", name, desc, inlimit, initialValue);
-                                }
-                                catch (System.Exception)
-                                {
-                                    RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
-                                }
-
-                                break;
-
-                            // esteira de desvio
-                            case 4:
-                                try
-                                {
-                                    int typeD = int.Parse(additional);
-
-                                    if (typeD == 1)
+                                    if (p != null)
                                     {
-                                        e = new EsteiraBalanceadora("", name, desc, inlimit);
-                                    }
-                                    else if (typeD == 2)
-                                    {
-                                        e = new EsteiraSeletora("", name, desc, inlimit);
+                                        e = new EsteiraModel("", name, desc, inlimit);
+                                        EsteiraModel em = (EsteiraModel)e;
+
+                                        em.insertMasterProcess(p);
                                     }
                                     else
                                     {
-                                        RegisterMessageDashboard("Tipo de Desvio inválido: " + typeD, 3, true);
+                                        RegisterMessageDashboard("Processo in Select '" + additional + "' não encontrado", 3, true);
                                     }
-                                }
-                                catch (System.Exception)
-                                {
-                                    RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
-                                }
 
-                                break;
+                                    break;
 
-                            // caso seja bulado o sistema de tipo, cai aqui
-                            default:
-                                RegisterMessageDashboard("Error: Default type in CreateEsteira", 3, true);
-                                break;
+                                // esteira de armazenamento
+                                case 2:
+                                    e = new EsteiraArmazenamento("", name, desc, inlimit);
+                                    break;
+
+                                // esteira etiquetadora
+                                case 3:
+
+                                    try
+                                    {
+                                        int initialValue = int.Parse(additional);
+
+                                        e = new EsteiraEtiquetadora(pgm.Login, "", name, desc, inlimit, initialValue);
+                                    }
+                                    catch (System.Exception)
+                                    {
+                                        RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
+                                    }
+
+                                    break;
+
+                                // esteira de desvio
+                                case 4:
+                                    try
+                                    {
+                                        int typeD = int.Parse(additional);
+
+                                        if (typeD == 1)
+                                        {
+                                            e = new EsteiraBalanceadora("", name, desc, inlimit);
+                                        }
+                                        else if (typeD == 2)
+                                        {
+                                            e = new EsteiraSeletora("", name, desc, inlimit);
+                                        }
+                                        else
+                                        {
+                                            RegisterMessageDashboard("Tipo de Desvio inválido: " + typeD, 3, true);
+                                        }
+                                    }
+                                    catch (System.Exception)
+                                    {
+                                        RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
+                                    }
+
+                                    break;
+
+                                // caso seja bulado o sistema de tipo, cai aqui
+                                default:
+                                    RegisterMessageDashboard("Error: Default type in CreateEsteira", 3, true);
+                                    break;
+                            }
+
+                            // cria a esteira apenas se ela foi instanciada
+                            if (e != null)
+                            {
+                                pgm.CriarEsteira(e);
+                                RegisterMessageDashboard("Esteira '" + name + "' Criada", 1, true);
+                                Clients.Caller.clearEsteira();
+                                CallListEsteira();
+                            }
                         }
-
-                        // cria a esteira apenas se ela foi instanciada
-                        if (e != null)
+                        else
                         {
-                            pgm.CriarEsteira(e);
-                            RegisterMessageDashboard("Esteira '" + name + "' Criada", 1, true);
-                            CallListEsteira();
+                            RegisterMessageDashboard("Limite de entrada não permitido", 2, true);
                         }
                     }
                     else
                     {
-                        RegisterMessageDashboard("Limite de entrada não permitido", 2, true);
+                        RegisterMessageDashboard("Esteira '" + name + "' já existente", 2, true);
                     }
                 }
                 else
                 {
-                    RegisterMessageDashboard("Esteira '" + name + "' já existente", 2, true);
+                    RegisterMessageDashboard("Limite de caracteres antingido", 2, true);
                 }
             }
         }
@@ -814,112 +849,120 @@ namespace ProductionLinesWEG.Hub
 
             if (pgm != null)
             {
-                // procura pela esteira e veficica se exite
-                if (oldname.Equals(newname) || pgm.listEsteiras.Find(x => x.Name.Equals(newname)) == null)
+                if (newname.Length <= 30)
                 {
-                    EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Name.Equals(oldname));
-
-                    if (e != null)
+                    // procura pela esteira e veficica se exite
+                    if (oldname.Equals(newname) || pgm.listEsteiras.Find(x => x.Name.Equals(newname)) == null)
                     {
-                        if (inlimit >= -1 && inlimit != 0)
+                        EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Name.Equals(oldname));
+
+                        if (e != null)
                         {
-                            // verifica o tipo de esteira e trabalha de acordo com o tipo
-                            switch (type)
+                            if (inlimit >= -1 && inlimit != 0)
                             {
-                                // esteira model
-                                case 1:
+                                // verifica o tipo de esteira e trabalha de acordo com o tipo
+                                switch (type)
+                                {
+                                    // esteira model
+                                    case 1:
 
-                                    Processo p = pgm.listProcessos.Find(x => x.Name.Equals(additional));
+                                        Processo p = pgm.listProcessos.Find(x => x.Name.Equals(additional));
 
-                                    if (p != null)
-                                    {
-                                        EsteiraModel em = (EsteiraModel)e;
-
-                                        if (!em.NameProcessMaster.Equals(additional))
+                                        if (p != null)
                                         {
-                                            em.insertMasterProcess(p);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        RegisterMessageDashboard("Processo in Select '" + additional + "' não encontrado", 3, true);
-                                        edit = false;
-                                    }
+                                            EsteiraModel em = (EsteiraModel)e;
 
-                                    break;
-
-                                // esteira de armazenamento
-                                case 2:
-                                    break;
-
-                                // esteira etiquetadora
-                                case 3:
-
-                                    try
-                                    {
-                                        int initialValue = int.Parse(additional);
-
-                                        if (EsteiraEtiquetadora.RangeIsPossible(pgm.Login, initialValue))
-                                        {
-                                            if (initialValue >= 0)
+                                            if (!em.NameProcessMaster.Equals(additional))
                                             {
-                                                EsteiraEtiquetadora ee = (EsteiraEtiquetadora)e;
-                                                ee.InitialValue = initialValue;
-                                            }
-                                            else
-                                            {
-                                                RegisterMessageDashboard("Range não permitido", 2, true);
-                                                edit = false;
+                                                em.insertMasterProcess(p);
                                             }
                                         }
                                         else
                                         {
-                                            RegisterMessageDashboard("Range não permitido (já utilizado)", 2, true);
+                                            RegisterMessageDashboard("Processo in Select '" + additional + "' não encontrado", 3, true);
                                             edit = false;
                                         }
-                                    }
-                                    catch (System.Exception)
-                                    {
-                                        RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
+
+                                        break;
+
+                                    // esteira de armazenamento
+                                    case 2:
+                                        break;
+
+                                    // esteira etiquetadora
+                                    case 3:
+
+                                        try
+                                        {
+                                            int initialValue = int.Parse(additional);
+
+                                            if (EsteiraEtiquetadora.RangeIsPossible(pgm.Login, initialValue))
+                                            {
+                                                if (initialValue >= 0)
+                                                {
+                                                    EsteiraEtiquetadora ee = (EsteiraEtiquetadora)e;
+                                                    ee.InitialValue = initialValue;
+                                                }
+                                                else
+                                                {
+                                                    RegisterMessageDashboard("Range não permitido", 2, true);
+                                                    edit = false;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                RegisterMessageDashboard("Range não permitido (já utilizado)", 2, true);
+                                                edit = false;
+                                            }
+                                        }
+                                        catch (System.Exception)
+                                        {
+                                            RegisterMessageDashboard("Error: create EsteiraEtiquetadora, Try", 3, true);
+                                            edit = false;
+                                        }
+
+                                        break;
+
+                                    // esteira de desvio
+                                    case 4:
+                                        break;
+
+                                    // caso seja bulado o sistema de tipo, cai aqui
+                                    default:
+                                        RegisterMessageDashboard("Error: Default type in CreateEsteira", 3, true);
                                         edit = false;
-                                    }
+                                        break;
+                                }
 
-                                    break;
+                                if (edit)
+                                {
+                                    e.Name = newname;
+                                    e.Description = desc;
+                                    e.InLimit = inlimit;
 
-                                // esteira de desvio
-                                case 4:
-                                    break;
-
-                                // caso seja bulado o sistema de tipo, cai aqui
-                                default:
-                                    RegisterMessageDashboard("Error: Default type in CreateEsteira", 3, true);
-                                    edit = false;
-                                    break;
+                                    RegisterMessageDashboard("Esteira '" + oldname + "' Alterada", 1, true);
+                                    Clients.Caller.clearEsteira();
+                                    CallListEsteira();
+                                }
                             }
-
-                            if (edit)
+                            else
                             {
-                                e.Name = newname;
-                                e.Description = desc;
-                                e.InLimit = inlimit;
-
-                                RegisterMessageDashboard("Esteira '" + oldname + "' Alterada", 1, true);
-                                CallListEsteira();
+                                RegisterMessageDashboard("Limite de entrada não permitido", 2, true);
                             }
                         }
                         else
                         {
-                            RegisterMessageDashboard("Limite de entrada não permitido", 2, true);
+                            RegisterMessageDashboard("Error: Find Esteira: '" + oldname + "'", 3, true);
                         }
                     }
                     else
                     {
-                        RegisterMessageDashboard("Error: Find Esteira: '" + oldname + "'", 3, true);
+                        RegisterMessageDashboard("Esteira '" + newname + "' já existente", 2, true);
                     }
                 }
                 else
                 {
-                    RegisterMessageDashboard("Esteira '" + newname + "' já existente", 2, true);
+                    RegisterMessageDashboard("Limite de caracteres antingido", 2, true);
                 }
             }
         }
@@ -939,6 +982,7 @@ namespace ProductionLinesWEG.Hub
                     pgm.removeEsteira(e);
 
                     RegisterMessageDashboard("Esteira '" + name + "' Deletado", 1, true);
+                    Clients.Caller.clearEsteira();
                     CallListEsteira();
                 }
                 else
@@ -1219,7 +1263,7 @@ namespace ProductionLinesWEG.Hub
 
                 if (e != null)
                 {
-                    e.TurnOn(pgm, Context.ConnectionId);
+                    e.TurnOn(pgm, Context.ConnectionId, true);
                 }
                 else
                 {
@@ -1257,7 +1301,7 @@ namespace ProductionLinesWEG.Hub
             {
                 if (se.EsteiraOutput != null)
                 {
-                    e.TurnOn(pgm, Context.ConnectionId);
+                    e.TurnOn(pgm, Context.ConnectionId, false);
                     turnOnAllFrontR(pgm, se.EsteiraOutput);
                 }
             }
@@ -1265,7 +1309,7 @@ namespace ProductionLinesWEG.Hub
             {
                 if (ed.EsteiraOutput.Count > 0)
                 {
-                    e.TurnOn(pgm, Context.ConnectionId);
+                    e.TurnOn(pgm, Context.ConnectionId, false);
                     ed.EsteiraOutput.ForEach(x => { turnOnAllFrontR(pgm, x); });
                 }
             }
@@ -1319,7 +1363,7 @@ namespace ProductionLinesWEG.Hub
             if (e.Ligado)
             {
                 e.TurnOff(pgm);
-                RegisterMessageDashboard("Esteira '" + e.Name + "' desligada", 1, true);
+                RegisterMessageDashboard("Esteira '" + e.Name + "' desligada", 1, "");
             }
 
             if (e is SetableOutput se)

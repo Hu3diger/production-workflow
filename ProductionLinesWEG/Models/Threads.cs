@@ -17,12 +17,14 @@ namespace ProductionLinesWEG.Models
 
         private Program pgm;
         private string ClientId;
+        private bool ShowTurnOnMessage;
 
-        public Threads(EsteiraAbstrata e, Program p, string clientId)
+        public Threads(EsteiraAbstrata e, Program p, string clientId, bool showTurnOnMessage)
         {
             this.e = e;
             pgm = p;
             ClientId = clientId;
+            this.ShowTurnOnMessage = showTurnOnMessage;
         }
 
         private void initSimulation()
@@ -32,11 +34,17 @@ namespace ProductionLinesWEG.Models
             if (!pgm.InSimulation)
             {
                 pgm.toDashboard("Simulação iniciada", 2, true);
+                pgm.InSimulation = true;
             }
 
-            pgm.toDashboard("Esteira '" + e.Name + "' ligada", 1, ClientId);
-
-            pgm.InSimulation = true;
+            if (ShowTurnOnMessage)
+            {
+                pgm.toDashboard("Esteira '" + e.Name + "' ligada", 1, ClientId);
+            }
+            else
+            {
+                pgm.toDashboard("Esteira '" + e.Name + "' ligada", 1, false);
+            }
         }
 
         /// <summary>

@@ -173,11 +173,11 @@ namespace ProductionLinesWEG.Models
         /// <summary>
         /// Liga a esteira e possibilita o trabalho dela
         /// </summary>
-        public void TurnOn(Program program, string clientId)
+        public void TurnOn(Program program, string clientId, bool showTurnOnMessage)
         {
             CleanThread();
 
-            Threads t = new Threads(this, program, clientId);
+            Threads t = new Threads(this, program, clientId, showTurnOnMessage);
 
             thread = new Thread(t.threadEsteira);
 
