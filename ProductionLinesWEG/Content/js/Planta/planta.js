@@ -1,10 +1,9 @@
-﻿var Xconectors = 11;
+﻿const Xconectors = 13;
 var countIdEm = 0;
 var countIdEa = 0;
 var countIdEe = 0;
 var countIdEd = 0;
 
-var instances2;
 var idModal = "modal41";
 var sobre = "";
 

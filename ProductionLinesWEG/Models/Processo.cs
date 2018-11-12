@@ -480,10 +480,10 @@ namespace ProductionLinesWEG.Models
 
                 _ordem++;
 
-                if (_listOrdem[_ordem - 1].IsFinalProcess())
-                {
-                    return _listOrdem[_ordem - 1];
-                }
+                //if (_listOrdem[_ordem - 1].IsFinalProcess())
+                //{
+                return _listOrdem[_ordem - 1];
+                //}
             }
 
             for (; _ordem < _listOrdem.Count; _ordem++)
@@ -506,11 +506,11 @@ namespace ProductionLinesWEG.Models
 
                 _listOrdem[_ordem].InProcess = true;
 
-                if (_listOrdem[_ordem].IsFinalProcess())
-                {
-                    _ordem++;
-                    return _listOrdem[_ordem - 1];
-                }
+                //if (_listOrdem[_ordem].IsFinalProcess())
+                //{
+                _ordem++;
+                return _listOrdem[_ordem - 1];
+                //}
             }
 
             return null;

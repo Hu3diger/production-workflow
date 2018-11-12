@@ -47,6 +47,12 @@
                             <tr>
                                 <td><div id="cn11" class="dragBase conectorP Cup reciveCfront"><img src="~/Content/images/cn11.png" /></div></td>
                             </tr>
+                            <tr>
+                                <td><div id="cn12" class="dragBase conectorP Cdown reciveCdown reciveCfront"><img src="~/Content/images/cn12.png" /></div></td>
+                            </tr>
+                            <tr>
+                                <td><div id="cn13" class="dragBase conectorP Cup reciveCup reciveCfront"><img src="~/Content/images/cn13.png" /></div></td>
+                            </tr>
                         </tbody>
                     </table>
 
@@ -122,7 +128,10 @@
                     <a onclick="applyReajust()" class="waves-effect green darken-4 waves-light btn">Aplicar</a>
                 </div>
             </div>
+
             <div class="col s4 m1 l2 trashMargin">
+                <a class="waves-effect waves-light btn red darken-4 mleft" onclick="clearContent()">limpar planta</a>
+                <a class="waves-effect waves-light btn green darken-4" onclick="saveContent()">Salvar planta</a>
                 <div class="dTrash red darken-4"><i class="material-icons branco">delete_forever</i></div>
             </div>
         </div>
@@ -142,11 +151,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <div class="col s12 m10 offset-m1 trashMargin">
-                <a class="waves-effect waves-light btn red darken-4 mleft" onclick="clearContent()">limpar planta</a>
-                <a class="waves-effect waves-light btn green darken-4" onclick="saveContent()">Salvar planta</a>
             </div>
 
         </div>

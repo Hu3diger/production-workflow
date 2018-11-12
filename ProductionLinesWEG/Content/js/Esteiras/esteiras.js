@@ -37,7 +37,7 @@ function showCreate() {
       </div>\
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
-        <a href="" onclick="limpaInfo()">Cancelar</a>\
+        <a href="#" onclick="limpaAbout()">Cancelar</a>\
         <a class="waves-effect waves-light btn right green darken-4" onclick="saveEsteira()"><i class="material-icons left">sd_card</i>criar</a>\
       </div>\
     </div>\
@@ -172,7 +172,7 @@ function alteraEsteira(id) {
       </div>\
     <div class="row">\
       <div class="col s12 m8 offset-m2">\
-      <a href="" onclick="limpaAbout()">Cancelar</a>\
+      <a href="#" onclick="limpaAbout()">Cancelar</a>\
         <a class="waves-effect waves-light btn right green darken-4" onclick="changeEsteira(\''+ data.Name + '\')"><i class="material-icons left">sd_card</i>salvar</a>\
         <a class="waves-effect waves-light btn right red darken-4 modal-trigger" href="#modal1"><i class="material-icons left">delete_forever</i>deletar</a>\
       </div>\

@@ -6,6 +6,15 @@
     margin-top: 50vh;
 }
 
-#newProcess{
+.ProcessTUT{
+    font-weight: bold;
+}
+
+.mbTut{
+    margin-bottom: 5vh;
+}
+
+.warning{
+    color: red;
     font-weight: bold;
 }
