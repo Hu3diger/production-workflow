@@ -69,6 +69,8 @@ function ServerReciveMethods() {
         $("#listProcesso").html("");
 
         generateList(jsonRecived, $("#listProcesso"));
+
+        $("#loading").hide();
     }
 
     //lista as esteiras na tela de esteiras
@@ -79,10 +81,13 @@ function ServerReciveMethods() {
             $("#esteirasEtiq").html("");
             $("#esteirasDesvio").html("");
 
+            // Pagina Esteiras
             generateListEsteira(jsonRecived.listModel, $("#esteirasModel"), 1, "colorEModel");
             generateListEsteira(jsonRecived.listArmazenamento, $("#esteirasArma"), 2, "colorEArmazem");
             generateListEsteira(jsonRecived.listEtiquetadora, $("#esteirasEtiq"), 3, "colorEEtiqueta");
             generateListEsteira(jsonRecived.listDesvio, $("#esteirasDesvio"), 4, "colorEDesvio");
+
+            $("#loading").hide();
         } catch (e) {
             // null
         }
@@ -100,6 +105,27 @@ function ServerReciveMethods() {
             generateListProducao(jsonRecived.listDesvio, $("#tdesvio tbody"), 4, "purple lighten-1");
 
             setDropDragItens();
+        } catch (e) {
+            // null
+        }
+
+        try{
+            let jsonR = [];
+            for(var x in jsonRecived.listModel){
+                jsonR.push(jsonRecived.listModel[x]);
+            }
+            for(var x in jsonRecived.listArmazenamento){
+                jsonR.push(jsonRecived.listArmazenamento[x]);
+            }
+            for(var x in jsonRecived.listEtiquetadora){
+                jsonR.push(jsonRecived.listEtiquetadora[x]);
+            }
+            for(var x in jsonRecived.listDesvio){
+                jsonR.push(jsonRecived.listDesvio[x]);
+            }
+            setDataStatistic(jsonR);
+            
+            $("#loading").hide();
         } catch (e) {
             // null
         }

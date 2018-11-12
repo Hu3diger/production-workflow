@@ -23,6 +23,11 @@
         <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/estatistica.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/main.css" />
     }
+    else if(ViewBag.Screen == "Wiki")
+    {
+        <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/wiki.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/main.css" />
+    }
     else
     {
         <link rel="stylesheet" type="text/css" media="screen" href="~/Content/css/main.css" />
@@ -50,13 +55,13 @@
                             }>
                             <a href="@Url.Action("Index", "Dashboard")">Dashboard</a>
                         </li>
-                        <li @if (ViewBag.Screen == "Esteiras") { @: class="active"
-                            }>
-                            <a href="@Url.Action("Index", "Esteiras")">Esteiras</a>
-                        </li>
                         <li @if (ViewBag.Screen == "Processos") { @: class="active"
                             }>
                             <a href="@Url.Action("Index", "Processos")">Processos</a>
+                        </li>
+                        <li @if (ViewBag.Screen == "Esteiras") { @: class="active"
+                            }>
+                            <a href="@Url.Action("Index", "Esteiras")">Esteiras</a>
                         </li>
                         <li @if (ViewBag.Screen == "Planta") { @: class="active"
                             }>
@@ -111,6 +116,20 @@
         </div>
     }
 
+    
+    @if(ViewBag.Screen != "Login" && ViewBag.Screen != "Wiki" && ViewBag.Screen != "Dashboard"){
+        <div id="loading" class="overlay">
+            <div class="inner">
+
+                <div class="progress light-blue lighten-3">
+                    <div class="indeterminate light-blue"></div>
+                </div>
+                
+            </div>
+        </div>
+    }
+    
+
     <!-- Page content -->
     @RenderBody()
     <!-- JS in the end of file to optimize loading -->
@@ -163,7 +182,7 @@
                 {
                 @:callListProcess();
                 }
-                else if (ViewBag.Screen == "Esteiras" || ViewBag.Screen == "Planta")
+                else if (ViewBag.Screen == "Esteiras" || ViewBag.Screen == "Planta" || ViewBag.Screen == "Estatistica")
                 {
                 @:callListEsteira();
                 }else if (ViewBag.Screen == "Dashboard")

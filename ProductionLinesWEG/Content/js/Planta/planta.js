@@ -42,6 +42,8 @@ function getIds() {
         $("#tamanho_y").val(minY);
 
         assignItemsTable(reciveContentTable.ArrayMapCells);
+    
+        $("#loading").hide();
     });
 }
 
