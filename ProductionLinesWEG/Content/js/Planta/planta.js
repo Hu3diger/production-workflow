@@ -67,7 +67,7 @@ function setDropDragItens() {
         let offAll = "turnOffAllFront(" + $(this).attr("id") + ")";
 
         $("#item").data("id", this.id);
-        $("#modalId").html("<b>Id: </b>" + this.id);
+        $("#idModal").html("<b>Id: </b>" + this.id);
         $("#btnChumbar").attr("onclick", fn);
         $("#btnOnAll").attr("onclick", onAll);
         $("#btnOffAll").attr("onclick", offAll);

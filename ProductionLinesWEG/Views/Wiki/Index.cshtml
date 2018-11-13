@@ -33,8 +33,7 @@
 
             <h5>Dashboard</h5>
             <ul>
-                <li><a href="#">Nível de debug</a></li>
-                <li><a href="#">Limpando a dashboard</a></li>
+                <li><a href="#msgLvl">Niveis de mensagem</a></li>
             </ul>
         </div>
     </div>
@@ -270,8 +269,8 @@
                 </li>
             </ul>
 
-            <p class="ProcessTUT" id="conTypes">Tipos de esteiras</p>
-            <ul class="collapsible popout">
+            <p class="ProcessTUT" >Tipos de esteiras</p>
+            <ul class="collapsible popout" id="conTypes">
                 <li>
                     <div class="collapsible-header"><i class="fas fa-pallet"></i>Tipos de esteiras</div>
                     <div class="collapsible-body">
@@ -543,36 +542,70 @@
         <div class="col s12 m10 offset-m1">
             <h5>Dashboard</h5>
 
-            <p class="ProcessTUT" id="inLimit">Niveis de mensagem</p>
+            <p class="ProcessTUT" id="msgLvl">Niveis de mensagem</p>
             <ul class="collapsible popout">
                  <li>
-                    <div class="collapsible-header"><i class="material-icons">info</i>Finalidade do limite de entrada</div>
+                    <div class="collapsible-header"><i class="material-icons">info</i>Finalidade do dashboard</div>
                     <div class="collapsible-body">
                         <span> 
-                            A função do limite de entrada, é limitar o número de peças que a esteira suporte. <br>
-                            <b>Ex:</b> Uma esteira possui 5 como limite de entrada, então, a esteira irá permitir que apenas 5 peças fiquem na fila execução.<br>
+                            A função dos níveis de mensaegm, é separar as mensagens por seu tipo. <br>
                         </span>
                     </div>
                 </li>
+
                 <li>
-                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Aplicando o limite de entrada</div>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Nível de mensagem</div>
                     <div class="collapsible-body">
                         <span>
                             <ul class="collection with-header">
-                                <li class="collection-header">
-                                    Para utilizar basta seguir os seguintes passos:<br>
-                                </li>
+                                <li class="collection-header"> Nível onde aparecem apenas mensagens <i>leves</i>, sem nenhum valor crítico. Mensagens de salvamento são o tipo que aparecem nesta categoria</li>
                                 <li class="collection-item">
-                                    <b>1-</b> Acessar a página de Esteiras, pode ser acessada através do botão na barra de navegação:<br>
-                                    <img class="mbTut" src="content/images/wiki/esteira1.jpg"/><br>
+                                    <img class="mbTut" src="content/images/wiki/dash1.jpg"/><br>
+                                </li>
+                            </ul>
 
-                                    <b>2-</b> Selecione a esteira, ou então, clique para criar uma nova.<br><br>
+                        </span>
+                    </div>
+                </li>
 
-                                    <b>3-</b> A utilização do limite de entrada pode ser feito no ato da criação ou na edição da esteira.<br>
-                                    Para aplicar, basta preencher o campo a seguir:<br>
-                                    <img class="mbTut" src="content/images/wiki/esteira6.jpg"/><br>
-                                    Após preenchido, basta clicar em salvar, ou então criar (caso esteja na etapa de criação).<br>
-                                    <b>Obs¹:</b> Caso a esteira suporte um número ilimitado, basta preencher o campo com -1.
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Nível de aviso</div>
+                    <div class="collapsible-body">
+                        <span>
+                            <ul class="collection with-header">
+                                <li class="collection-header"> Nível onde aparecem apenas mensagens <i>medianas</i>, com um valor importante a ser observado.</li>
+                                <li class="collection-item">
+                                    <img class="mbTut" src="content/images/wiki/dash2.jpg"/><br>
+                                </li>
+                            </ul>
+
+                        </span>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Nível de erro</div>
+                    <div class="collapsible-body">
+                        <span>
+                            <ul class="collection with-header">
+                                <li class="collection-header"> Nível onde aparecem apenas mensagens <i>graves</i>, com um valor crítico.</li>
+                                <li class="collection-item">
+                                    <img class="mbTut" src="content/images/wiki/dash3.jpg"/><br>
+                                </li>
+                            </ul>
+
+                        </span>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Nível de debug</div>
+                    <div class="collapsible-body">
+                        <span>
+                            <ul class="collection with-header">
+                                <li class="collection-header"> Nível onde aparecem todas as mensagens do sistema.</li>
+                                <li class="collection-item">
+                                    <img class="mbTut" src="content/images/wiki/dash4.jpg"/><br>
                                 </li>
                             </ul>
 
