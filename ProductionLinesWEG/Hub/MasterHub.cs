@@ -1004,7 +1004,7 @@ namespace ProductionLinesWEG.Hub
             {
                 ListEsteiraClient l = pgm.getEsteirasToClient();
 
-                //debugEsteira(l);
+                debugEsteira(l);
 
                 Clients.Clients(connections).listEsteiras(pgm.getEsteirasToClient());
             }
@@ -1089,7 +1089,7 @@ namespace ProductionLinesWEG.Hub
                             {
                                 if (aux.Esteira != null)
                                 {
-                                    aux.Esteira = (EsteiraAbstrata)pgm.listEsteiras.Find(x => x.Id.Equals(aux.Esteira.Id)).Clone();
+                                    aux.Esteira = (EsteiraAbstrata)pgm.listEsteiras.Find(x => x.Id.Equals(aux.Esteira.Id)).CloneWithIO();
                                 }
 
                                 aux.Up = null;

@@ -101,7 +101,7 @@ function ServerReciveMethods() {
             // Pagina Planta
             generateListProducao(jsonRecived.listModel, $("#tmodelo tbody"), 1, "blue darken-4");
             generateListProducao(jsonRecived.listArmazenamento, $("#tarmazenamento tbody"), 2, "orange darken-4");
-            generateListProducao(jsonRecived.listEtiquetadora, $("#tetiquetadora tbody"), 3, "lime darken-2");
+            generateListProducao(jsonRecived.listEtiquetadora, $("#tetiquetadora tbody"), 3, "teal darken-2");
             generateListProducao(jsonRecived.listDesvio, $("#tdesvio tbody"), 4, "purple lighten-1");
 
             setDropDragItens();

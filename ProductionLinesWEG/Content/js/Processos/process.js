@@ -126,13 +126,12 @@
     </div>\
     <div id="modal1" class="modal">\
         <div class="modal-content">\
-            <h5>Atenção!</h5>\
-            <p>Deseja mesmo deletar este processo?</p>\
-            <p>Obs: Irá também deletar todos os processos filhos do processo selecionado.   </p>\
+            <p>Você está prestes a deletar o processo <b>'+ data.Name +'</b></p>\
+            <p><b>Atenção:</b> Esta ação irá deletar todos os sub-processos contidos no processo <b>'+ data.Name +'</b>. Irá deletar também, todas as esteiras onde este processo está incluído.</p>\
         </div>\
         <div class="modal-footer">\
-            <a href="#!" class="modal-close waves-effect www waves-light btn-flat">Não</a>\
-            <a href="#!" class="modal-close waves-effect waves-light btn green darken-4" onclick="deleteProcess('+ name +')">Sim</a>\
+            <a href="#!" class="modal-close waves-effect www waves-light btn-flat">Cancelar</a>\
+            <a href="#!" class="modal-close waves-effect waves-light btn green darken-4" onclick="deleteProcess('+ name +')">Confirmar</a>\
         </div>\
     </div>\
     ';

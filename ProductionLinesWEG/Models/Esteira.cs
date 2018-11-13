@@ -53,7 +53,7 @@ namespace ProductionLinesWEG.Models
             _queueInputPecas = new Queue<Peca>();
 
             EsteiraInput = new List<EsteiraAbstrata>();
-            
+
             listTime = new List<int>();
         }
 
@@ -244,11 +244,20 @@ namespace ProductionLinesWEG.Models
             return ImplementedClone(e);
         }
 
+        public object CloneWithIO()
+        {
+            EsteiraAbstrata e = (EsteiraAbstrata)Clone();
+
+            return ImplementedCloneWithIO(e);
+        }
+
         public abstract bool PassPiece();
 
         public abstract bool IsInCondition();
 
         protected abstract object ImplementedClone(EsteiraAbstrata e);
+
+        protected abstract object ImplementedCloneWithIO(EsteiraAbstrata e);
 
         public override string ToString()
         {
@@ -300,7 +309,19 @@ namespace ProductionLinesWEG.Models
             return false;
         }
 
+        protected override object ImplementedCloneWithIO(EsteiraAbstrata e)
+        {
+            SetableOutput es = (SetableOutput)e;
+            if (EsteiraOutput != null)
+            {
+                es.EsteiraOutput = (EsteiraAbstrata)EsteiraOutput.Clone();
+            }
+
+            return es;
+        }
+
         public abstract void ImplementedFailSuccess();
+
     }
     // classe usada para as esteiras que possuem processos internos
     public class EsteiraModel : SetableOutput
@@ -653,6 +674,17 @@ namespace ProductionLinesWEG.Models
         protected override object ImplementedClone(EsteiraAbstrata e)
         {
             return e;
+        }
+
+        protected override object ImplementedCloneWithIO(EsteiraAbstrata e)
+        {
+            EsteiraDesvio ed = (EsteiraDesvio)e;
+            if (EsteiraOutput != null)
+            {
+                EsteiraOutput.ForEach(x => ed.EsteiraOutput.Add((EsteiraAbstrata)x.Clone()));
+            }
+
+            return ed;
         }
     }
 

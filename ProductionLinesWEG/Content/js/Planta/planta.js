@@ -12,15 +12,20 @@ var minY = 1;
 
 var ListPieces = [];
 
+var blockClickModal;
+
 $(document).ready(function () {
     $('.modal1').modal();
     $('.modal2').modal();
 
     $('.modal1').modal({
-        onCloseStart: function(){
+        onCloseStart: function () {
             $("#item").data("id", "");
         },
         onOpenStart: function () {
+            if(blockClickModal){
+                console.log("kappa")
+            }
             getTickEsteira();
         }
     })
@@ -41,7 +46,7 @@ function getIds() {
         $("#tamanho_y").val(minY);
 
         assignItemsTable(reciveContentTable.ArrayMapCells);
-    
+
         $("#loading").hide();
     });
 }
@@ -54,8 +59,7 @@ function setDropDragItens() {
 
     $(".dragBase").draggable({ helper: 'clone' });
 
-    // TESTES APENAS
-    $(".dragClone").click(function () {
+    $(".esteiraP").click(function () {
         let fn = "chumbarPecaEsteira(" + this.id + ")";
         let tn = "changeOnOff(" + this.id + ")";
 
@@ -63,13 +67,14 @@ function setDropDragItens() {
         let offAll = "turnOffAllFront(" + $(this).attr("id") + ")";
 
         $("#item").data("id", this.id);
+        $("#modalId").html("<b>Id: </b>" + this.id);
         $("#btnChumbar").attr("onclick", fn);
         $("#btnOnAll").attr("onclick", onAll);
         $("#btnOffAll").attr("onclick", offAll);
-        $("#modalName").html("<b>"+ $(this).data().Name +"</b>");
-        $("#modalDescription").html("<b>Descrição da esteira</b>: "+ $(this).data().Description);
-        $("#modalLimit").html("<b>Limite de entrada</b>: "+ ($(this).data().InLimit == -1 ? "Limite infinito de " : $(this).data().InLimit) + " peças");
-        $("#modalType").html("<b>Tipo da esteira</b>: "+ $(this).data().Type);
+        $("#modalName").html("<b>" + $(this).data().Name + "</b>");
+        $("#modalDescription").html("<b>Descrição da esteira</b>: " + $(this).data().Description);
+        $("#modalLimit").html("<b>Limite de entrada</b>: " + ($(this).data().InLimit == -1 ? "Limite infinito de " : $(this).data().InLimit) + " peças");
+        $("#modalType").html("<b>Tipo da esteira</b>: " + $(this).data().Type);
 
         setOnOff(this.id, $(this).data().Ligado);
 
@@ -87,15 +92,14 @@ function setDropDragItens() {
                 sobre = "Outras parada</b>: " + $(this).data().Addtional;
                 break;
         }
- 
-        $("#modalAbout").html("<b>"+ sobre +"</b>");
+
+        $("#modalAbout").html("<b>" + sobre + "</b>");
 
         connector.server.getPieces($(this).attr("id")).done(function (json) {
             setPiecesModal(json);
         })
-        
+
         $('.modal2').modal('close');
-        
     });
 
 
@@ -150,6 +154,7 @@ function setDropDragItens() {
         // aceita os objeto que contenham as seguintes classes
         accept: '.dragBase, .dragClone',
         drop: function (ev, ui) {
+            blockClickModal = true;
             var droppedItem = $(ui.draggable);
 
             // verifica se contem nada na celula ou a celular contem o mesmo item que foi dropado
@@ -158,32 +163,35 @@ function setDropDragItens() {
                 if (droppedItem.hasClass("dragBase")) {
 
                     let tempData = droppedItem.data();
-
                     droppedItem = droppedItem.clone();
-                    droppedItem.removeClass("dragBase").addClass("dragClone modal-trigger");
-                    droppedItem.attr("data-target", idModal);
+                    droppedItem.removeClass("dragBase").addClass("dragClone");
 
-                    var idM = droppedItem.attr("id");
+                    if (droppedItem.hasClass("esteiraP")) {
 
-                    if (tempData.TypeN == 1) {
-                        droppedItem.attr("id", idM + "c" + countIdEm++);
-                    } else if (tempData.TypeN == 2) {
-                        droppedItem.attr("id", idM + "c" + countIdEa++);
-                    } else if (tempData.TypeN == 3) {
-                        droppedItem.attr("id", idM + "c" + countIdEe++);
-                    } else if (tempData.TypeN == 4) {
-                        droppedItem.attr("id", idM + "c" + countIdEd++);
-                    }
+                        droppedItem.addClass("modal-trigger");
+                        droppedItem.attr("data-target", idModal);
 
-                    // for each com com os valores de tempData
-                    $.each(tempData, function (i, item) {
-                        if (i != "uiDraggable") {
-                            droppedItem.data(i, item);
+                        var idM = droppedItem.attr("id");
+
+                        if (tempData.TypeN == 1) {
+                            droppedItem.attr("id", idM + "c" + countIdEm++);
+                        } else if (tempData.TypeN == 2) {
+                            droppedItem.attr("id", idM + "c" + countIdEa++);
+                        } else if (tempData.TypeN == 3) {
+                            droppedItem.attr("id", idM + "c" + countIdEe++);
+                        } else if (tempData.TypeN == 4) {
+                            droppedItem.attr("id", idM + "c" + countIdEd++);
                         }
-                    });
 
-                    droppedItem.data("idM", idM);
+                        // for each com com os valores de tempData
+                        $.each(tempData, function (i, item) {
+                            if (i != "uiDraggable") {
+                                droppedItem.data(i, item);
+                            }
+                        });
 
+                        droppedItem.data("idM", idM);
+                    }
                 }
 
                 $(this).html(droppedItem);
@@ -203,6 +211,7 @@ function setDropDragItens() {
 
     $('.dTrash').droppable({
         drop: function (event, ui) {
+            blockClickModal = true;
             var droppedItem = $(ui.draggable);
 
             if (!droppedItem.hasClass("dragBase")) {
@@ -240,12 +249,12 @@ function modal2show(i) {
     for (var j = 0; j < list.length; j++) {
         html += "\
             <tr>\
-                <td>"+ list[j].IdP +"</td>\
-                <td>"+ list[j].NameP +"</td>\
-                <td>"+ list[j].Estado +"</td>\
-                <td>"+ list[j].Value +"</td>\
-                <td>"+ list[j].Data +"</td>\
-                <td>"+ list[j].Time +"ms</td>\
+                <td>"+ list[j].IdP + "</td>\
+                <td>"+ list[j].NameP + "</td>\
+                <td>"+ list[j].Estado + "</td>\
+                <td>"+ list[j].Value + "</td>\
+                <td>"+ list[j].Data + "</td>\
+                <td>"+ list[j].Time + "ms</td>\
             </tr>\
         ";
     }
@@ -644,6 +653,7 @@ function saveContent() {
 
     // verifica se encontrou
     if (tbl.length) {
+        $("#loading").show();
 
         // inicia e declara as variaveis
         let tBody = tbl.find($("tbody"));
@@ -701,17 +711,17 @@ function saveContent() {
         sendServ.minY = minY;
 
         // metodo do servidor que faz o mapeamento
-        console.log(sendServ);
         saveTableProduction(sendServ);
+        getIds();
+        blockClickModal = false;
     } else {
-        console.log("Object not found");
+        console.error("Object not found");
     }
 }
 
 
 
 function assignItemsTable(mapCells) {
-
     if (mapCells != null) {
         var auxX = minX;
         var auxY = minY;
@@ -761,7 +771,15 @@ function assignItemsTable(mapCells) {
 
                         if (item.Esteira) {
                             div.attr("data-target", idModal);
-                            div.data("Ligado", item.Esteira.Ligado);
+                            if (item.Esteira.EsteiraOutput) {
+                                if (Array.isArray(item.Esteira.EsteiraOutput)) {
+                                    div.data("EsteiraOutput", item.Esteira.EsteiraOutput);
+                                } else {
+                                    div.data("EsteiraOutput", [item.Esteira.EsteiraOutput]);
+                                }
+                            } else {
+                                div.data("EsteiraOutput", []);
+                            }
                         }
                     }
                 }
@@ -781,6 +799,7 @@ function clearContent() {
 
     // verifica se encontrou
     if (tbl.length) {
+        $("#loading").show();
 
         // inicia e declara as variaveis
         let tBody = tbl.find($("tbody"));
@@ -803,12 +822,13 @@ function clearContent() {
         }
 
         reajustTable();
+        saveContent();
     } else {
         console.log("Object not found");
     }
 }
 
-function closeModal40(){
+function closeModal40() {
     $('.modal2').modal('close');
 }
 
@@ -826,7 +846,7 @@ function setOnOff(id, state) {
     }
 }
 
-function setPiecesModal(json){
+function setPiecesModal(json) {
     ListPieces = json;
     let html = "";
 

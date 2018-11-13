@@ -260,7 +260,7 @@
                                     <b>3-</b> A utilização do limite de entrada pode ser feito no ato da criação ou na edição da esteira.<br>
                                     Para aplicar, basta preencher o campo a seguir:<br>
                                     <img class="mbTut" src="content/images/wiki/esteira6.jpg"/><br>
-                                    Após preenchido, basta clicar em salvar, ou então criar o processo (caso esteja no processo de criação).<br>
+                                    Após preenchido, basta clicar em salvar, ou então criar (caso esteja na etapa de criação).<br>
                                     <b>Obs¹:</b> Caso a esteira suporte um número ilimitado, basta preencher o campo com -1.
                                 </li>
                             </ul>
@@ -273,13 +273,13 @@
             <p class="ProcessTUT" id="conTypes">Tipos de esteiras</p>
             <ul class="collapsible popout">
                 <li>
-                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Tipos de esteiras</div>
+                    <div class="collapsible-header"><i class="fas fa-pallet"></i>Tipos de esteiras</div>
                     <div class="collapsible-body">
                         <span>
 
                         <ul class="collapsible">
                             <li>
-                                <div class="collapsible-header"><i class="fas fa-cogs"></i>Esteira de processamento</div>
+                                <div class="collapsible-header"><i class="fas fa-pallet colorEModel"></i>Esteira de processamento</div>
                                 <div class="collapsible-body">
                                     <span>
                                         <ul class="collection with-header">
@@ -303,7 +303,7 @@
 
                         <ul class="collapsible">
                             <li>
-                                <div class="collapsible-header"><i class="fas fa-cogs"></i>Esteira de armazenamento</div>
+                                <div class="collapsible-header"><i class="fas fa-pallet colorEArmazem"></i>Esteira de armazenamento</div>
                                 <div class="collapsible-body">
                                     <span>
                                         <ul class="collection with-header">
@@ -324,25 +324,22 @@
                             </li>
                         </ul>
 
-                        <ul class="collapsible">
+                         <ul class="collapsible">
                             <li>
-                                <div class="collapsible-header"><i class="fas fa-cogs"></i>Esteira etiquetadora</div>
+                                <div class="collapsible-header"><i class="fas fa-pallet colorEEtiqueta"></i>Esteira etiquetadora</div>
                                 <div class="collapsible-body">
                                     <span>
                                         <ul class="collection with-header">
                                             <li class="collection-header">
-                                                Para utilizar basta seguir os seguintes passos:<br>
+                                                A esteira do tipo <b>etiquetadora</b>, são as únicas esteiras que mudam o rótulo da peça.<br>
+                                                Na criação de uma esteira, ao selecionar o tipo <b>etiquetadora</b>, o campo extra será liberado, no qual você informa o valor inicial para a geração das etiquetas.<br>
+                                                <b>Importante:</b> No tipo <b>etiquetadora</b>, ao definir um valor inicial, esta produzirá até um número ininito, caso crie outra etiquetadora com um número superior ao da outra esteira, o limite da primeira será o valor inicial da segunda.<br>
+                                                <b>Ex:</b> Esteira A possui valor inicial 1, Esteira B possui valor inicial 15, então, a esteira A irá etiquetar até o valor 14 e a esteira B irá etiquetar de 15 até inifinito.
+                                                Observe na imagem a seguir:
                                             </li>
                                             <li class="collection-item">
-                                                <b>1-</b> Acessar a página de Processos, pode ser acessada através do botão na barra de navegação:<br>
-                                                <img class="mbTut" src="content/images/wiki/process1.jpg"/><br>
-
-                                                <b>2-</b> Selecione um processo, ou então, clique para criar um novo.<br><br>
-
-                                                <b>3-</b> A utilização da variação pode ser feita no ato da criação ou da edição do processo.<br>
-                                                Para aplicar, basta preencher o campo a seguir:<br>
-                                                <img class="mbTut" src="content/images/wiki/process7.jpg"/><br>
-                                                Após preenchido, basta clicar em salvar, ou então criar o processo (caso esteja no processo de criação).
+                                                <img class="mbTut" src="content/images/wiki/esteiraP3.jpg"/><br>
+                                                <b>Obs¹:</b> As esteiras etiquetadoras sempre terão a cor VERDE (Teal).
                                             </li>
                                         </ul>
 
@@ -353,23 +350,28 @@
 
                         <ul class="collapsible">
                             <li>
-                                <div class="collapsible-header"><i class="fas fa-cogs"></i>Esteira de desvio</div>
+                                <div class="collapsible-header"><i class="fas fa-pallet colorEDesvio"></i>Esteira de desvio</div>
                                 <div class="collapsible-body">
                                     <span>
                                         <ul class="collection with-header">
                                             <li class="collection-header">
-                                                Para utilizar basta seguir os seguintes passos:<br>
+                                                A esteira do tipo <b>devio</b>, são as únicas esteiras que realizam o processo de balanceamento e separação das peças.<br>
+                                                <b>Importante:</b> No tipo <b>etiquetadora</b> o campo extra Tipo de desvio será liberado. Existem apenas dois tipos de desvio, de Balanceamento e de Seleção.<br>
                                             </li>
                                             <li class="collection-item">
-                                                <b>1-</b> Acessar a página de Processos, pode ser acessada através do botão na barra de navegação:<br>
-                                                <img class="mbTut" src="content/images/wiki/process1.jpg"/><br>
+                                                <b>Balanceamento:</b> A esteira de desvio do tipo balanceamento, realiza a função de balancear a entrada de peças em várias saídas.<br>
+                                                Observe a imagem:<br>
+                                                <img class="mbTut" src="content/images/wiki/esteira7.jpg"/><br>
+                                            </li>
+                                            <li class="collection-item">
+                                                <b>Seleção:</b> A esteira de desvio do tipo seleção, realiza a função de separar as peças, com base no último processo pelo qual a peça passou.<br>
+                                                <b>Importante:</b> A esteira de desvio por seleção, deve ter, obrigatoriamente, três saídas:<br>
+                                                <b>-</b> Processo Concluído/Aguardando <br>
+                                                <b>-</b> Processo Defeituoso <br>
+                                                <b>-</b> Processo Interrompido <br>
 
-                                                <b>2-</b> Selecione um processo, ou então, clique para criar um novo.<br><br>
-
-                                                <b>3-</b> A utilização da variação pode ser feita no ato da criação ou da edição do processo.<br>
-                                                Para aplicar, basta preencher o campo a seguir:<br>
-                                                <img class="mbTut" src="content/images/wiki/process7.jpg"/><br>
-                                                Após preenchido, basta clicar em salvar, ou então criar o processo (caso esteja no processo de criação).
+                                                Observe a imagem:<br>
+                                                <img class="mbTut" src="content/images/wiki/esteira8.jpg"/><br>
                                             </li>
                                         </ul>
 
@@ -377,6 +379,202 @@
                                 </div>
                             </li>
                         </ul>
+
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row mtExp">
+        <div class="col s12 m10 offset-m1">
+            <h5>Processos</h5>
+            <p class="ProcessTUT" id="newProcess">Criando/Editando um processo</p>
+            <ul class="collapsible popout">
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">info</i>Finalidade de um processo</div>
+                    <div class="collapsible-body">
+                        <span>Processo são diversas etapas que uma peça terá que atravessar para completar uma certa operação. Ou seja, é qualquer ação que a peça terá que passar.</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Criando o processo</div>
+                    <div class="collapsible-body">
+                        <span>
+                            <ul class="collection with-header">
+                                <li class="collection-header">Para realizar a criação ou a edição de um novo processo, os próximos passos devem ser seguidos:</li>
+                                <li class="collection-item">
+                                    <b>1-</b> Acessar a página de Processos, pode ser acessada através do botão na barra de navegação:<br>
+                                    <img class="mbTut" src="content/images/wiki/process1.jpg"/><br>
+
+                                    <b>2-</b> Ao carregar a página, clique no seguinte botão:<br>
+                                    <img class="mbTut" src="content/images/wiki/process2.jpg"/><br>
+
+                                    <b>3-</b> Após clicar no botão, os seguintes campos devem ser liberados, preencha todas as informações:<br>
+                                    <img class="mbTut" src="content/images/wiki/process3.jpg"/><br>
+
+                                    <b>4-</b> Preenchidos todos os campos, basta clicar em criar:<br>
+                                    <img class="mbTut" src="content/images/wiki/process4.jpg" /><br>
+
+                                    <b>5-</b> Após criado, o processo deverá estar listado da seguinte forma:<br>
+                                    <img class="mbTut" src="content/images/wiki/process5.jpg"/>
+                                    <p class="warning">O processo irá aparecer de acorodo com a posição informada no processo de criação</p>
+                                </li>
+                            </ul>
+
+                        </span>
+                    </div>
+                </li>
+            </ul>
+
+            <p class="ProcessTUT" id="appError">Aplicando a probabilidade de erro</p>
+            <ul class="collapsible popout">
+                 <li>
+                    <div class="collapsible-header"><i class="material-icons">info</i>Finalidade da probabilidade de erro</div>
+                    <div class="collapsible-body">
+                        <span> A função da probabilidade de erro é manter uma margem de erro máxima permitida para o processo. <br>
+                                    <b>Ex:</b> Um processo possui 5% de probabilidade, então, o processo ao executar pode ter ATÉ 5% de falhar.<br></span>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Aplicando a probabilidade de erro</div>
+                    <div class="collapsible-body">
+                        <span>
+                            <ul class="collection with-header">
+                                <li class="collection-header">
+                                    Para utilizar basta seguir os seguintes passos:<br>
+                                </li>
+                                <li class="collection-item">
+                                    <b>1-</b> Acessar a página de Processos, pode ser acessada através do botão na barra de navegação:<br>
+                                    <img class="mbTut" src="content/images/wiki/process1.jpg"/><br>
+
+                                    <b>2-</b> Selecione um processo, ou então, clique para criar um novo.<br><br>
+
+                                    <b>3-</b> A utilização da probabilidade pode ser feita no ato da criação ou da edição do processo.<br>
+                                    Para aplicar, basta preencher o campo a seguir:<br>
+                                    <img class="mbTut" src="content/images/wiki/process6.jpg"/><br>
+                                    Após preenchido, basta clicar em salvar, ou então criar o processo (caso esteja no processo de criação).
+                                </li>
+                            </ul>
+
+                        </span>
+                    </div>
+                </li>
+            </ul>
+
+            <p class="ProcessTUT" id="utVariation">Utilizando variação</p>
+            <ul class="collapsible popout">
+                 <li>
+                    <div class="collapsible-header"><i class="material-icons">info</i>Finalidade da variação</div>
+                    <div class="collapsible-body">
+                        <span> A função da variação, é a porcentagem em que o tempo de execução do processo poderá sofrer.<br>
+                        <b>Ex:</b> Um processo possui 5% de variação, então, o processo ao executar pode levar 5% a mais ou a menos de tempo estabelecido, para terminar.<br></span>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Utilizando variação</div>
+                    <div class="collapsible-body">
+                        <span>
+                            <ul class="collection with-header">
+                                <li class="collection-header">
+                                    Para utilizar basta seguir os seguintes passos:<br>
+                                </li>
+                                <li class="collection-item">
+                                    <b>1-</b> Acessar a página de Processos, pode ser acessada através do botão na barra de navegação:<br>
+                                    <img class="mbTut" src="content/images/wiki/process1.jpg"/><br>
+
+                                    <b>2-</b> Selecione um processo, ou então, clique para criar um novo.<br><br>
+
+                                    <b>3-</b> A utilização da variação pode ser feita no ato da criação ou da edição do processo.<br>
+                                    Para aplicar, basta preencher o campo a seguir:<br>
+                                    <img class="mbTut" src="content/images/wiki/process7.jpg"/><br>
+                                    Após preenchido, basta clicar em salvar, ou então criar o processo (caso esteja no processo de criação).
+                                </li>
+                            </ul>
+
+                        </span>
+                    </div>
+                </li>
+            </ul>
+
+            <p class="ProcessTUT" id="utFather">Utilizando um processo pai</p>
+            <ul class="collapsible popout">
+                 <li>
+                    <div class="collapsible-header"><i class="material-icons">info</i>Finalidade do processo pai</div>
+                    <div class="collapsible-body">
+                        <span> 
+                            A função do processo pai é abranger vários processos. É um processo que possui sub-processos.<br>
+                            <b>Ex:</b> O processo X possui como sub-processos A e B. Então, o processo PAI é X e processos filhos são A e B<br>
+                            Serão executados os processos X, A e B; Nesta ordem.
+                        </span>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Aplicando o processo pai</div>
+                    <div class="collapsible-body">
+                        <span>
+                            <ul class="collection with-header">
+                                <li class="collection-header">
+                                    Para utilizar basta seguir os seguintes passos:<br>
+                                </li>
+                                <li class="collection-item">
+                                    <b>1-</b> Acessar a página de Processos, pode ser acessada através do botão na barra de navegação:<br>
+                                    <img class="mbTut" src="content/images/wiki/process1.jpg"/><br>
+
+                                    <b>2-</b> Selecione um processo, ou então, clique para criar um novo.<br><br>
+
+                                    <b>3-</b> A aplicação do processo pai, pode ser feita no ato da criação ou da edição do processo.<br>
+                                    Para aplicar, basta selecionar o processo a ser definido como pai, clicando no botão a seguir:<br>
+                                    <img class="mbTut" src="content/images/wiki/process8.jpg"/><br>
+                                    <b>Obs¹:</b> Após selecionado, basta clicar em salvar, ou então criar o processo (caso esteja no processo de criação).<br>
+                                    <b>Obs²:</b> Caso não exista outro processo criado, será impossível definir um processo pai.
+                                </li>
+                            </ul>
+
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row mtExp">
+        <div class="col s12 m10 offset-m1">
+            <h5>Dashboard</h5>
+
+            <p class="ProcessTUT" id="inLimit">Niveis de mensagem</p>
+            <ul class="collapsible popout">
+                 <li>
+                    <div class="collapsible-header"><i class="material-icons">info</i>Finalidade do limite de entrada</div>
+                    <div class="collapsible-body">
+                        <span> 
+                            A função do limite de entrada, é limitar o número de peças que a esteira suporte. <br>
+                            <b>Ex:</b> Uma esteira possui 5 como limite de entrada, então, a esteira irá permitir que apenas 5 peças fiquem na fila execução.<br>
+                        </span>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="fas fa-cogs"></i>Aplicando o limite de entrada</div>
+                    <div class="collapsible-body">
+                        <span>
+                            <ul class="collection with-header">
+                                <li class="collection-header">
+                                    Para utilizar basta seguir os seguintes passos:<br>
+                                </li>
+                                <li class="collection-item">
+                                    <b>1-</b> Acessar a página de Esteiras, pode ser acessada através do botão na barra de navegação:<br>
+                                    <img class="mbTut" src="content/images/wiki/esteira1.jpg"/><br>
+
+                                    <b>2-</b> Selecione a esteira, ou então, clique para criar uma nova.<br><br>
+
+                                    <b>3-</b> A utilização do limite de entrada pode ser feito no ato da criação ou na edição da esteira.<br>
+                                    Para aplicar, basta preencher o campo a seguir:<br>
+                                    <img class="mbTut" src="content/images/wiki/esteira6.jpg"/><br>
+                                    Após preenchido, basta clicar em salvar, ou então criar (caso esteja na etapa de criação).<br>
+                                    <b>Obs¹:</b> Caso a esteira suporte um número ilimitado, basta preencher o campo com -1.
+                                </li>
+                            </ul>
 
                         </span>
                     </div>

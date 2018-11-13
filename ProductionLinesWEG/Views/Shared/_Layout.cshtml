@@ -117,7 +117,7 @@
     }
 
     
-    @if(ViewBag.Screen != "Login" && ViewBag.Screen != "Wiki" && ViewBag.Screen != "Dashboard"){
+    @if(ViewBag.Screen != "Login" && ViewBag.Screen != "Dashboard"){
         <div id="loading" class="overlay">
             <div class="inner">
 
@@ -224,9 +224,9 @@
     {
         <script src="~/Content/js/Estatisticas/estatistica.js"></script>
     }
-    else if (ViewBag.Screen == "__Planta")
+    else if (ViewBag.Screen == "Wiki")
     {
-        <script src="~/Content/js/Planta/__planta.js"></script>
+        <script src="~/Content/js/Wiki/wiki.js"></script>
     }
 
     <script src="/signalr/hubs" type="text/javascript"></script>
