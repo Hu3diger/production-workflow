@@ -31,7 +31,6 @@ function logOut() {
     connector.server.logOut().done(function () {
         window.location.href = '/Login';
     });
-
 }
 
 //função para a criação de processos, recebendo os dados do processo e enviando para o servidor
@@ -94,12 +93,6 @@ function callListProcess() {
 function showDebug(msg) {
 
     connector.server.showDebug(msg);
-
-}
-
-function saveTableProduction(array) {
-
-    connector.server.saveTableProduction(array);
 
 }
 

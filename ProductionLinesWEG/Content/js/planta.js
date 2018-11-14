@@ -12,7 +12,9 @@ var minY = 1;
 
 var ListPieces = [];
 
+var itemForBlock;
 var blockClickModal;
+var blockedDrag;
 
 $(document).ready(function () {
     $('.modal1').modal();
@@ -22,12 +24,6 @@ $(document).ready(function () {
         onCloseStart: function () {
             $("#item").data("id", "");
         },
-        onOpenStart: function () {
-            if(blockClickModal){
-                console.log("kappa")
-            }
-            getTickEsteira();
-        }
     })
 });
 
@@ -57,58 +53,95 @@ var CellAfterDrop;
 // adiciona as propriedades aos objetos (drag e drop)
 function setDropDragItens() {
 
-    $(".dragBase").draggable({ helper: 'clone' });
+    $(".esteiraP").unbind("click").ready(function () {
+        $(".esteiraP").click(function () {
+            let fn = "chumbarPecaEsteira(" + this.id + ")";
+            let tn = "changeOnOff(" + this.id + ")";
 
-    $(".esteiraP").click(function () {
-        let fn = "chumbarPecaEsteira(" + this.id + ")";
-        let tn = "changeOnOff(" + this.id + ")";
+            let onAll = "turnOnAllFront(" + $(this).attr("id") + ")";
+            let offAll = "turnOffAllFront(" + $(this).attr("id") + ")";
 
-        let onAll = "turnOnAllFront(" + $(this).attr("id") + ")";
-        let offAll = "turnOffAllFront(" + $(this).attr("id") + ")";
+            $("#item").data("id", this.id);
+            $("#idModal").html("<b>Id: </b>" + this.id);
+            $("#btnChumbar").attr("onclick", fn);
+            $("#btnOnAll").attr("onclick", onAll);
+            $("#btnOffAll").attr("onclick", offAll);
+            $("#modalName").html("<b>" + $(this).data().Name + "</b>");
+            $("#modalDescription").html("<b>Descrição da esteira</b>: " + $(this).data().Description);
+            $("#modalLimit").html("<b>Limite de entrada</b>: " + ($(this).data().InLimit == -1 ? "Limite infinito de " : $(this).data().InLimit) + " peças");
+            $("#modalType").html("<b>Tipo da esteira</b>: " + $(this).data().Type);
 
-        $("#item").data("id", this.id);
-        $("#idModal").html("<b>Id: </b>" + this.id);
-        $("#btnChumbar").attr("onclick", fn);
-        $("#btnOnAll").attr("onclick", onAll);
-        $("#btnOffAll").attr("onclick", offAll);
-        $("#modalName").html("<b>" + $(this).data().Name + "</b>");
-        $("#modalDescription").html("<b>Descrição da esteira</b>: " + $(this).data().Description);
-        $("#modalLimit").html("<b>Limite de entrada</b>: " + ($(this).data().InLimit == -1 ? "Limite infinito de " : $(this).data().InLimit) + " peças");
-        $("#modalType").html("<b>Tipo da esteira</b>: " + $(this).data().Type);
+            setOnOff(this.id, $(this).data().Ligado);
 
-        setOnOff(this.id, $(this).data().Ligado);
+            $("#modalEntradas").html("");
+            $("#modalSaidas").html("");
 
-        switch ($(this).data().TypeN) {
-            case 1:
-                sobre = "Processo Master</b>: " + $(this).data().Addtional;
-                break;
-            case 2:
-                sobre = "";
-                break;
-            case 3:
-                sobre = "Valor inicial</b>: " + $(this).data().Addtional + " (Para geração de etiquetas)";
-                break;
-            case 4:
-                sobre = "Outras parada</b>: " + $(this).data().Addtional;
-                break;
-        }
+            let output = $(this).data().EsteiraOutput;
+            let input = $(this).data().EsteiraInput
+            if(output && output.length > 0){
+                for (let x in output) {
+                    let item = $(this).data().EsteiraOutput[x];
+                    $("#modalSaidas").append("\
+                        <li>"+ item.Name + " (" + item.Id + ")</li>\
+                        <hr>\
+                    ");
+                }
+            }else{
+                $("#modalSaidas").append("\
+                    <li>Não existem saidas nesta esteira</li>\
+                ");
+            }
+            
+            if(input && input.length > 0){
+                for (let x in input) {
+                    let item = $(this).data().EsteiraInput[x];
+                    $("#modalEntradas").append("\
+                    <li>"+ item.Name + " (" + item.Id + ")</li>\
+                    <hr>\
+                    ");
+                }
+            }else{
+                $("#modalEntradas").append("\
+                    <li>Não existem entradas nesta esteira</li>\
+                ");
+            }
 
-        $("#modalAbout").html("<b>" + sobre + "</b>");
+            switch ($(this).data().TypeN) {
+                case 1:
+                    sobre = "Processo Master</b>: " + $(this).data().Addtional;
+                    break;
+                case 2:
+                    sobre = "";
+                    break;
+                case 3:
+                    sobre = "Valor inicial</b>: " + $(this).data().Addtional + " (Para geração de etiquetas)";
+                    break;
+                case 4:
+                    sobre = "Outras parada</b>: " + $(this).data().Addtional;
+                    break;
+            }
 
-        connector.server.getPieces($(this).attr("id")).done(function (json) {
-            setPiecesModal(json);
-        })
+            $("#modalAbout").html("<b>" + sobre + "</b>");
 
-        $('.modal2').modal('close');
+            if (blockClickModal) {
+                M.toast({ html: "Salve o programa para que as alterações tenham efeito" });
+            } else {
+                getTickEsteira();
+                $('.modal2').modal('close');
+                $('.modal1').modal('open');
+            }
+        });
     });
 
+    $(".dragBase").draggable({ helper: 'clone', disabled: blockedDrag, });
 
     $(".dragClone").draggable({
+        disabled: blockedDrag,
         revert: 'invalid',
         start: function (event, ui) {
             var gotItem = $(ui.helper);
 
-            CellAfterDrop = gotItem.parent();
+            itemForBlock = CellAfterDrop = gotItem.parent();
 
             var objImg = gotItem.children().get(0);
 
@@ -154,8 +187,12 @@ function setDropDragItens() {
         // aceita os objeto que contenham as seguintes classes
         accept: '.dragBase, .dragClone',
         drop: function (ev, ui) {
-            blockClickModal = true;
             var droppedItem = $(ui.draggable);
+
+            if (!blockClickModal) {
+                blockClickModal = $(itemForBlock)[0] != $(this)[0];
+                itemForBlock = null;
+            }
 
             // verifica se contem nada na celula ou a celular contem o mesmo item que foi dropado
             if ($(this).children().length == 0 || droppedItem != $(this).children().get(0)) {
@@ -167,9 +204,6 @@ function setDropDragItens() {
                     droppedItem.removeClass("dragBase").addClass("dragClone");
 
                     if (droppedItem.hasClass("esteiraP")) {
-
-                        droppedItem.addClass("modal-trigger");
-                        droppedItem.attr("data-target", idModal);
 
                         var idM = droppedItem.attr("id");
 
@@ -194,12 +228,10 @@ function setDropDragItens() {
                     }
                 }
 
-                $(this).html(droppedItem);
-
-                // reajusta a tabela
-                reajustTable();
+                $(this).html(droppedItem).ready(function () {// reajusta a tabela
+                    reajustTable();
+                });
             }
-
 
             if (CellAfterDrop) {
                 analyzeCell(CellAfterDrop);
@@ -211,7 +243,8 @@ function setDropDragItens() {
 
     $('.dTrash').droppable({
         drop: function (event, ui) {
-            blockClickModal = true;
+            if (!blockClickModal) blockClickModal = itemForBlock != null;
+
             var droppedItem = $(ui.draggable);
 
             if (!droppedItem.hasClass("dragBase")) {
@@ -276,6 +309,9 @@ function applyReajust() {
     minX = parseInt($("#tamanho_x").val());
     minY = parseInt($("#tamanho_y").val());
 
+    if(minX < 1) minX = 1;
+    if(minY < 1) minY = 1;
+
     reajustTable();
 }
 
@@ -339,7 +375,7 @@ function reajustTable() {
                 $('<td class="tCell">').appendTo(tr);
             } else {
                 $('<td class="tCellLines no-padding">').appendTo(tr);
-                $(tr.children().get(0)).html("" + (tBody.children().length - 1));
+                $(tr.children().get(0)).html("" + (tBody.children().length -1));
             }
         }
 
@@ -711,9 +747,13 @@ function saveContent() {
         sendServ.minY = minY;
 
         // metodo do servidor que faz o mapeamento
-        saveTableProduction(sendServ);
-        getIds();
-        blockClickModal = false;
+        connector.server.saveTableProduction(sendServ).done(function (t) {
+            if (t) {
+                getIds();
+                blockClickModal = false;
+            }
+            $("#loading").hide();
+        });
     } else {
         console.error("Object not found");
     }
@@ -765,12 +805,42 @@ function assignItemsTable(mapCells) {
                             div.addClass(item);
                         });
 
-                        $.each(item.DataObj, function (i, item) {
-                            div.data(i, item);
-                        });
-
                         if (item.Esteira) {
-                            div.attr("data-target", idModal);
+                            switch (item.DataObj.TypeN) {
+                                case 1:
+                                    div.data("Addtional", item.Esteira.NameProcessMaster);
+                                    div.data("Type", "Esteira Modelo");
+                                    break;
+                                case 2:
+                                    div.data("Type", "Esteira de armazenamento");
+                                    break;
+                                case 3:
+                                    div.data("Addtional", item.Esteira.InitialValue);
+                                    div.data("Type", "Esteira etiquetadora");
+                                    break;
+                                case 4:
+                                    div.data("Addtional", item.Esteira.tipoDesvio);
+                                    div.data("Type", "Esteira de desvio");
+                                    break;
+                            }
+
+                            //salva informa��es dentro da id do item
+                            div.data("Name", item.Esteira.Name);
+                            div.data("Description", item.Esteira.Description);
+                            div.data("InLimit", item.Esteira.InLimit);
+                            div.data("Ligado", item.Esteira.Ligado);
+                            div.data("TypeN", item.DataObj.TypeN);
+
+                            if (item.Esteira.EsteiraInput) {
+                                if (Array.isArray(item.Esteira.EsteiraInput)) {
+                                    div.data("EsteiraInput", item.Esteira.EsteiraInput);
+                                } else {
+                                    div.data("EsteiraInput", [item.Esteira.EsteiraInput]);
+                                }
+                            } else {
+                                div.data("EsteiraInput", []);
+                            }
+
                             if (item.Esteira.EsteiraOutput) {
                                 if (Array.isArray(item.Esteira.EsteiraOutput)) {
                                     div.data("EsteiraOutput", item.Esteira.EsteiraOutput);
@@ -780,6 +850,10 @@ function assignItemsTable(mapCells) {
                             } else {
                                 div.data("EsteiraOutput", []);
                             }
+                        } else {
+                            $.each(item.DataObj, function (i, item) {
+                                div.data(i, item);
+                            });
                         }
                     }
                 }
@@ -867,4 +941,11 @@ function setPiecesModal(json) {
     }
 
     $("#tablePieces").html(html);
+}
+
+function blockDrag(v) {
+    blockedDrag = v;
+    setDropDragItens();
+    if (v) $("#tdropesteiras").addClass("grey lighten-2");
+    else $("#tdropesteiras").removeClass("grey lighten-2");
 }

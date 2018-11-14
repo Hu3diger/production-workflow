@@ -108,27 +108,6 @@ function ServerReciveMethods() {
         } catch (e) {
             // null
         }
-
-        try{
-            let jsonR = [];
-            for(var x in jsonRecived.listModel){
-                jsonR.push(jsonRecived.listModel[x]);
-            }
-            for(var x in jsonRecived.listArmazenamento){
-                jsonR.push(jsonRecived.listArmazenamento[x]);
-            }
-            for(var x in jsonRecived.listEtiquetadora){
-                jsonR.push(jsonRecived.listEtiquetadora[x]);
-            }
-            for(var x in jsonRecived.listDesvio){
-                jsonR.push(jsonRecived.listDesvio[x]);
-            }
-            setDataStatistic(jsonR);
-            
-            $("#loading").hide();
-        } catch (e) {
-            // null
-        }
     }
 
     connector.client.setNivelDash = function (nivel) {
@@ -175,9 +154,11 @@ function ServerReciveMethods() {
         if (inSimulation && !$("#navId").hasClass("red darken-2")) {
             $("#navId").removeAttr("class");
             $("#navId").addClass("red darken-2");
+            blockDrag(true);
         } else if (!inSimulation && !$("#navId").hasClass("light-blue darken-2")) {
             $("#navId").removeAttr("class");
             $("#navId").addClass("light-blue darken-2");
+            blockDrag(false);
         }
     }
 

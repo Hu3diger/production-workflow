@@ -995,9 +995,6 @@ namespace ProductionLinesWEG.Hub
         // retorna todas as esteiras separadas em tipos para o usuario
         public void CallListEsteira()
         {
-            string AuthId = GetAuthIdByConnectionId(Context.ConnectionId);
-            var connections = GetAllConnectionIdsByAuthId(AuthId).ToList();
-
             Program pgm = CheckPgmInSimulation();
 
             if (pgm != null)
@@ -1006,7 +1003,9 @@ namespace ProductionLinesWEG.Hub
 
                 debugEsteira(l);
 
-                Clients.Clients(connections).listEsteiras(pgm.getEsteirasToClient());
+                Clients.Clients(
+                        GetAllConnectionIdsByAuthId(GetAuthIdByConnectionId(Context.ConnectionId)).ToList()
+                    ).listEsteiras(pgm.getEsteirasToClient());
             }
         }
 
@@ -1121,7 +1120,7 @@ namespace ProductionLinesWEG.Hub
 
 
         // mapeamento das esteiras
-        public void saveTableProduction(dynamic recivedServ)
+        public bool saveTableProduction(dynamic recivedServ)
         {
             Program pgm = CheckReturnPgm();
 
@@ -1242,13 +1241,15 @@ namespace ProductionLinesWEG.Hub
                     pgm.MinY = recivedServ.minY;
 
                     RegisterMessageDashboard("Projeto Salvo", 1, true);
-
+                    return true;
                 }
                 catch (Exception e)
                 {
                     RegisterMessageDashboard(e.Message, 3, true);
                 }
             }
+
+            return false;
         }
 
         public void turnOnEsteira(string id)
@@ -1422,31 +1423,6 @@ namespace ProductionLinesWEG.Hub
             }
         }
 
-        public List<Peca> getPieces(string id)
-        {
-            List<Peca> list = null;
-
-            Program pgm = CheckPgmInSimulation();
-
-            if (pgm != null)
-            {
-
-                EsteiraAbstrata e = pgm.listEsteiras.Find(x => x.Id.Equals(id));
-
-                if (e != null)
-                {
-                    list = e.getPiecesToList();
-                }
-                else
-                {
-                    RegisterMessageDashboard("Salve o programa para que as alterações tenham efeito", 2, true);
-                }
-
-            }
-
-            return list;
-        }
-
 
 
 
@@ -1601,6 +1577,18 @@ namespace ProductionLinesWEG.Hub
             {
                 Clients.Caller.setNavColor(pgm.InSimulation);
             }
+        }
+
+        // retorna todas as esteiras separadas em tipos para o usuario
+        public ListEsteiraClient ListClonedEsteira()
+        {
+            Program pgm = CheckPgmInSimulation();
+
+            if (pgm != null)
+            {
+                return pgm.getClonedEsteirasToClient();
+            }
+            return new ListEsteiraClient();
         }
     }
 

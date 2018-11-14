@@ -1,0 +1,20 @@
+simu1
+"sem nada " identifica a entrada, flecha identifica saida
+
+simu2
+uma esteira tem entradas nas laterias e atras
+
+simu3
+uma esteira nao pode sair pelas laterias, apenas pela frente
+
+simu4
+pode ser definido varios caminhos para a esteiras, porém apenas uma saida é definida e não impacta a performance
+
+simu5
+esteiras do tipo de processamento, armazenamento e etiquetadora tem apenas uma saida, se colocar mais de uma saída da erro
+
+simu6
+apenas esteira do tipo desvio pode ter inumeras saídas
+
+simu7
+uma esteira pode ter inumeras entradas

@@ -229,12 +229,13 @@ namespace ProductionLinesWEG.Models
 
         public object Clone()
         {
+            EsteiraAbstrata e = (EsteiraAbstrata)this.MemberwiseClone();
+
             if (!IsClone)
             {
-                _queueInputPecas = new Queue<Peca>();
-                listTime = new List<int>();
+                e._queueInputPecas = new Queue<Peca>();
+                e.listTime = new List<int>();
             }
-            EsteiraAbstrata e = (EsteiraAbstrata)this.MemberwiseClone();
 
             e.EsteiraInput = new List<EsteiraAbstrata>();
             e.RemoveAllOutput();
@@ -247,6 +248,8 @@ namespace ProductionLinesWEG.Models
         public object CloneWithIO()
         {
             EsteiraAbstrata e = (EsteiraAbstrata)Clone();
+
+            EsteiraInput.ForEach(x => e.EsteiraInput.Add((EsteiraAbstrata)x.Clone()));
 
             return ImplementedCloneWithIO(e);
         }

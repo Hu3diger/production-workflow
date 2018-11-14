@@ -319,7 +319,6 @@ function changeEsteira(oldName) {
     let type = $('#selectTE :selected').val();
     let value = '';
     var typeBool = true;
-    console.log($('#selectTE :selected').val());
 
     //faz a verificação do tipo, e atribui para a tag value, o valor do campo extra de cada tipo de esteira.
     if (type == '1') {
@@ -334,7 +333,7 @@ function changeEsteira(oldName) {
     } else if (type == '3') {
         value = $('#etiqueta').val();
     } else if (type == '4') {
-        value = $('#typeSelect :selected').text();
+        value = $('#typeDesvio :selected').text();
     } else {
         M.toast({ html: 'Type inválido' });
         typeBool = false;

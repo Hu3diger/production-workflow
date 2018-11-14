@@ -110,12 +110,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\estatistica.css" />
     <Content Include="Content\css\fonts.css" />
     <Content Include="Content\css\main.css" />
     <Content Include="Content\css\materialize.css" />
     <Content Include="Content\css\materialize.min.css" />
+    <Content Include="Content\css\planta.css" />
     <Content Include="Content\css\production.css" />
     <Content Include="Content\css\Site.css" />
+    <Content Include="Content\css\wiki.css" />
     <Content Include="Content\images\cn1.png" />
     <Content Include="Content\images\cn10.png" />
     <Content Include="Content\images\cn10x.png" />
@@ -141,20 +144,21 @@
     <Content Include="Content\images\weg.png" />
     <Content Include="Content\images\wega.png" />
     <Content Include="Content\images\wumpus.png" />
-    <Content Include="Content\js\Dashboard\dashboard.js" />
-    <Content Include="Content\js\Estatisticas\estatistica.js" />
-    <Content Include="Content\js\Esteiras\esteiras.js" />
-    <Content Include="Content\js\login\login.js" />
+    <Content Include="Content\js\dashboard.js" />
+    <Content Include="Content\js\estatistica.js" />
+    <Content Include="Content\js\esteiras.js" />
+    <Content Include="Content\js\login.js" />
     <Content Include="Content\js\main.js" />
-    <Content Include="Content\js\Planta\planta.js" />
+    <Content Include="Content\js\planta.js" />
+    <Content Include="Content\js\process.js" />
     <Content Include="Content\js\serverRecive.js" />
     <Content Include="Content\js\serverSend.js" />
+    <Content Include="Content\js\wiki.js" />
     <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\jquery-cookie.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.ui.touch-punch.min.js" />
     <Content Include="Scripts\materialize.min.js" />
-    <Content Include="Content\js\Processos\process.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\css\fonts\materialize_icons.woff2" />
     <Content Include="Content\css\fonts\pacific.woff2" />

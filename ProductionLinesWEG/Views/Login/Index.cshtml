@@ -4,8 +4,14 @@
 }
 <div class="content">
     <div class="row">
+        <div class="col s10 m4 offset-m4 offset-s1 logoCard center">
+            <img src="content/images/weg.png" width="50%"/>
+        </div>
+    </div>
+    <div class="row">
         <form>
-        <div class="col s10 m4 offset-m4 offset-s1 mt white z-depth-5">
+        <div class="col s10 m4 offset-m4 offset-s1 loginCard white z-depth-5 center">
+            <h5>Login</h5>
             <div class="row">
                 <div class="input-field col s12">
                     <input id="user" type="text" class="validate">
@@ -18,10 +24,16 @@
                     <label for="password">Senha</label>
                 </div>
             </div>
-            <button onclick='login()' class="btn waves-effect waves-light right teal darken-3">
+            <button id="btnLogin" disabled onclick='login()' class="btn waves-effect waves-light right teal darken-3">
                 Entrar
                 <i class="material-icons right">send</i>
             </button>
+            
+            <div id="loading">
+                <div class="progress light-blue lighten-3">
+                    <div class="indeterminate light-blue"></div>
+                </div>
+            </div>
         </div>
         </form>
     </div>

@@ -131,33 +131,21 @@ namespace ProductionLinesWEG.Models
 
             listProcessos.Clear();
 
-            listProcessos.Add(new Processo(new BaseProcesso("a", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("b", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("c", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("d", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("e", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("f", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("g", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("h", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("i", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("j", "Processo qualquer", 1000)));
-            listProcessos.Add(new Processo(new BaseProcesso("teste de erro", "Processo para teste de erro", 500)));
+            listProcessos.Add(new Processo(new BaseProcesso("Processo EXEMPLO", "Tem por objetivo EXEMPLIFICAR os Processos", 1000)));
+            listProcessos[0].BaseProcesso.ErrorProbability = 5;
+            listProcessos[0].BaseProcesso.VariationRuntime = 5;
 
-            listProcessos[0].AddInternalProcess(-1, listProcessos[1]);
-            listProcessos[0].AddInternalProcess(-1, listProcessos[3]);
-            listProcessos[0].AddInternalProcess(-1, listProcessos[6]);
+            listProcessos.Add(new Processo(new BaseProcesso("Processo Filho 1", "Teste para EXEMPLIFICAR o funcionamento do filho 1", 1000)));
+            listProcessos[0].BaseProcesso.ErrorProbability = 3;
+            listProcessos[0].BaseProcesso.VariationRuntime = 2;
 
-            listProcessos[1].AddInternalProcess(-1, listProcessos[2]);
+            listProcessos.Add(new Processo(new BaseProcesso("Processo Filho 2", "Teste para EXEMPLIFICAR o funcionamento do filho 2", 1000)));
+            listProcessos[0].BaseProcesso.ErrorProbability = 3;
+            listProcessos[0].BaseProcesso.VariationRuntime = 2;
 
-            listProcessos[3].AddInternalProcess(-1, listProcessos[4]);
-            listProcessos[3].AddInternalProcess(-1, listProcessos[5]);
 
-            listProcessos[6].AddInternalProcess(-1, listProcessos[7]);
-
-            listProcessos[7].AddInternalProcess(-1, listProcessos[8]);
-            listProcessos[7].AddInternalProcess(-1, listProcessos[9]);
-
-            listProcessos[10].BaseProcesso.ErrorProbability = 50;
+            listProcessos[0].AddInternalProcess(0, listProcessos[1]);
+            listProcessos[0].AddInternalProcess(1, listProcessos[2]);
 
             toDashboard("Sistema pré-carregado com processos\n", 1, false);
 
@@ -169,31 +157,16 @@ namespace ProductionLinesWEG.Models
 
             listEsteiras.Clear();
 
-            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo a", "Executa o processo a", 5));
-            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo b", "Executa o processo b", 2));
-            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo c", "Executa o processo c", 3));
-            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo d", "Executa o processo d", 1));
-            listEsteiras.Add(new EsteiraModel("", "Esteira com Processo teste", "Executa o processo teste de erro", 5));
-
+            listEsteiras.Add(new EsteiraModel("", "Esteira de EXEMPLO", "Tem por objetivo EXEMPLIFICAR as esteiras", 5));
             ((EsteiraModel)listEsteiras[0]).insertMasterProcess(listProcessos[0]);
 
-            ((EsteiraModel)listEsteiras[1]).insertMasterProcess(listProcessos[1]);
+            listEsteiras.Add(new EsteiraEtiquetadora(this.Login, "", "Etiquetadora", "Atribui uam tag com inicio 10000", 1, 10000));
 
-            ((EsteiraModel)listEsteiras[2]).insertMasterProcess(listProcessos[2]);
-
-            ((EsteiraModel)listEsteiras[3]).insertMasterProcess(listProcessos[3]);
-
-            ((EsteiraModel)listEsteiras[4]).insertMasterProcess(listProcessos[10]);
-
-            listEsteiras.Add(new EsteiraEtiquetadora(this.Login, "", "Esteira Etiquetadora", "Atribui uam tag com inicio 10000...", 1, 10000));
-
-            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 1 100pc", "Armazena X itens na esteira", 100));
-            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 2 10pc", "Armazena X itens na esteira", 10));
-            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 3 50pc", "Armazena X itens na esteira", 50));
-            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem 4 Xpc", "Armazena infinitos itens na esteira", -1));
+            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem de 100pc", "Armazena X itens na esteira", 100));
+            listEsteiras.Add(new EsteiraArmazenamento("", "Amazem de Xpc", "Armazena infinitos itens na esteira", -1));
             
-            listEsteiras.Add(new EsteiraBalanceadora("", "Esteira Balanceadora", "Balanceia as peças nas esteiras de saída", 5));
-            listEsteiras.Add(new EsteiraSeletora("", "Esteira Seletora", "Divide entre 3 saidas de acordo com os atributos do último processo", 5));
+            listEsteiras.Add(new EsteiraBalanceadora("", "Balanceadora", "Balanceia as peças nas esteiras de saída", 5));
+            listEsteiras.Add(new EsteiraSeletora("", "Seletora", "Divide entre 3 saidas de acordo com os atributos do último processo", 5));
 
             toDashboard("Sistema pré-carregado com esteiras\n", 1, false);
         }
@@ -249,6 +222,19 @@ namespace ProductionLinesWEG.Models
             listEsteiras.FindAll(x => x is EsteiraArmazenamento && !x.IsClone).ForEach(x => list.listArmazenamento.Add((EsteiraArmazenamento)x));
             listEsteiras.FindAll(x => x is EsteiraEtiquetadora && !x.IsClone).ForEach(x => list.listEtiquetadora.Add((EsteiraEtiquetadora)x));
             listEsteiras.FindAll(x => x is EsteiraDesvio a && !x.IsClone).ForEach(x => list.listDesvio.Add((EsteiraDesvio)x));
+
+            return list;
+        }
+
+        // adiciona as esteiras separadas por tipo para que o cliente possa implementar com facilidade
+        public ListEsteiraClient getClonedEsteirasToClient()
+        {
+            ListEsteiraClient list = new ListEsteiraClient();
+
+            listEsteiras.FindAll(x => x is EsteiraModel && x.IsClone).ForEach(x => list.listModel.Add((EsteiraModel)x.Clone()));
+            listEsteiras.FindAll(x => x is EsteiraArmazenamento && x.IsClone).ForEach(x => list.listArmazenamento.Add((EsteiraArmazenamento)x.Clone()));
+            listEsteiras.FindAll(x => x is EsteiraEtiquetadora && x.IsClone).ForEach(x => list.listEtiquetadora.Add((EsteiraEtiquetadora)x.Clone()));
+            listEsteiras.FindAll(x => x is EsteiraDesvio a && x.IsClone).ForEach(x => list.listDesvio.Add((EsteiraDesvio)x.Clone()));
 
             return list;
         }
